@@ -5,7 +5,7 @@
 package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.AmpShooterSubsystem;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -23,7 +23,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private final AmpShooterSubsystem shooterSubsystem = new AmpShooterSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -53,10 +53,12 @@ public class RobotContainer {
     driverController.b().whileTrue(exampleSubsystem.exampleMethodCommand());
 
     // Intake
-    driverController.leftBumper().whileTrue(intakeSubsystem.intake());
+    driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
+    driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
 
     // Shooter
-    driverController.a().whileTrue(shooterSubsystem.shoot());
+    driverController.a().whileTrue(ampShooterSubsystem.shootAmp());
+    driverController.b().whileTrue(shooterSubsystem.shootSpeaker());
   }
 
   /**

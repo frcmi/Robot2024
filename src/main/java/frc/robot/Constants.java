@@ -21,6 +21,9 @@ public final class Constants {
     public static final int kintakeMotor2Id = 2; //TODO: change it lol 
   }
   public static class ShooterConstants {
-    public static final int kshooterMotorId = 3; //TODO: change it lol
+    public static final int kspeakerShooterMotorId = 3; //TODO: change it lol
+    public static final int kampShooterMotorId = 6; //TODO: change it lol
+    public static final int kampAxisMotor1Id = 4; //TODO: change it lol
+    public static final int kampAxisMotor2Id = 5; //TODO: change it lol
   }
 }

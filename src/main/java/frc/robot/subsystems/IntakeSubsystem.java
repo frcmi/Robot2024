@@ -36,12 +36,20 @@ public class IntakeSubsystem extends SubsystemBase {
         }
     }
 
-    public Command intake() {
+    public Command intakeAmp() { //Subject to change due to motor shenanigans
         return run (
                 () -> {intakeMotor1.set(1);
                     intakeMotor2.set(1);
                 }
-        ).withName("intake");
+        ).withName("intakeAmp");
+    }
+
+    public Command intakeSpeaker()  { //Subject to change due to motor shenanigans
+                return run (
+                () -> {intakeMotor1.set(1);
+                    intakeMotor2.set(1);
+                }
+        ).withName("intakeSpeaker");
     }
     public Command stop() {
         return run(
