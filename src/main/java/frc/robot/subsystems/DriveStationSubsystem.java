@@ -1,6 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
+// code now takes in everything color related except for just RGB
 
 package frc.robot.subsystems;
 
@@ -11,8 +12,8 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 public class DriveStationSubsystem extends SubsystemBase {
-  /** Creates a new LEDSubsystem. */
-  
+  // Creates a new LEDSubsystem.
+
 
   public AddressableLEDBuffer m_ledBuffer;
 
@@ -103,10 +104,7 @@ public class DriveStationSubsystem extends SubsystemBase {
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
+
 
   @Override
   public void periodic() {
@@ -116,5 +114,14 @@ public class DriveStationSubsystem extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+  }
+  public Command dropDisk{
+    run(255,165,0);
+  }
+  public Command coop{
+    run(255,255,0);
+  }
+  public Command ampSpeaker{
+    run(128,0,128);
   }
 }
