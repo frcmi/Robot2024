@@ -55,7 +55,7 @@ public class RobotContainer {
     // Intake
     driverController.leftBumper().whileTrue(intakeSubsystem.intake());
 
-    // Outake
+    // Shooter
     driverController.a().whileTrue(shooterSubsystem.shoot());
   }
 

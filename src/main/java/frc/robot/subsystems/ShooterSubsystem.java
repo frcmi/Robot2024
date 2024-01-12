@@ -16,23 +16,23 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase{
-    private TalonFX motor3 = new TalonFX(ShooterConstants.kmotor3Id);
+    private TalonFX shooterMotor = new TalonFX(ShooterConstants.kshooterMotorId);
 
     public ShooterSubsystem() {
-        motor3.setNeutralMode(NeutralModeValue.Coast);
+        shooterMotor.setNeutralMode(NeutralModeValue.Coast);
         setDefaultCommand(stop());
     }
 
     public Command shoot() {
         return run (
-                () -> {motor3.set(1);
+                () -> {shooterMotor.set(1); //TODO: can change
                 }
         ).withName("intake");
     }
 
     public Command stop() {
         return run (
-                () -> {motor3.set(0);
+                () -> {shooterMotor.set(0); //TODO: can change
                 }
         ).withName("stop");
     }

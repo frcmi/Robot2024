@@ -16,12 +16,12 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
-    private final TalonFX motor1 = new TalonFX(IntakeConstants.kmotor1Id);
-    private final TalonFX motor2 = new TalonFX(IntakeConstants.kmotor2Id);
+    private final TalonFX intakeMotor1 = new TalonFX(IntakeConstants.kintakeMotor1Id);
+    private final TalonFX intakeMotor2 = new TalonFX(IntakeConstants.kintakeMotor2Id);
 
     public IntakeSubsystem() {
-        motor1.setNeutralMode(NeutralModeValue.Coast);
-        motor2.setNeutralMode(NeutralModeValue.Coast);
+        intakeMotor1.setNeutralMode(NeutralModeValue.Coast);
+        intakeMotor2.setNeutralMode(NeutralModeValue.Coast);
         setDefaultCommand(stop());
     }
 
@@ -38,15 +38,15 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command intake() {
         return run (
-                () -> {motor1.set(1);
-                    motor2.set(1);
+                () -> {intakeMotor1.set(1);
+                    intakeMotor2.set(1);
                 }
         ).withName("intake");
     }
     public Command stop() {
         return run(
-            () -> {motor1.set(0);
-                motor2.set(0);
+            () -> {intakeMotor1.set(0);
+                intakeMotor2.set(0);
                 }
         ).withName("stop");
     }

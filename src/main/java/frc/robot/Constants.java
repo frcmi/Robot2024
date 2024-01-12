@@ -17,10 +17,10 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
   public static class IntakeConstants {
-    public static final int kmotor1Id = 1;
-    public static final int kmotor2Id = 2;
+    public static final int kintakeMotor1Id = 1; //TODO: change it lol
+    public static final int kintakeMotor2Id = 2; //TODO: change it lol 
   }
   public static class ShooterConstants {
-    public static final int kmotor3Id = 3;
+    public static final int kshooterMotorId = 3; //TODO: change it lol
   }
 }
