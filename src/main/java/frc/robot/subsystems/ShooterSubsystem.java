@@ -25,7 +25,7 @@ public class ShooterSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        var currentCommand = this.CurrentCommand();`
+        var currentCommand = this.getCurrentCommand();
         if (currentCommand != null){
             SmartDashboard.putString("Outtake Command", currentCommand.getName());
         } else {
