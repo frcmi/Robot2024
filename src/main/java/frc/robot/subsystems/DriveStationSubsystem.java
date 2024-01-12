@@ -85,29 +85,18 @@ public class DriveStationSubsystem extends SubsystemBase {
         });
   }
 
-  public Command runRed() {
+  public Command run(Color8Bit color) {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return runOnce(
         () -> {
-          setColor(255, 0, 0);
+          setColor(color);
           m_led.setData(m_ledBuffer);
           m_led.start();
           //System.out.println("CODE IS WORKING!! ");
         });
   }
 
-    public Command runBlue() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          setColor(0, 0, 255);
-          m_led.setData(m_ledBuffer);
-          m_led.start();
-          //System.out.println("CODE IS WORKING!! ");
-        });
-  }
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).

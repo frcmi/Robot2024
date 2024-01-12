@@ -15,20 +15,11 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-
-  public static class LEDConstants {
-    public static final Color8Bit kYellow = new Color8Bit(255, 255, 0);
-    public static final Color8Bit kPurple = new Color8Bit(255, 0, 255);
-    public static final Color8Bit kInitialMaroon = new Color8Bit(144, 56, 32);
-    public static final int kLightsPerFoot = 9; //also place holder
-    public static final int[] kLightPorts = {0, 1}; // <== Placeholder!!
-    public static final int[] kLightsLengthsArray = {kLightsPerFoot, kLightsPerFoot};
+    public static class OperatorConstants {
+      public static final int kDriverControllerPort = 0;
+      public static final int kLedCount = 12;
+    }
   }
 
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  
-  }
-}
 
 
