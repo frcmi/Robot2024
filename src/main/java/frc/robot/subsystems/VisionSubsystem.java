@@ -70,6 +70,7 @@ public class VisionSubsystem extends SubsystemBase {
             });
 
             field.setRobotPose(pose.toPose2d());
+            SmartDashboard.putData("Simulated field", field);
         }
     }
 
