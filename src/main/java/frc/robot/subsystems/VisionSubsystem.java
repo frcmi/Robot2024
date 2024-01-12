@@ -14,11 +14,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
     private Optional<EstimatedRobotPose> lastPose;
+    private Field2d field;
+
     private PhotonPoseEstimator estimator;
     private PhotonCamera camera;
 
@@ -36,6 +39,7 @@ public class VisionSubsystem extends SubsystemBase {
 
         estimator.setReferencePose(new Pose2d(0, 0, new Rotation2d(0)));
         lastPose = estimator.update();
+        field = new Field2d();
     }
 
     @Override
@@ -64,6 +68,9 @@ public class VisionSubsystem extends SubsystemBase {
                 rotation.getY(),
                 rotation.getZ()
             });
+
+            field.setRobotPose(pose.toPose2d());
+            SmartDashboard.putData("Simulated field", field);
         }
     }
 
