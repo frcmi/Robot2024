@@ -23,6 +23,16 @@ public class ShooterSubsystem extends SubsystemBase{
         setDefaultCommand(stop());
     }
 
+    @Override
+    public void periodic() {
+        var currentCommand = this.CurrentCommand();`
+        if (currentCommand != null){
+            SmartDashboard.putString("Outtake Command", currentCommand.getName());
+        } else {
+            SmartDashboard.putString("Outtake Command", "");
+        }
+    }
+
     public Command shoot() {
         return run (
                 () -> {shooterMotor.set(1); //TODO: can change
