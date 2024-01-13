@@ -115,13 +115,19 @@ public class DriveStationSubsystem extends SubsystemBase {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
-  public Command dropDisk{
+  public Command dropDisk(){
     run(255,165,0);
   }
-  public Command coop{
+  public Command coop(){
     run(255,255,0);
   }
-  public Command ampSpeaker{
+  public Command ampSpeaker(){
     run(128,0,128);
+  }
+  public Command readyToAmp(){
+    run(0, 0, 255);
+  }
+  public Command readyToSpeaker(){
+    run(0, 255, 0);
   }
 }
