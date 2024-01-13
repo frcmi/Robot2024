@@ -23,6 +23,32 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
   public static class SwerveConstants { //TODO: actually fill these in (they are from kickoff bot)
+    public static class AutoConstants { 
+      public static final double kDriveP = 0;
+      public static final double kDriveI = 0;
+      public static final double kDriveD = 0;
+
+      public static final double kSteerP = 0;
+      public static final double kSteerI = 0;
+      public static final double kSteerD = 0;
+
+      public static final double kRotationP = 0;
+      public static final double kRotationI = 0;
+      public static final double kRotationD = 0;
+
+      public static final double kAutoXP = 0;
+      public static final double kAutoXI = 0;
+      public static final double kAutoXD = 0;
+
+      public static final double kAutoYP = 0;
+      public static final double kAutoYI = 0;
+      public static final double kAutoYD = 0;
+    }
+    // limits
+    public static final double kAllowedDistanceToDestination = 0.1;
+    public static final double kMaxSpeed = 3;
+    public static final double kMaxAcceleration = 3;
+
     // gear ratios
     public static final double kSteerMotorGearRatio = 150d/7d;
     public static final double kDriveMotorGearRatio = 6.12d;
@@ -37,6 +63,7 @@ public final class Constants {
     public static final double kDriveS = 0;
     public static final double kDriveV = 0;
     public static final double kDriveA = 0;
+
     public static final Slot0Configs kSteerMotorGains = new Slot0Configs();
     public static final Slot0Configs kDriveMotorGains = new Slot0Configs();
     public static final SteerFeedbackType kFeedbackSource = SteerFeedbackType.RemoteCANcoder;
@@ -44,6 +71,7 @@ public final class Constants {
     // measured values
     public static final double kWidth = 0.7112;
     public static final double kLength = 0.7112;
+    public static final double kDriveBaseRadius = 0;
     public static final double kWheelRadius = 2;
     public static final double kSteerIntertia = 50;
     public static final double kDriveIntertia = 50;
