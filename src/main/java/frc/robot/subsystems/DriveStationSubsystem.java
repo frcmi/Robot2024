@@ -35,12 +35,12 @@ public class DriveStationSubsystem extends SubsystemBase {
 
   }
 
-  private void setColor(Color8Bit color) {
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+ // private void setColor(Color8Bit color) {
+ //   for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
-      m_ledBuffer.setLED(i, color);
-   }
-  }
+ //     m_ledBuffer.setLED(i, color);
+ //  }
+ // }
 
   private void rainbow() {
 
@@ -115,6 +115,24 @@ public class DriveStationSubsystem extends SubsystemBase {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
+  public void diskShoot(){
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+     // Sets the specified LED to the RGB values for blue
+      mledBuffer.setRGB(i, 0, 0, bluePulseBrightness);
+   }
+
+   //increase brightness
+   bluePulseBrightness += 5;
+
+   //Check bounds
+   bluePulseBrightness %= 255;
+
+   m_led.setData(m_ledBuffer);
+
+    //This is currently a pulsing effect, will try to get trailing effect later
+
+  }
+  
   public void dropDisk(){
     run(new Color8Bit(255,165,0));
   }
