@@ -5,6 +5,7 @@
 package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.SpeakerShooterSubsystem;
 import frc.robot.subsystems.AmpShooterSubsystem;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
@@ -23,7 +24,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final AmpShooterSubsystem shooterSubsystem = new AmpShooterSubsystem();
+  private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem();
+  private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -48,17 +51,13 @@ public class RobotContainer {
     new Trigger(exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    driverController.b().whileTrue(exampleSubsystem.exampleMethodCommand());
-
     // Intake
     driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
     driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
 
     // Shooter
     driverController.a().whileTrue(ampShooterSubsystem.shootAmp());
-    driverController.b().whileTrue(shooterSubsystem.shootSpeaker());
+    driverController.b().whileTrue(speakerShooterSubsystem.shootSpeaker());
   }
 
   /**

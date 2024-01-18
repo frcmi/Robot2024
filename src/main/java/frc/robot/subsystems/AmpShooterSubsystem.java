@@ -13,16 +13,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.AmpShooterConstants;
 
 public class AmpShooterSubsystem extends SubsystemBase{
-    private TalonFX speakerShooterMotor = new TalonFX(ShooterConstants.kspeakerShooterMotorId);
-    private TalonFX ampShooterMotor = new TalonFX(ShooterConstants.kampShooterMotorId);
-    private TalonFX ampAxisMotor1 = new TalonFX(ShooterConstants.kampAxisMotor1Id);
-    private TalonFX ampAxisMotor2 = new TalonFX(ShooterConstants.kampAxisMotor2Id);
+    private TalonFX ampShooterMotor = new TalonFX(AmpShooterConstants.kampShooterMotorId);
+    private TalonFX ampAxisMotor1 = new TalonFX(AmpShooterConstants.kampAxisMotor1Id);
+    private TalonFX ampAxisMotor2 = new TalonFX(AmpShooterConstants.kampAxisMotor2Id);
 
     public AmpShooterSubsystem() {
-        speakerShooterMotor.setNeutralMode(NeutralModeValue.Coast);
         ampShooterMotor.setNeutralMode(NeutralModeValue.Coast);
         ampAxisMotor1.setNeutralMode(NeutralModeValue.Coast);
         ampAxisMotor2.setNeutralMode(NeutralModeValue.Coast);
@@ -34,9 +32,9 @@ public class AmpShooterSubsystem extends SubsystemBase{
     public void periodic() {
         var currentCommand = this.getCurrentCommand();
         if (currentCommand != null){
-            SmartDashboard.putString("Outtake Command", currentCommand.getName());
+            SmartDashboard.putString("AmpShooter Command", currentCommand.getName());
         } else {
-            SmartDashboard.putString("Outtake Command", "");
+            SmartDashboard.putString("AmpShooter Command", "");
         }
     }
 
@@ -48,17 +46,9 @@ public class AmpShooterSubsystem extends SubsystemBase{
         ).withName("shootAmp");
     }
 
-    public Command shootSpeaker() { //TODO: can change
-        return run (
-                () -> {speakerShooterMotor.set(1); 
-                }
-        ).withName("shootSpeaker");
-    }    
-
     public Command stop() { //TODO: can change
         return run (
-                () -> {speakerShooterMotor.set(0); 
-                    ampShooterMotor.set(0);
+                () -> {ampShooterMotor.set(0);
                 }
         ).withName("stop");
     }
