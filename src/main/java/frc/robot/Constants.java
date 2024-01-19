@@ -19,6 +19,10 @@ public final class Constants {
       public static final int kDriverControllerPort = 0;
       public static final int kLedCount = 12;
     }
+    public static class LightLEDConstants {
+      public static final int kStreakLength = 13; //TODO: Change Streak Length
+      
+    }
   }
 
 

@@ -13,9 +13,19 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 public class DriveStationSubsystem extends SubsystemBase {
   // Creates a new LEDSubsystem.
+  public Color8Bit setColor = new Color8Bit(128,0,0);
 
 
   public AddressableLEDBuffer m_ledBuffer;
+
+  public void updateLight(){
+      m_led.setData(m_ledBuffer);
+      m_led.start();
+  }
+
+  public void setLight(int ID, Color8Bit clor){
+    m_ledBuffer.setLED(ID, clor);
+  }
 
   public AddressableLED m_led;
   public DriveStationSubsystem() {
@@ -86,17 +96,23 @@ public class DriveStationSubsystem extends SubsystemBase {
         });
   }
 
-  public Command run(Color8Bit color) {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          setColor(color);
-          m_led.setData(m_ledBuffer);
-          m_led.start();
-          //System.out.println("CODE IS WORKING!! ");
-        });
+  public void setColor(Color8Bit color) {
+
+    setColor = color;
+
   }
+
+  public Command setLights(){
+    return run(() -> {
+      for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+        m_ledBuffer.setLED(i, setColor);
+      }
+      m_led.setData(m_ledBuffer);
+      m_led.start();
+      //System.out.println("CODE IS WORKING!! ");
+    });
+  }
+
 
 
   /**
@@ -115,37 +131,21 @@ public class DriveStationSubsystem extends SubsystemBase {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
-  public void diskShoot(){
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-     // Sets the specified LED to the RGB values for blue
-      mledBuffer.setRGB(i, 0, 0, bluePulseBrightness);
-   }
 
-   //increase brightness
-   bluePulseBrightness += 5;
-
-   //Check bounds
-   bluePulseBrightness %= 255;
-
-   m_led.setData(m_ledBuffer);
-
-    //This is currently a pulsing effect, will try to get trailing effect later
-
-  }
   
   public void dropDisk(){
-    run(new Color8Bit(255,165,0));
+    setColor(new Color8Bit(255,165,0));
   }
   public void coop(){
-    run(new Color8Bit(255,255,0));
+    setColor(new Color8Bit(255,255,0));
   }
   public void ampSpeaker(){
-    run(new Color8Bit(128,0,128));
+    setColor(new Color8Bit(128,0,128));
   }
   public void readyToAmp(){
-    run(new Color8Bit(0, 0, 255));
+    setColor(new Color8Bit(0, 0, 255)); //change color later bc alliance problems
   }
   public void readyToSpeaker(){
-    run(new Color8Bit(0, 255, 0));
+    setColor(new Color8Bit(0, 255, 0));
   }
 }
