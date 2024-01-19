@@ -8,7 +8,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
-
+/**
+ * Command that drives the robot to a field position
+ */
 public class DriveToPosition extends Command {
     SwerveSubsystem m_swerveSubsystem;
     Supplier<Pose2d> currentPosition;
@@ -26,6 +28,12 @@ public class DriveToPosition extends Command {
         SwerveConstants.AutoConstants.kRotationI,
         SwerveConstants.AutoConstants.kRotationD);
 
+    /**
+     * Drive robot to a given position using PID
+     * @param swerveSubsystem the swerve subsystem to spin motors on
+     * @param currentPosition a supplier that contains the consitently updated position of the bot
+     * @param destination the position that the robot should drive to, relative to the field
+     */
     public DriveToPosition(SwerveSubsystem swerveSubsystem, Supplier<Pose2d> currentPosition, Pose2d destination) {
         m_swerveSubsystem = swerveSubsystem;
         this.currentPosition = currentPosition;
@@ -45,8 +53,8 @@ public class DriveToPosition extends Command {
 
     @Override
     public boolean isFinished() {
-        Translation2d t = currentPosition.get().minus(destination).getTranslation();
-        return Math.sqrt(t.getX()*t.getX() + t.getY()*t.getY()) <= SwerveConstants.kAllowedDistanceToDestination;
+        Translation2d toDestinationVector = currentPosition.get().minus(destination).getTranslation();
+        return Math.sqrt(toDestinationVector.getX()*toDestinationVector.getX() + toDestinationVector.getY()*toDestinationVector.getY()) <= SwerveConstants.kAllowedDistanceToDestination;
     }
     
 }

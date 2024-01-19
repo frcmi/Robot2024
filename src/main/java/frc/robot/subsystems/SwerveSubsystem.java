@@ -1,33 +1,27 @@
 package frc.robot.subsystems;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.PathPlannerTrajectory;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.ReplanningConfig;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
+    //TODO: delete this once vision is finished
+    public SwerveDriveKinematics kinematics = new SwerveDriveKinematics(new Translation2d[] {
+        SwerveConstants.Mod0.getPosition(),
+        SwerveConstants.Mod1.getPosition(),
+        SwerveConstants.Mod2.getPosition(),
+        SwerveConstants.Mod3.getPosition()
+    });
     public SwerveDrivetrainConstants swerveDrivetrainConstants = new SwerveDrivetrainConstants()
         .withPigeon2Id(SwerveConstants.kPigeonId)
         .withCANbusName(SwerveConstants.kCanbusName);
@@ -45,6 +39,15 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveConstants.Mod2,
         SwerveConstants.Mod3
     };
+    //TODO: can be removed once vision is finished
+    public SwerveDriveOdometry odometry = new SwerveDriveOdometry(
+        kinematics, 
+        gyro.getRotation2d(), new SwerveModulePosition[]{
+            SwerveConstants.Mod0.getSwerveModulePosition(),
+            SwerveConstants.Mod1.getSwerveModulePosition(),
+            SwerveConstants.Mod2.getSwerveModulePosition(),
+            SwerveConstants.Mod3.getSwerveModulePosition()
+        });
 
     public SwerveSubsystem() {
         resetGyro();
@@ -103,12 +106,18 @@ public class SwerveSubsystem extends SubsystemBase {
             .withVelocityY(sidewaysVelocity)
             .withRotationalRate(rotationAboutCenter);
     }
+    /**
+     * @param chassisSpeeds the speeds at which to run the bot
+     */
     public void driveChassisSpeedsFieldCentric(ChassisSpeeds chassisSpeeds) {
         driveFieldCentric(
             chassisSpeeds.vxMetersPerSecond, 
             chassisSpeeds.vyMetersPerSecond, 
             chassisSpeeds.omegaRadiansPerSecond);
     }
+    /**
+     * To be ran once per gyro update.
+     */
     private void updateChassisSpeeds() {
         chassisSpeeds.omegaRadiansPerSecond = gyro.getRate();
         chassisSpeeds = chassisSpeeds.plus(
@@ -117,6 +126,9 @@ public class SwerveSubsystem extends SubsystemBase {
                 gyro.getAccelerationY().getValueAsDouble(), 
                 0d));
     }
+    /**
+     * @return the speeds at which the chassises of the robot are going
+     */
     public ChassisSpeeds getChassisSpeeds() {
         return chassisSpeeds;
     }
