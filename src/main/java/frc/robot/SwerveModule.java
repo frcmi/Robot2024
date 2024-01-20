@@ -1,7 +1,9 @@
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,6 +23,7 @@ public class SwerveModule {
 
     protected TalonFX steerMotor;
     protected TalonFX driveMotor;
+    protected CANcoder steerEncoder;
 
     protected SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(SwerveConstants.kDriveS, SwerveConstants.kDriveV, SwerveConstants.kDriveA);
 
@@ -37,13 +40,18 @@ public class SwerveModule {
 
         steerMotor = new TalonFX(moduleConstants.SteerMotorId);
         driveMotor = new TalonFX(moduleConstants.DriveMotorId);
+        steerEncoder = new CANcoder(moduleConstants.CANcoderId);
+    }
+
+    public void setSteerMotor(double speed) {
+        steerMotor.set(speed);
     }
 
     /**
      * @return gets the angle the steer motor is pointed at
      */
     public Rotation2d getSteerMotorAngle() {
-        return Rotation2d.fromDegrees(Conversions.falconToDegrees(0 /*TODO: idk how to get encoder values from falcon ill google it next time i see this */, SwerveConstants.kSteerMotorGearRatio));
+        return Rotation2d.fromRotations(steerEncoder.getAbsolutePosition().getValueAsDouble());
     }
 
     /**
@@ -51,6 +59,10 @@ public class SwerveModule {
      */
     public void stopDriveMotor() {
         driveMotor.stopMotor();
+    }
+
+    public void setCoastMode() {
+        steerMotor.setNeutralMode(NeutralModeValue.Coast);
     }
 
     /**

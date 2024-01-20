@@ -44,9 +44,10 @@ public class RobotContainer {
    */
   private void configureBindings() {
     m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.driveFieldCentric(
-      driverController.getLeftX(),
-      driverController.getLeftY(),
-      driverController.getRightX()));
+      driverController::getLeftX,
+      driverController::getLeftY,
+      driverController::getRightX));
+    // m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.test());
   }
 
   /**
