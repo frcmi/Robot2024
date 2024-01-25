@@ -2,56 +2,65 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.LightLEDConstants;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.subsystems.DriveStationSubsystem;
 
+/**
+ * Creates a trail effect on the LEDs given a {@link DriveStationSubsystem}.
+ * <p>It will follow current {@link DriveStationSubsystem} LED color.
+ */
 public class SetTrailLights extends Command {
-    DriveStationSubsystem m_DriveStationSubsystem;
+    private int counter = 0;
+    private int frame = 0;
+    private boolean done = false;
+    private DriveStationSubsystem m_DriveStationSubsystem;
+    private boolean forever;
 
-    public SetTrailLights(DriveStationSubsystem DriveStationSubsystem) {
+    public SetTrailLights(DriveStationSubsystem DriveStationSubsystem, boolean forever) {
         m_DriveStationSubsystem = DriveStationSubsystem;
-    }
-
-    int min = 0;
-    int max = 0;
-    int counter = 0;
-    @Override
-    public void initialize() {
-        Color8Bit old = m_DriveStationSubsystem.setColor;
-        m_DriveStationSubsystem.setColor = new Color8Bit(0,0,0);
-        m_DriveStationSubsystem.setLights();
-        m_DriveStationSubsystem.setColor = old;
+        this.forever = forever;
     }
 
     @Override
     public void execute() {
         counter++;
-        counter %= 50;
+        counter %= 2;
         if (counter != 0) {
             return;
         }
-        System.out.println("a");
-        if (max >= LightLEDConstants.kStreakLength){
-            min++;
+
+        frame++;
+
+        // No LEDs are active on first frame
+        int min = -1;
+        int max = -1;
+
+        if (frame > 0) {
+            // See https://www.desmos.com/calculator/fejjdhp1bc
+            min = Math.max(0, frame - LEDConstants.kStreakLength);
+            max = Math.min(m_DriveStationSubsystem.m_ledBuffer.getLength(), frame - 1);
+
+            if (min == m_DriveStationSubsystem.m_ledBuffer.getLength()) {
+                done = true;
+            }
         }
-        if (max + 1 < m_DriveStationSubsystem.m_ledBuffer.getLength()){
-            max++;
-        }
-        if (min > 0) {
-            m_DriveStationSubsystem.setLight(min-1, new Color8Bit(0,0,0));
-        }
-        for (int i = min; i <= max; i++){
-            System.out.println("b");
+        
+        for (int i = 0; i < m_DriveStationSubsystem.m_ledBuffer.getLength(); i++) {
+            if (i >= min && i <= max) {
             m_DriveStationSubsystem.setLight(i, m_DriveStationSubsystem.setColor);
-        } 
-        m_DriveStationSubsystem.updateLight();
-        System.out.println("c");
+
+            } else {
+            m_DriveStationSubsystem.setLight(i, new Color8Bit());
+            }
+        }
     } 
 
     @Override
     public boolean isFinished() {
-        if (min >= m_DriveStationSubsystem.m_ledBuffer.getLength() && max >= m_DriveStationSubsystem.m_ledBuffer.getLength()){
-            return true;
+        if (done) {
+            frame = 0;
+            done = false;
+            return true && !forever;
         } else {
             return false;
         }

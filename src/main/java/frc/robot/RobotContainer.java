@@ -51,8 +51,13 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.x().onTrue(new SetTrailLights(m_driveStationSubsystem));
-    // m_driverController.b().
+    // m_driveStationSubsystem.coop();
+    m_driverController.x().onTrue(m_driveStationSubsystem.setLights());//new SetTrailLights(m_driveStationSubsystem));
+    m_driverController.b().onTrue(new SetTrailLights(m_driveStationSubsystem, false));
+    m_driverController.a().whileTrue(new SetTrailLights(m_driveStationSubsystem, true));
+
+    // m_driveStationSubsystem.coop();
+    // m_driveStationSubsystem.setLights().schedule();
   }
 
   /**

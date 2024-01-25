@@ -17,11 +17,12 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 public final class Constants {
     public static class OperatorConstants {
       public static final int kDriverControllerPort = 0;
-      public static final int kLedCount = 3;
+
     }
-    public static class LightLEDConstants {
-      public static final int kStreakLength = 13; //TODO: Change Streak Length
-      
+    public static class LEDConstants {
+      public static final int kStreakLength = 3; //TODO: Change Streak Length
+      public static final int kLedCount =11;
+      public static final int kLedPort = 1;
     }
   }
 

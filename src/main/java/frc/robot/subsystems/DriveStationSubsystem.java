@@ -7,51 +7,34 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.Constants.OperatorConstants;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 public class DriveStationSubsystem extends SubsystemBase {
-  // Creates a new LEDSubsystem.
   public Color8Bit setColor = new Color8Bit(128,0,0);
 
 
   public AddressableLEDBuffer m_ledBuffer;
 
-  public void updateLight(){
-      m_led.setData(m_ledBuffer);
-      m_led.start();
-  }
 
-  public void setLight(int ID, Color8Bit clor){
-    m_ledBuffer.setLED(ID, clor);
+  public void setLight(int ID, Color8Bit color){
+    m_ledBuffer.setLED(ID, color);
   }
 
   public AddressableLED m_led;
   public DriveStationSubsystem() {
-    m_led = new AddressableLED(OperatorConstants.kDriverControllerPort);
-    m_ledBuffer = new AddressableLEDBuffer(OperatorConstants.kLedCount);
-
-    // Default to a length of 60, start empty output
-
-    // Length is expensive to set, so only set it once, then just update data
+    m_led = new AddressableLED(LEDConstants.kLedPort);
+    m_ledBuffer = new AddressableLEDBuffer(LEDConstants.kLedCount);
 
     m_led.setLength(m_ledBuffer.getLength());
 
-    // Set the data
-  //  setColor(255, 0, 0);
-  //  m_led.setData(m_ledBuffer);
-  //  m_led.start();
-
+    m_led.setData(m_ledBuffer);
+    m_led.start();
   }
-
- // private void setColor(Color8Bit color) {
- //   for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for red
- //     m_ledBuffer.setLED(i, color);
- //  }
- // }
-
+ 
+  // TODO: See if still needed, or remove if isn't.
   private void rainbow() {
 
     // For every pixel
@@ -87,8 +70,6 @@ public class DriveStationSubsystem extends SubsystemBase {
    * @return a command
    */
   public Command runRainbow() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
     return runOnce(
         () -> {
           rainbow();
@@ -103,13 +84,11 @@ public class DriveStationSubsystem extends SubsystemBase {
   }
 
   public Command setLights(){
-    return run(() -> {
+    return runOnce(() -> {
+      System.out.println("huh");
       for (int i = 0; i < m_ledBuffer.getLength(); i++) {
         m_ledBuffer.setLED(i, setColor);
       }
-      m_led.setData(m_ledBuffer);
-      m_led.start();
-      //System.out.println("CODE IS WORKING!! ");
     });
   }
 
@@ -120,11 +99,9 @@ public class DriveStationSubsystem extends SubsystemBase {
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
-
-
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    m_led.setData(m_ledBuffer);
   }
 
   @Override
