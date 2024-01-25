@@ -22,13 +22,17 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
-  public static class SwerveConstants { //TODO: asactually fill these in (they are from kickoff bot)
-    public static class AutoConstants {
-      public static final double kSteerP = 0.5;
+  public static class SwerveConstants { //TODO: actually fill these in (they are from kickoff bot)
+    public static class AutoConstants { 
+      public static final double kDriveP = 0;
+      public static final double kDriveI = 0;
+      public static final double kDriveD = 0;
+
+      public static final double kSteerP = 0;
       public static final double kSteerI = 0;
       public static final double kSteerD = 0;
 
-      public static final double kRotationP = 0.5;
+      public static final double kRotationP = 0;
       public static final double kRotationI = 0;
       public static final double kRotationD = 0;
 
@@ -42,8 +46,8 @@ public final class Constants {
     }
     // limits
     public static final double kAllowedDistanceToDestination = 0.1;
-    public static final double kMaxSpeed = 0.1;
-    public static final double kMaxAcceleration = 0.05;
+    public static final double kMaxSpeed = 3;
+    public static final double kMaxAcceleration = 3;
 
     // gear ratios
     public static final double kSteerMotorGearRatio = 150d/7d;
@@ -67,7 +71,7 @@ public final class Constants {
     // measured values
     public static final double kWidth = 0.7112;
     public static final double kLength = 0.7112;
-    public static final double kDriveBaseRadius = 0.5028;
+    public static final double kDriveBaseRadius = 0;
     public static final double kWheelRadius = 2;
     public static final double kSteerIntertia = 50;
     public static final double kDriveIntertia = 50;
@@ -92,7 +96,7 @@ public final class Constants {
 
     public static final SwerveModule Mod0 = new SwerveModule(
       0, 
-      Rotation2d.fromRadians(-3.063359633407626),
+      Rotation2d.fromDegrees(329.59), 
       kSwerveConstantsFactory.createModuleConstants(
         6, 
         2, 
@@ -103,7 +107,7 @@ public final class Constants {
         false));
     public static final SwerveModule Mod1 = new SwerveModule(
       1, 
-      Rotation2d.fromRadians(-0.484737928971863),
+      Rotation2d.fromDegrees(136.93), 
       kSwerveConstantsFactory.createModuleConstants(
         5, 
         1, 
@@ -114,10 +118,10 @@ public final class Constants {
         false));
     public static final SwerveModule Mod2 = new SwerveModule(
       2, 
-      Rotation2d.fromRadians(3.115514980195737), 
+      Rotation2d.fromDegrees(126.83), 
       kSwerveConstantsFactory.createModuleConstants(
-        7, 
         3, 
+        7, 
         11, 
         0, 
         -kWidth/2, 
@@ -125,10 +129,10 @@ public final class Constants {
         false));
     public static final SwerveModule Mod3 = new SwerveModule(
       3, 
-      Rotation2d.fromRadians(-2.437495471950284), 
+      Rotation2d.fromDegrees(110.65), 
       kSwerveConstantsFactory.createModuleConstants(
-        8, 
         4, 
+        8, 
         12, 
         0, 
         kWidth/2, 

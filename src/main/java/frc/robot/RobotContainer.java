@@ -5,11 +5,11 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.DriveToPosition;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -47,7 +47,6 @@ public class RobotContainer {
       driverController::getLeftX,
       driverController::getLeftY,
       driverController::getRightX));
-    // m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.test());
   }
 
   /**
@@ -56,6 +55,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new DriveToPosition(m_swerveSubsystem, m_swerveSubsystem.odometry::getPoseMeters, new Pose2d(3d,3d, new Rotation2d(0)));
+    return new PrintCommand("Skill issue");//new DriveToPosition(m_swerveSubsystem, m_swerveSubsystem.odometry::getPoseMeters, new Pose2d(3d,3d, new Rotation2d(0)));
   }
 }

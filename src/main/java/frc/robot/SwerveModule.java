@@ -3,12 +3,12 @@ package frc.robot;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.math.Conversions;
 import frc.robot.Constants.SwerveConstants;
 
@@ -23,7 +23,7 @@ public class SwerveModule {
 
     protected TalonFX steerMotor;
     protected TalonFX driveMotor;
-    protected CANcoder steerEncoder;
+    protected CANcoder canCoder;
 
     protected SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(SwerveConstants.kDriveS, SwerveConstants.kDriveV, SwerveConstants.kDriveA);
 
@@ -40,18 +40,14 @@ public class SwerveModule {
 
         steerMotor = new TalonFX(moduleConstants.SteerMotorId);
         driveMotor = new TalonFX(moduleConstants.DriveMotorId);
-        steerEncoder = new CANcoder(moduleConstants.CANcoderId);
+
+        canCoder = new CANcoder(moduleConstants.CANcoderId);
     }
 
-    public void setSteerMotor(double speed) {
-        steerMotor.set(speed);
-    }
-
-    /**
-     * @return gets the angle the steer motor is pointed at
-     */
-    public Rotation2d getSteerMotorAngle() {
-        return Rotation2d.fromRotations(steerEncoder.getAbsolutePosition().getValueAsDouble());
+    public SwerveModulePosition getSwerveModulePosition() {
+        return new SwerveModulePosition(
+            steerMotor.getPosition().getValueAsDouble(), 
+            Rotation2d.fromRotations(canCoder.getAbsolutePosition().getValueAsDouble()));
     }
 
     /**
@@ -61,21 +57,10 @@ public class SwerveModule {
         driveMotor.stopMotor();
     }
 
-    public void setCoastMode() {
-        steerMotor.setNeutralMode(NeutralModeValue.Coast);
-    }
-
     /**
      * @return the position of the module relative to the center
      */
     public Translation2d getPosition() {
         return new Translation2d(moduleConstants.LocationX, moduleConstants.LocationY);
-    }
-
-    /**
-     * @return the position of the module relative to the center
-     */
-    public SwerveModulePosition getSwerveModulePosition() {
-        return new SwerveModulePosition(getPosition().getNorm(), getPosition().getAngle());
     }
 }
