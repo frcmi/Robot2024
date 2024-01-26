@@ -85,7 +85,7 @@ public class DriveStationSubsystem extends SubsystemBase {
 
   public Command setLights(){
     return runOnce(() -> {
-      System.out.println("huh");
+      System.out.println("bombaclat");
       for (int i = 0; i < m_ledBuffer.getLength(); i++) {
         m_ledBuffer.setLED(i, setColor);
       }
