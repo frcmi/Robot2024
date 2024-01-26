@@ -26,7 +26,7 @@ import swervelib.parser.SwerveParser;
 import frc.robot.SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
-    private SwerveDrive swerveDrivetrain;
+    public SwerveDrive swerveDrivetrain;
     
     public Pigeon2 gyro = new Pigeon2(SwerveConstants.kPigeonId);
 

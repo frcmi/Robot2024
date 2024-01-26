@@ -21,8 +21,9 @@ public class VisionSubsystem extends SubsystemBase {
     private Optional<EstimatedRobotPose> lastPose;
     private PhotonPoseEstimator estimator;
     private PhotonCamera camera;
+    private SwerveSubsystem swerve;
 
-    public VisionSubsystem() {
+    public VisionSubsystem(SwerveSubsystem swerveSubsystem) {
         var robotToCamera = new Transform3d(0.5, 0.5, 0.5, new Rotation3d(0, 0, 0));
 
         try {
@@ -36,6 +37,7 @@ public class VisionSubsystem extends SubsystemBase {
 
         estimator.setReferencePose(new Pose2d(0, 0, new Rotation2d(0)));
         lastPose = estimator.update();
+        swerve = swerveSubsystem;
     }
 
     @Override
@@ -50,20 +52,20 @@ public class VisionSubsystem extends SubsystemBase {
 
         if (lastPose.isPresent()) {
             var pose = lastPose.get().estimatedPose;
+
             var translation = pose.getTranslation();
             var rotation = pose.getRotation();
 
-            SmartDashboard.putNumberArray("Robot translation", new double[] {
-                translation.getX(),
-                translation.getY(),
-                translation.getZ()
-            });
+            SmartDashboard.putNumber("Vision translation X", translation.getX());
+            SmartDashboard.putNumber("Vision translation Y", translation.getY());
+            SmartDashboard.putNumber("Vision translation Z", translation.getZ());
 
-            SmartDashboard.putNumberArray("Robot rotation", new double[] {
-                rotation.getX(),
-                rotation.getY(),
-                rotation.getZ()
-            });
+            SmartDashboard.putNumber("Vision pitch", rotation.getX());
+            SmartDashboard.putNumber("Vision yaw", rotation.getZ());
+            SmartDashboard.putNumber("Vision pitch", rotation.getY());
+
+            // i really hope this is the timestamp odometry is looking for
+            swerve.swerveDrivetrain.addVisionMeasurement(pose.toPose2d(), (double)System.currentTimeMillis() / 1000);
         }
     }
 
