@@ -20,9 +20,11 @@ public class SpeakerShooterSubsystem extends SubsystemBase{
     public TalonFX speakerShooterMotor2 = new TalonFX(SpeakerShooterConstants.kspeakerShooterMotorId2);
 
     public SpeakerShooterSubsystem() {
-        speakerShooterMotor.setNeutralMode(NeutralModeValue.Brake);
-        speakerShooterMotor2.setNeutralMode(NeutralModeValue.Brake);
+        speakerShooterMotor.setNeutralMode(NeutralModeValue.Coast);
+        speakerShooterMotor2.setNeutralMode(NeutralModeValue.Coast);
         setDefaultCommand(stop());
+
+        SmartDashboard.setDefaultNumber("Shooter Speed", 0.373);
     }
 
     @Override
@@ -37,8 +39,8 @@ public class SpeakerShooterSubsystem extends SubsystemBase{
 
     public Command shootSpeaker() { //TODO: can change
         return run (
-                () -> {speakerShooterMotor.set(0.373); 
-                    speakerShooterMotor2.set(0.373);
+                () -> {speakerShooterMotor.set(SmartDashboard.getNumber("Shooter Speed", 0.373)); 
+                    speakerShooterMotor2.set(SmartDashboard.getNumber("Shooter Speed", 0.373));
                 }
         ).withName("shootSpeaker");
     }   
