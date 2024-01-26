@@ -19,9 +19,11 @@ public final class Constants {
   public static class IntakeConstants {
     public static final int kintakeMotor1Id = 25;
     public static final int kintakeMotor2Id = 2; //TODO: change it lol 
+    public static final int kindexerMotorId = 7; //TODO: change it lol
   }
   public static class SpeakerShooterConstants {
-    public static final int kspeakerShooterMotorId = 3; //TODO: change it lol
+    public static final int kspeakerShooterMotorId = 1;
+    public static final int kspeakerShooterMotorId2 = 3;
   }
   public static class AmpShooterConstants {
         public static final int kampShooterMotorId = 6; //TODO: change it lol

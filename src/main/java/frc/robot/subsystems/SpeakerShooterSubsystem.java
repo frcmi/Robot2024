@@ -17,9 +17,11 @@ import frc.robot.Constants.SpeakerShooterConstants;
 
 public class SpeakerShooterSubsystem extends SubsystemBase{
     public TalonFX speakerShooterMotor = new TalonFX(SpeakerShooterConstants.kspeakerShooterMotorId);
-    
+    public TalonFX speakerShooterMotor2 = new TalonFX(SpeakerShooterConstants.kspeakerShooterMotorId2);
+
     public SpeakerShooterSubsystem() {
-        speakerShooterMotor.setNeutralMode(NeutralModeValue.Coast);
+        speakerShooterMotor.setNeutralMode(NeutralModeValue.Brake);
+        speakerShooterMotor2.setNeutralMode(NeutralModeValue.Brake);
         setDefaultCommand(stop());
     }
 
@@ -35,7 +37,8 @@ public class SpeakerShooterSubsystem extends SubsystemBase{
 
     public Command shootSpeaker() { //TODO: can change
         return run (
-                () -> {speakerShooterMotor.set(1); 
+                () -> {speakerShooterMotor.set(0.373); 
+                    speakerShooterMotor2.set(0.373);
                 }
         ).withName("shootSpeaker");
     }   
@@ -43,6 +46,7 @@ public class SpeakerShooterSubsystem extends SubsystemBase{
     public Command stop() { //TODO: can change
         return run (
                 () -> {speakerShooterMotor.set(0); 
+                    speakerShooterMotor2.set(0);
                 }
         ).withName("stop");
     }

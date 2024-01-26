@@ -14,20 +14,17 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.SpeakerShooterConstants;
-import frc.robot.Constants.AmpShooterConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
     private final TalonFX intakeMotor1 = new TalonFX(IntakeConstants.kintakeMotor1Id);
     private final TalonFX intakeMotor2 = new TalonFX(IntakeConstants.kintakeMotor2Id);
-    private final TalonFX speakerShooterMotor = new TalonFX(SpeakerShooterConstants.kspeakerShooterMotorId);
-    private final TalonFX ampShooterMotor = new TalonFX(AmpShooterConstants.kampShooterMotorId);
+    private final TalonFX indexerMotor = new TalonFX(IntakeConstants.kindexerMotorId);
+
 
     public IntakeSubsystem() {
-        intakeMotor1.setNeutralMode(NeutralModeValue.Coast);
-        intakeMotor2.setNeutralMode(NeutralModeValue.Coast);
-        speakerShooterMotor.setNeutralMode(NeutralModeValue.Coast);
-        ampShooterMotor.setNeutralMode(NeutralModeValue.Coast);
+        intakeMotor1.setNeutralMode(NeutralModeValue.Brake);
+        intakeMotor2.setNeutralMode(NeutralModeValue.Brake);
+        indexerMotor.setNeutralMode(NeutralModeValue.Brake);
         setDefaultCommand(stop());
     }
 
@@ -46,7 +43,7 @@ public class IntakeSubsystem extends SubsystemBase {
         return run (
                 () -> {intakeMotor1.set(1);
                     intakeMotor2.set(1);
-                    ampShooterMotor.set(1);
+                    indexerMotor.set(1);
                     
                     
                 }
@@ -57,7 +54,7 @@ public class IntakeSubsystem extends SubsystemBase {
                 return run (
                 () -> {intakeMotor1.set(1);
                     intakeMotor2.set(1);
-                    speakerShooterMotor.set(1);
+                    indexerMotor.set(-1);
 
                 }
         ).withName("intakeSpeaker");
@@ -66,6 +63,7 @@ public class IntakeSubsystem extends SubsystemBase {
         return run(
             () -> {intakeMotor1.set(0);
                 intakeMotor2.set(0);
+                indexerMotor.set(0);
                 }
         ).withName("stop");
     }
