@@ -85,7 +85,6 @@ public class DriveStationSubsystem extends SubsystemBase {
 
   public Command setLights(){
     return runOnce(() -> {
-      System.out.println("bombaclat");
       for (int i = 0; i < m_ledBuffer.getLength(); i++) {
         m_ledBuffer.setLED(i, setColor);
       }
@@ -110,19 +109,24 @@ public class DriveStationSubsystem extends SubsystemBase {
   }
 
   
-  public void dropDisk(){
+  public Command dropDisk(){
     setColor(new Color8Bit(255,165,0));
+    return null;
   }
-  public void coop(){
+  public Command coop(){
     setColor(new Color8Bit(255,255,0));
+    return null;
   }
-  public void ampSpeaker(){
+  public Command ampSpeaker(){
     setColor(new Color8Bit(128,0,128));
+    return null;
   }
-  public void readyToAmp(){
-    setColor(new Color8Bit(0, 0, 255)); //change color later bc alliance problems
+  public Command readyToAmp(){
+    setColor(new Color8Bit(0, 0, 255));
+    return null; //change color later bc alliance problems
   }
-  public void readyToSpeaker(){
+  public Command readyToSpeaker(){
     setColor(new Color8Bit(0, 255, 0));
+    return null;
   }
 }

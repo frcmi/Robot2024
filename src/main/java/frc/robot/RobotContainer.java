@@ -10,6 +10,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SetTrailLights;
 import frc.robot.subsystems.DriveStationSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -55,6 +56,7 @@ public class RobotContainer {
     m_driverController.x().onTrue(m_driveStationSubsystem.setLights());//new SetTrailLights(m_driveStationSubsystem));
     m_driverController.b().onTrue(new SetTrailLights(m_driveStationSubsystem, false));
     m_driverController.a().whileTrue(new SetTrailLights(m_driveStationSubsystem, true));
+    m_driverController.y().onTrue(m_driveStationSubsystem.dropDisk());
 
     // m_driveStationSubsystem.coop();
     // m_driveStationSubsystem.setLights().schedule();
