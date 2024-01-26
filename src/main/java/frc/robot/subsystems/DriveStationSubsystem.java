@@ -26,6 +26,7 @@ public class DriveStationSubsystem extends SubsystemBase {
   public AddressableLED m_led;
   public DriveStationSubsystem() {
     m_led = new AddressableLED(LEDConstants.kLedPort);
+    
     m_ledBuffer = new AddressableLEDBuffer(LEDConstants.kLedCount);
 
     m_led.setLength(m_ledBuffer.getLength());
@@ -82,7 +83,13 @@ public class DriveStationSubsystem extends SubsystemBase {
     setColor = color;
 
   }
-
+  public Command ledOff() {   
+    return runOnce(
+      () -> {
+        setColor(new Color8Bit(0,0,0));
+      }
+    );
+  }
   public Command setLights(){
     return runOnce(() -> {
       for (int i = 0; i < m_ledBuffer.getLength(); i++) {
@@ -110,23 +117,28 @@ public class DriveStationSubsystem extends SubsystemBase {
 
   
   public Command dropDisk(){
-    setColor(new Color8Bit(255,165,0));
-    return null;
+    return runOnce(() -> {
+      setColor(new Color8Bit(255,0,0));
+    });
   }
   public Command coop(){
-    setColor(new Color8Bit(255,255,0));
-    return null;
+    return runOnce(() -> {
+      setColor(new Color8Bit(255,164,0));
+    });
   }
   public Command ampSpeaker(){
-    setColor(new Color8Bit(128,0,128));
-    return null;
+    return runOnce(() -> {
+      setColor(new Color8Bit(128,0,128));
+    });
   }
   public Command readyToAmp(){
-    setColor(new Color8Bit(0, 0, 255));
-    return null; //change color later bc alliance problems
+    return runOnce(() -> {
+      setColor(new Color8Bit(0,0,255));
+    });
   }
   public Command readyToSpeaker(){
-    setColor(new Color8Bit(0, 255, 0));
-    return null;
+    return runOnce(() -> {
+      setColor(new Color8Bit(0,165,0));
+    });
   }
 }

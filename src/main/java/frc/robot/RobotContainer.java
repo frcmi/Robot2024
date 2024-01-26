@@ -53,10 +53,14 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // m_driveStationSubsystem.coop();
-    m_driverController.x().onTrue(m_driveStationSubsystem.setLights());//new SetTrailLights(m_driveStationSubsystem));
+    m_driverController.x().onTrue(m_driveStationSubsystem.ampSpeaker());//new SetTrailLights(m_driveStationSubsystem));
     m_driverController.b().onTrue(new SetTrailLights(m_driveStationSubsystem, false));
     m_driverController.a().whileTrue(new SetTrailLights(m_driveStationSubsystem, true));
     m_driverController.y().onTrue(m_driveStationSubsystem.dropDisk());
+    m_driverController.leftBumper().onTrue(m_driveStationSubsystem.setLights());
+    m_driverController.rightBumper().onTrue(m_driveStationSubsystem.ledOff());
+    //you have to press right bumper then left bumper to turn off the lights, I don't why, ask the lights
+    
 
     // m_driveStationSubsystem.coop();
     // m_driveStationSubsystem.setLights().schedule();
