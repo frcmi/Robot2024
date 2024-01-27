@@ -29,6 +29,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController m_DriverButton = new CommandXboxController(OperatorConstants.kDriverButtonPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -58,6 +59,15 @@ public class RobotContainer {
     m_driverController.a().whileTrue(new SetTrailLights(m_driveStationSubsystem, true));
     m_driverController.y().onTrue(m_driveStationSubsystem.dropDisk());
 
+    m_DriverButton.button(0).onTrue(m_driveStationSubsystem.dropDisk());
+    
+    m_DriverButton.button(2).onTrue(m_driveStationSubsystem.coop());
+
+    m_DriverButton.button(4).onTrue(m_driveStationSubsystem.ampSpeaker());
+
+    m_DriverButton.button(6).onTrue(m_driveStationSubsystem.readyToAmp());
+
+    m_DriverButton.button(8).onTrue(m_driveStationSubsystem.readyToSpeaker());
     // m_driveStationSubsystem.coop();
     // m_driveStationSubsystem.setLights().schedule();
   }

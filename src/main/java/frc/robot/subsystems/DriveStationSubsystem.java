@@ -110,23 +110,23 @@ public class DriveStationSubsystem extends SubsystemBase {
 
   
   public Command dropDisk(){
-    setColor(new Color8Bit(255,165,0));
-    return null;
+    return runOnce(() -> setColor(new Color8Bit(255,165,0)));
+    
   }
   public Command coop(){
-    setColor(new Color8Bit(255,255,0));
-    return null;
+     return runOnce(() -> setColor(new Color8Bit(255,255,0)));
+    
   }
   public Command ampSpeaker(){
-    setColor(new Color8Bit(128,0,128));
-    return null;
+    return runOnce(() ->  setColor(new Color8Bit(128,0,128)));
+    
   }
   public Command readyToAmp(){
-    setColor(new Color8Bit(0, 0, 255));
-    return null; //change color later bc alliance problems
+     return runOnce(() -> setColor(new Color8Bit(0, 0, 255)));
+     //change color later bc alliance problems
   }
   public Command readyToSpeaker(){
-    setColor(new Color8Bit(0, 255, 0));
-    return null;
+    return runOnce(() ->  setColor(new Color8Bit(0, 255, 0)));
+    
   }
 }
