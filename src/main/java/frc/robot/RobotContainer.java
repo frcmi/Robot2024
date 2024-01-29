@@ -7,8 +7,13 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -25,6 +30,8 @@ public class RobotContainer {
   SwerveSubsystem m_swerveSubsystem = new SwerveSubsystem();
   VisionSubsystem m_visionSubsystem = new VisionSubsystem(m_swerveSubsystem);
 
+  TalonFX[] talons = new TalonFX[8];
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -33,6 +40,9 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    for (int i = 0; i < talons.length; i++) {
+      talons[i] = new TalonFX(i+1);
+    }
   }
 
   /**
@@ -45,10 +55,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.driveFieldCentric(
+    /*m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.driveFieldCentric(
       driverController::getLeftX,
       driverController::getLeftY,
-      driverController::getRightX));
+      driverController::getRightX));*/
+    talons[(int)SmartDashboard.getNumber("Id", 0)].set(0.1);
   }
 
   /**
