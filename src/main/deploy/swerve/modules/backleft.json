@@ -12,7 +12,7 @@
   "angle": {
     "type": "falcon",
     "id": 7,
-    "canbus": 11
+    "canbus": "rio"
   },
   "conversionFactor": {
     "angle": 16.8,

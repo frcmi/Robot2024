@@ -88,12 +88,12 @@ public class SwerveSubsystem extends SubsystemBase {
     public Command driveFieldCentric(DoubleSupplier xVelocity, DoubleSupplier yVelocity, DoubleSupplier spinVelocity) {
         return runOnce(() -> {
             swerveDrivetrain.drive(
-                swerveDrivetrain.swerveController.getTargetSpeeds(
-                    xVelocity.getAsDouble()*5,
-                    yVelocity.getAsDouble()*5,
-                    0.0,
-                    0.0,
-                    10));
+                new Translation2d(
+                    xVelocity.getAsDouble(),
+                    yVelocity.getAsDouble()),
+                spinVelocity.getAsDouble(),
+                true,
+                false);
             SmartDashboard.putNumber("Distance", swerveDrivetrain.getModulePositions()[0].distanceMeters);
         });
     }
