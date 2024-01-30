@@ -18,16 +18,15 @@ public final class Constants {
   }
   public static class IntakeConstants {
     public static final int kintakeMotor1Id = 24;
-    public static final int kintakeMotor2Id = 25; //TODO: change it lol 
-    public static final int kindexerMotorId = 7; //TODO: change it lol
+    public static final int kintakeMotor2Id = 0; //TODO: change it lol 
+    public static final int kindexerMotorId = 0; //TODO: change it lol
   }
   public static class SpeakerShooterConstants {
     public static final int kspeakerShooterMotorId = 26;
     public static final int kspeakerShooterMotorId2 = 27;
   }
   public static class AmpShooterConstants {
-        public static final int kampShooterMotorId = 6; //TODO: change it lol
-    public static final int kampAxisMotor1Id = 4; //TODO: change it lol
-    public static final int kampAxisMotor2Id = 5; //TODO: change it lol
+      public static final int kupperAmpMotorId = 2;
+      public static final int klowerAmpMotorId = 1;
   }
 }

@@ -1,11 +1,10 @@
 package frc.robot.subsystems;
 
 import java.util.Map;
-
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,17 +13,17 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AmpShooterConstants;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
 
 public class AmpShooterSubsystem extends SubsystemBase{
-    private TalonFX ampShooterMotor = new TalonFX(AmpShooterConstants.kampShooterMotorId);
-    private TalonFX ampAxisMotor1 = new TalonFX(AmpShooterConstants.kampAxisMotor1Id);
-    private TalonFX ampAxisMotor2 = new TalonFX(AmpShooterConstants.kampAxisMotor2Id);
+    // private TalonFX ampShooterMotor = new TalonFX(AmpShooterConstants.kampShooterMotorId);
+    private final CANSparkMax upperMotor = new CANSparkMax(AmpShooterConstants.kupperAmpMotorId, MotorType.kBrushless);
+    private final CANSparkMax lowerMotor = new CANSparkMax(AmpShooterConstants.klowerAmpMotorId, MotorType.kBrushless);
 
     public AmpShooterSubsystem() {
-        ampShooterMotor.setNeutralMode(NeutralModeValue.Coast);
-        ampAxisMotor1.setNeutralMode(NeutralModeValue.Coast);
-        ampAxisMotor2.setNeutralMode(NeutralModeValue.Coast);
-
+        upperMotor.setInverted(true);
         setDefaultCommand(stop());
     }
 
@@ -40,15 +39,17 @@ public class AmpShooterSubsystem extends SubsystemBase{
 
     public Command shootAmp() { //TODO: can change
         return run (
-                () -> {ampAxisMotor1.set(1); 
-                    ampAxisMotor2.set(1);
+                () -> {upperMotor.set(-0.4); // Keep this motor negative
+                    lowerMotor.set(0.4);
                 }
         ).withName("shootAmp");
     }
 
     public Command stop() { //TODO: can change
         return run (
-                () -> {ampShooterMotor.set(0);
+                () -> { //ampShooterMotor.set(0);
+                    upperMotor.set(0);
+                    lowerMotor.set(0);
                 }
         ).withName("stop");
     }

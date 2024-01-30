@@ -57,7 +57,7 @@ public class RobotContainer {
 
     // Shooter
     // driverController.a().whileTrue(ampShooterSubsystem.shootAmp());
-    driverController.b().whileTrue(speakerShooterSubsystem.shootSpeaker());
+    driverController.b().whileTrue(ampShooterSubsystem.shootAmp());
   }
 
   /**
