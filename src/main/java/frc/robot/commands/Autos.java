@@ -5,6 +5,8 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.SpeakerShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -16,5 +18,15 @@ public final class Autos {
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
+  }
+
+  public static Command intakeThenShootSpeaker(IntakeSubsystem intake, SpeakerShooterSubsystem shooter, double wait) {
+    return Commands.sequence(intake.intakeSpeaker(),
+                             Commands.waitSeconds(1), // todo: wait until note is in the chamber
+                             intake.stop(),
+                             Commands.waitSeconds(wait),
+                             shooter.shootSpeaker(),
+                             Commands.waitSeconds(1), // todo: wait until note is NOT in the chamber
+                             shooter.stop());
   }
 }
