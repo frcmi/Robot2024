@@ -73,9 +73,8 @@ public class RobotContainer {
 
     m_DriverButton.button(3).onTrue(m_driveStationSubsystem.readyToSpeaker());
     
-    // m_DriverButton.button(8).and(m_DriverButton.button(4).and(m_DriverButton.button(6).whileTrue(m_driveStationSubsystem.runRainbow())));
+    m_DriverButton.button(8).and(m_DriverButton.button(4).and(m_DriverButton.button(6))).whileTrue(m_driveStationSubsystem.runRainbow());
     // made a rainbow command because its funny, probably won't use at comps though
-    // when button 6 is pressed, it does it
     
     // m_driveStationSubsystem.coop();
     // m_driveStationSubsystem.setLights().schedule();
