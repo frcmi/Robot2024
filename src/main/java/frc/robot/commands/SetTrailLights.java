@@ -60,6 +60,7 @@ public class SetTrailLights extends Command {
         if (done) {
             frame = 0;
             done = false;
+            m_DriveStationSubsystem.setLights();
             return true && !forever;
         } else {
             return false;
