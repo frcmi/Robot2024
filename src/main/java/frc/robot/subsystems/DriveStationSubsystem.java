@@ -33,6 +33,7 @@ public class DriveStationSubsystem extends SubsystemBase {
 
     m_led.setData(m_ledBuffer);
     m_led.start();
+
   }
  
   // TODO: See if still needed, or remove if isn't.
@@ -78,9 +79,10 @@ public class DriveStationSubsystem extends SubsystemBase {
         });
   }
 
-  public void setColor(Color8Bit color) {
-
-    setColor = color;
+  public Command setColor(Color8Bit color) {
+    return runOnce(() -> {
+      setColor = color;
+    }).andThen(setLights());
 
   }
   public Command ledOff() {   
@@ -108,6 +110,7 @@ public class DriveStationSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_led.setData(m_ledBuffer);
+    
   }
 
   @Override
@@ -117,23 +120,23 @@ public class DriveStationSubsystem extends SubsystemBase {
 
   
   public Command dropDisk(){
-    return runOnce(() -> setColor(new Color8Bit(255,165,0)));
-    
+    return setColor(new Color8Bit(0,255,100));
+  
   }
   public Command coop(){
-     return runOnce(() -> setColor(new Color8Bit(255,255,0)));
+     return setColor(new Color8Bit(255,255,0));
     
   }
   public Command ampSpeaker(){
-    return runOnce(() ->  setColor(new Color8Bit(128,0,128)));
+    return setColor(new Color8Bit(128,0,128));
     
   }
   public Command readyToAmp(){
-     return runOnce(() -> setColor(new Color8Bit(0, 0, 255)));
+     return setColor(new Color8Bit(255, 192, 203));
      //change color later bc alliance problems
   }
   public Command readyToSpeaker(){
-    return runOnce(() ->  setColor(new Color8Bit(0, 255, 0)));
+    return setColor(new Color8Bit(0, 255, 0));
     
   }
 }

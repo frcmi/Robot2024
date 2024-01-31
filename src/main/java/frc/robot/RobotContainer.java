@@ -54,24 +54,29 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // m_driveStationSubsystem.coop();
-    m_driverController.x().onTrue(m_driveStationSubsystem.ampSpeaker());//new SetTrailLights(m_driveStationSubsystem));
-    m_driverController.b().onTrue(new SetTrailLights(m_driveStationSubsystem, false));
-    m_driverController.a().whileTrue(new SetTrailLights(m_driveStationSubsystem, true));
-    m_driverController.y().onTrue(m_driveStationSubsystem.dropDisk());
-    m_driverController.leftBumper().onTrue(m_driveStationSubsystem.setLights());
-    m_driverController.rightBumper().onTrue(m_driveStationSubsystem.ledOff());
+    // m_driverController.x().onTrue(m_driveStationSubsystem.ampSpeaker());//new SetTrailLights(m_driveStationSubsystem));
+    // m_driverController.b().onTrue(new SetTrailLights(m_driveStationSubsystem, false));
+    // m_driverController.a().whileTrue(new SetTrailLights(m_driveStationSubsystem, true));
+    // m_driverController.y().onTrue(m_driveStationSubsystem.dropDisk());
+    // m_driverController.leftBumper().onTrue(m_driveStationSubsystem.setLights());
+    // m_driverController.rightBumper().onTrue(m_driveStationSubsystem.ledOff());
     //you have to press right bumper then left bumper to turn off the lights, I don't why, ask the lights
     
 
-    m_DriverButton.button(0).onTrue(m_driveStationSubsystem.dropDisk());
+    m_DriverButton.button(5).onTrue(m_driveStationSubsystem.dropDisk());
     
-    m_DriverButton.button(2).onTrue(m_driveStationSubsystem.coop());
+    m_DriverButton.button(7).onTrue(m_driveStationSubsystem.coop());
 
-    m_DriverButton.button(4).onTrue(m_driveStationSubsystem.ampSpeaker());
+    m_DriverButton.button(1).onTrue(m_driveStationSubsystem.ampSpeaker());
 
-    m_DriverButton.button(6).onTrue(m_driveStationSubsystem.readyToAmp());
+    m_DriverButton.button(9).onTrue(m_driveStationSubsystem.readyToAmp());
 
-    m_DriverButton.button(8).onTrue(m_driveStationSubsystem.readyToSpeaker());
+    m_DriverButton.button(3).onTrue(m_driveStationSubsystem.readyToSpeaker());
+    
+    // m_DriverButton.button(8).and(m_DriverButton.button(4).and(m_DriverButton.button(6).whileTrue(m_driveStationSubsystem.runRainbow())));
+    // made a rainbow command because its funny, probably won't use at comps though
+    // when button 6 is pressed, it does it
+    
     // m_driveStationSubsystem.coop();
     // m_driveStationSubsystem.setLights().schedule();
   }
