@@ -1,81 +1,94 @@
 package frc.robot;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import frc.math.Conversions;
-import frc.robot.Constants.SwerveConstants;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.lib.math.Conversions;
+import frc.lib.util.SwerveModuleConstants;
 
-/**
- * Class for containing data perlative to a swerve module. Intended for one class per module
- */
 public class SwerveModule {
-    public final SwerveModuleConstants moduleConstants;
     public int moduleNumber;
-    public Rotation2d angleOffset;
-    protected Rotation2d previousAngle;
+    private Rotation2d angleOffset;
 
-    protected TalonFX steerMotor;
-    protected TalonFX driveMotor;
-    protected CANcoder steerEncoder;
+    private TalonFX mAngleMotor;
+    private TalonFX mDriveMotor;
+    private CANcoder angleEncoder;
 
-    protected SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(SwerveConstants.kDriveS, SwerveConstants.kDriveV, SwerveConstants.kDriveA);
+    private final SimpleMotorFeedforward driveFeedForward = new SimpleMotorFeedforward(Constants.SwerveConstants.driveKS, Constants.SwerveConstants.driveKV, Constants.SwerveConstants.driveKA);
 
-    /**
-     * @param moduleNumber the ID of this module
-     * @param angleOffset the offset on the steer motor encoder
-     * @param moduleConstants the constants of the module
-     */
-    public SwerveModule(int moduleNumber, Rotation2d angleOffset, SwerveModuleConstants moduleConstants) {
+    /* drive motor control requests */
+    private final DutyCycleOut driveDutyCycle = new DutyCycleOut(0);
+    private final VelocityVoltage driveVelocity = new VelocityVoltage(0);
+
+    /* angle motor control requests */
+    private final PositionVoltage anglePosition = new PositionVoltage(0);
+
+    public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants, boolean isInverted){
         this.moduleNumber = moduleNumber;
-        this.angleOffset = angleOffset;
+        this.angleOffset = moduleConstants.angleOffset;
+        
+        /* Angle Encoder Config */
+        angleEncoder = new CANcoder(moduleConstants.cancoderID);
+        angleEncoder.getConfigurator().apply(Robot.ctreConfigs.swerveCANcoderConfig);
 
-        this.moduleConstants = moduleConstants;
+        /* Angle Motor Config */
+        mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
+        mAngleMotor.getConfigurator().apply(Robot.ctreConfigs.swerveAngleFXConfig);
+        resetToAbsolute();
 
-        steerMotor = new TalonFX(moduleConstants.SteerMotorId);
-        driveMotor = new TalonFX(moduleConstants.DriveMotorId);
-        steerEncoder = new CANcoder(moduleConstants.CANcoderId);
+        /* Drive Motor Config */
+        mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
+        mDriveMotor.getConfigurator().apply(Robot.ctreConfigs.swerveDriveFXConfig);
+        mDriveMotor.getConfigurator().setPosition(0.0);
+        mDriveMotor.setInverted(isInverted);
+
     }
 
-    public void setSteerMotor(double speed) {
-        steerMotor.set(speed);
+    public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
+        desiredState = SwerveModuleState.optimize(desiredState, getState().angle); 
+        mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
+        setSpeed(desiredState, isOpenLoop);
     }
 
-    /**
-     * @return gets the angle the steer motor is pointed at
-     */
-    public Rotation2d getSteerMotorAngle() {
-        return Rotation2d.fromRotations(steerEncoder.getAbsolutePosition().getValueAsDouble());
+    private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
+        if(isOpenLoop){
+            driveDutyCycle.Output = desiredState.speedMetersPerSecond / Constants.SwerveConstants.maxSpeed;
+            mDriveMotor.setControl(driveDutyCycle);
+        }
+        else {
+            driveVelocity.Velocity = Conversions.MPSToRPS(desiredState.speedMetersPerSecond, Constants.SwerveConstants.wheelCircumference);
+            driveVelocity.FeedForward = driveFeedForward.calculate(desiredState.speedMetersPerSecond);
+            mDriveMotor.setControl(driveVelocity);
+        }
     }
 
-    /**
-     * stops the drive motor from moving forward
-     */
-    public void stopDriveMotor() {
-        driveMotor.stopMotor();
+    public Rotation2d getCANcoder(){
+        return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValue());
     }
 
-    public void setCoastMode() {
-        steerMotor.setNeutralMode(NeutralModeValue.Coast);
+    public void resetToAbsolute(){
+        double absolutePosition = getCANcoder().getRotations() - angleOffset.getRotations();
+        mAngleMotor.setPosition(absolutePosition);
     }
 
-    /**
-     * @return the position of the module relative to the center
-     */
-    public Translation2d getPosition() {
-        return new Translation2d(moduleConstants.LocationX, moduleConstants.LocationY);
+    public SwerveModuleState getState(){
+        return new SwerveModuleState(
+            Conversions.RPSToMPS(mDriveMotor.getVelocity().getValue(), Constants.SwerveConstants.wheelCircumference), 
+            Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
+        );
     }
 
-    /**
-     * @return the position of the module relative to the center
-     */
-    public SwerveModulePosition getSwerveModulePosition() {
-        return new SwerveModulePosition(getPosition().getNorm(), getPosition().getAngle());
+    public SwerveModulePosition getPosition(){
+        return new SwerveModulePosition(
+            Conversions.rotationsToMeters(mDriveMotor.getPosition().getValue(), Constants.SwerveConstants.wheelCircumference), 
+            Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
+        );
     }
 }

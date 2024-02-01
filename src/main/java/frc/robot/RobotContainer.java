@@ -6,7 +6,8 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveToPosition;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.commands.TeleopSwerve;
+import frc.robot.subsystems.Swerve;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  SwerveSubsystem m_swerveSubsystem = new SwerveSubsystem();
+  Swerve m_swerveSubsystem = new Swerve();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -29,6 +30,15 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    m_swerveSubsystem.setDefaultCommand(
+        new TeleopSwerve(
+            m_swerveSubsystem, 
+            () -> -driverController.getLeftY(), 
+            () -> -driverController.getLeftX(), 
+            () -> -driverController.getRightX(), 
+            () -> false //robotCentric.getAsBoolean()
+        )
+    );
     // Configure the trigger bindings
     configureBindings();
   }
@@ -43,10 +53,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.driveFieldCentric(
-      driverController::getLeftX,
-      driverController::getLeftY,
-      driverController::getRightX));
     // m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.test());
   }
 
@@ -56,6 +62,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new DriveToPosition(m_swerveSubsystem, m_swerveSubsystem.odometry::getPoseMeters, new Pose2d(3d,3d, new Rotation2d(0)));
+    return new DriveToPosition(m_swerveSubsystem, m_swerveSubsystem.swerveOdometry::getPoseMeters, new Pose2d(3d,3d, new Rotation2d(0)));
   }
 }
