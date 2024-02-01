@@ -89,9 +89,9 @@ public class SwerveSubsystem extends SubsystemBase {
         return runOnce(() -> {
             swerveDrivetrain.drive(
                 new Translation2d(
-                    xVelocity.getAsDouble(),
-                    yVelocity.getAsDouble()),
-                spinVelocity.getAsDouble(),
+                    Math.pow(xVelocity.getAsDouble(), 3) * SwerveConstants.kMaxSpeed,
+                    Math.pow(yVelocity.getAsDouble(), 3) * SwerveConstants.kMaxSpeed),
+                Math.pow(spinVelocity.getAsDouble(), 3) * SwerveConstants.kMaxSpeed,
                 true,
                 false);
             SmartDashboard.putNumber("Distance", swerveDrivetrain.getModulePositions()[0].distanceMeters);

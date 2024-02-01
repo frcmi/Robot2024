@@ -14,10 +14,6 @@
     "id": 5,
     "canbus": "rio"
   },
-  "conversionFactor": {
-    "angle": 16.8,
-    "drive": 58.82352941
-  },
   "encoder": {
     "type": "cancoder",
     "id": 9,

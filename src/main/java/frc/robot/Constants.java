@@ -25,7 +25,7 @@ public final class Constants {
   public static class SwerveConstants { //TODO: actually fill these in (they are from kickoff bot)
     // limits
     public static final double kAllowedDistanceToDestination = 0.1;
-    public static final double kMaxSpeed = 3;
+    public static final double kMaxSpeed = 0.5;
     public static final double kMaxAcceleration = 3;
 
     // gear ratios
