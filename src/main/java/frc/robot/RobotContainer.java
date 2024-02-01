@@ -7,9 +7,11 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SpeakerShooterSubsystem;
 import frc.robot.subsystems.AmpShooterSubsystem;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.commands.DriveToPosition;
+import frc.robot.commands.TeleopSwerve;
+import frc.robot.subsystems.Swerve;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -22,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+  Swerve m_swerveSubsystem = new Swerve();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem();
   private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
@@ -33,6 +35,15 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    m_swerveSubsystem.setDefaultCommand(
+        new TeleopSwerve(
+            m_swerveSubsystem, 
+            () -> -driverController.getLeftY(), 
+            () -> -driverController.getLeftX(), 
+            () -> -driverController.getRightX(), 
+            () -> false //robotCentric.getAsBoolean()
+        )
+    );
     // Configure the trigger bindings
     configureBindings();
   }
@@ -48,25 +59,22 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(exampleSubsystem));
 
     // Intake
-    driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
+    // driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
     driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
 
     // Shooter
     // driverController.a().whileTrue(ampShooterSubsystem.shootAmp());
-    driverController.b().whileTrue(ampShooterSubsystem.shootAmp());
+    driverController.b().whileTrue(speakerShooterSubsystem.shootSpeaker());
   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(exampleSubsystem);
+    return new DriveToPosition(m_swerveSubsystem, m_swerveSubsystem.swerveOdometry::getPoseMeters, new Pose2d(3d,3d, new Rotation2d(0)));
   }
 }
