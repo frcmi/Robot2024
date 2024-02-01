@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
 /**
@@ -16,17 +17,17 @@ public class DriveToPosition extends Command {
     Supplier<Pose2d> currentPosition;
     Pose2d destination;
     PIDController xPID = new PIDController(
-        SwerveConstants.AutoConstants.kAutoXP,
-        SwerveConstants.AutoConstants.kAutoXI,
-        SwerveConstants.AutoConstants.kAutoXD);
+        AutoConstants.kAutoXP,
+        AutoConstants.kAutoXI,
+        AutoConstants.kAutoXD);
     PIDController yPID = new PIDController(
-        SwerveConstants.AutoConstants.kAutoYP,
-        SwerveConstants.AutoConstants.kAutoYI,
-        SwerveConstants.AutoConstants.kAutoYD);
+        AutoConstants.kAutoYP,
+        AutoConstants.kAutoYI,
+        AutoConstants.kAutoYD);
     PIDController turnPID = new PIDController(
-        SwerveConstants.AutoConstants.kRotationP,
-        SwerveConstants.AutoConstants.kRotationI,
-        SwerveConstants.AutoConstants.kRotationD);
+        AutoConstants.kRotationP,
+        AutoConstants.kRotationI,
+        AutoConstants.kRotationD);
 
     /**
      * Drive robot to a given position using PID

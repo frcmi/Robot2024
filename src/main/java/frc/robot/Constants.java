@@ -35,19 +35,6 @@ public final class Constants {
   }
 
   public static final class SwerveConstants {
-    public static final class AutoConstants {
-      public static final double kRotationP = 0.5;
-      public static final double kRotationI = 0;
-      public static final double kRotationD = 0;
-
-      public static final double kAutoXP = 0;
-      public static final double kAutoXI = 0;
-      public static final double kAutoXD = 0;
-
-      public static final double kAutoYP = 0;
-      public static final double kAutoYI = 0;
-      public static final double kAutoYD = 0;
-    }
     public static final double kAllowedDistanceToDestination = 0.1;
 
     public static final int pigeonID = 0;
@@ -186,5 +173,17 @@ public final class Constants {
     /* Constraint for the motion profilied robot angle controller */
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+        
+    public static final double kRotationP = 0.5;
+    public static final double kRotationI = 0;
+    public static final double kRotationD = 0;
+
+    public static final double kAutoXP = 0;
+    public static final double kAutoXI = 0;
+    public static final double kAutoXD = 0;
+
+    public static final double kAutoYP = 0;
+    public static final double kAutoYI = 0;
+    public static final double kAutoYD = 0;
   }
 }
