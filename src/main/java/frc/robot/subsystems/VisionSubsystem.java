@@ -19,27 +19,30 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
+    private static final String cameraName = "USB_Camera";
+
     private Optional<EstimatedRobotPose> lastPose;
     private Field2d field;
 
     private PhotonPoseEstimator estimator;
     private PhotonCamera camera;
+    private final SwerveSubsystem swerve;
 
-    public VisionSubsystem() {
+    public VisionSubsystem(SwerveSubsystem swerveSubsystem) {
         var robotToCamera = new Transform3d(0.5, 0.5, 0.5, new Rotation3d(0, 0, 0));
 
         try {
             var fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
 
-            camera = new PhotonCamera("USB_Camera");
+            camera = new PhotonCamera(cameraName);
             estimator = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, robotToCamera);
         } catch (Exception exc) {
             System.out.println("Failed to initialize Vision!");
         }
 
-        estimator.setReferencePose(new Pose2d(0, 0, new Rotation2d(0)));
         lastPose = estimator.update();
         field = new Field2d();
+        swerve = swerveSubsystem;
     }
 
     @Override
@@ -69,7 +72,10 @@ public class VisionSubsystem extends SubsystemBase {
                 rotation.getZ()
             });
 
-            field.setRobotPose(pose.toPose2d());
+            var pose2d = pose.toPose2d();
+            swerve.swerveDrivePoseEstimator.addVisionMeasurement(pose2d, (double)System.currentTimeMillis() / 1000);
+
+            field.setRobotPose(pose2d);
             SmartDashboard.putData("Simulated field", field);
         }
     }

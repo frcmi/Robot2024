@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveSubsystem extends SubsystemBase {
+    public SwerveDrivePoseEstimator swerveDrivePoseEstimator;
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
@@ -36,6 +38,7 @@ public class SwerveSubsystem extends SubsystemBase {
         };
 
         swerveOdometry = new SwerveDriveOdometry(Constants.SwerveConstants.swerveKinematics, getGyroYaw(), getModulePositions());
+        swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(Constants.SwerveConstants.swerveKinematics, getGyroYaw(), getModulePositions(), getPose());
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -117,6 +120,7 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic(){
         swerveOdometry.update(getGyroYaw(), getModulePositions());
+        swerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
 
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
