@@ -21,9 +21,10 @@ public final class Constants {
     }
     public static class LEDConstants {
       public static final int kStreakLength = 3; //TODO: Change Streak Length
-      public static final int kLedCount =11;
+      public static final int kLedCount = 11;
     
       public static final int kLedPort = 1;
+      public static final int kLedPort2 = 0;
     }
   }
 

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.subsystems.DriveStationSubsystem;
 
+
 /**
  * Creates a trail effect on the LEDs given a {@link DriveStationSubsystem}.
  * <p>It will follow current {@link DriveStationSubsystem} LED color.
@@ -53,6 +54,7 @@ public class SetTrailLights extends Command {
             m_DriveStationSubsystem.setLight(i, new Color8Bit());
             }
         }
+
     } 
 
     @Override

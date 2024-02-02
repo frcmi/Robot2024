@@ -17,22 +17,22 @@ public class DriveStationSubsystem extends SubsystemBase {
 
 
   public AddressableLEDBuffer m_ledBuffer;
-
+  public AddressableLEDBuffer m_ledBuffer2;
 
   public void setLight(int ID, Color8Bit color){
     m_ledBuffer.setLED(ID, color);
+    
   }
 
   public AddressableLED m_led;
+
   public DriveStationSubsystem() {
     m_led = new AddressableLED(LEDConstants.kLedPort);
-    
-    m_ledBuffer = new AddressableLEDBuffer(LEDConstants.kLedCount);
-
+    m_ledBuffer = new AddressableLEDBuffer(15);
     m_led.setLength(m_ledBuffer.getLength());
-
     m_led.setData(m_ledBuffer);
     m_led.start();
+
 
   }
  
@@ -53,17 +53,9 @@ public class DriveStationSubsystem extends SubsystemBase {
       // Set the value
 
       m_ledBuffer.setHSV(i, hue, 255, 128);
+      
 
     }
-
-    // Increase by to make the rainbow "move"
-
-    m_rainbowFirstPixelHue += 3;
-
-    // Check bounds
-
-    m_rainbowFirstPixelHue %= 180;
-
   }
 
   /**
@@ -83,9 +75,9 @@ public class DriveStationSubsystem extends SubsystemBase {
     return runOnce(() -> {
       setColor = color;
     }).andThen(setLights());
-
+  
   }
-  public Command ledOff() {   
+  public Command ledOff() {  
     return runOnce(
       () -> {
         setColor(new Color8Bit(0,0,0));
