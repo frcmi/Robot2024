@@ -25,7 +25,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
 
-    private Field2d field;
+    private Field2d field = new Field2d();
 
     public SwerveSubsystem() {
         gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
@@ -39,7 +39,8 @@ public class SwerveSubsystem extends SubsystemBase {
             new SwerveModule(3, Constants.SwerveConstants.Mod3.constants, Constants.SwerveConstants.Mod3.isInverted)
         };
 
-        swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(Constants.SwerveConstants.swerveKinematics, getGyroYaw(), getModulePositions(), getPose());
+        // TODO: What should starting Pose2d be?
+        swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(Constants.SwerveConstants.swerveKinematics, getGyroYaw(), getModulePositions(), new Pose2d());
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -123,9 +124,9 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
 
         for (SwerveModule mod : mSwerveMods) {
-            SmartDashboard.putNumber("Module " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
-            SmartDashboard.putNumber("Module " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Module " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
         }
 
         field.setRobotPose(getPose());
