@@ -5,13 +5,21 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.DriveToPosition;
+import frc.robot.commands.TeleopSwerve;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SetTrailLights;
 import frc.robot.subsystems.DriveStationSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -23,16 +31,26 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem();
+  public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
+  private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_DriverButton = new CommandXboxController(OperatorConstants.kDriverButtonPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    swerveSubsystem.setDefaultCommand(
+        new TeleopSwerve(
+            swerveSubsystem, 
+            () -> -driverController.getLeftY(), 
+            () -> -driverController.getLeftX(), 
+            () -> -driverController.getRightX(), 
+            () -> false //robotCentric.getAsBoolean()
+        )
+    );
     // Configure the trigger bindings
     configureBindings();
   }
@@ -79,15 +97,16 @@ public class RobotContainer {
     //made a rainbow command because its funny, probably won't use at comps though
     // m_driveStationSubsystem.coop();
     // m_driveStationSubsystem.setLights().schedule();
+    driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
+    // m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.test());
   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return new DriveToPosition(swerveSubsystem, swerveSubsystem::getPose, new Pose2d(3d,3d, new Rotation2d(0)));
   }
 }
