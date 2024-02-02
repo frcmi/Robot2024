@@ -40,6 +40,7 @@ public final class Constants {
     }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kDriverButtonPort = 1;
     public static final double stickDeadband = 0.03;
   }
 
@@ -197,6 +198,7 @@ public final class Constants {
     public static final double kAutoYI = 0;
     public static final double kAutoYD = 0;
   }
+}
 
 
 
