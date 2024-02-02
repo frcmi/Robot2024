@@ -16,24 +16,31 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class VisionSubsystem extends SubsystemBase {
+public class VisionSubsystem extends SubsystemBase
+{
     private Optional<EstimatedRobotPose> lastPose;
     private Field2d field;
 
     private PhotonPoseEstimator estimator;
     private PhotonCamera camera;
 
-    public VisionSubsystem() {
+    public VisionSubsystem()
+    {
         var robotToCamera = new Transform3d(0.5, 0.5, 0.5, new Rotation3d(0, 0, 0));
 
-        try {
+        try
+        {
             var fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
 
             camera = new PhotonCamera("USB_Camera");
             estimator = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, robotToCamera);
-        } catch (Exception exc) {
+        }
+        catch (Exception exc)
+        {
             System.out.println("Failed to initialize Vision!");
         }
 
@@ -43,43 +50,48 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {
-        if (estimator != null) {
-            if (lastPose.isPresent()) {
+    public void periodic()
+    {
+        if (estimator != null)
+        {
+            if (lastPose.isPresent())
+            {
                 estimator.setReferencePose(lastPose.get().estimatedPose);
             }
 
             lastPose = estimator.update();
         }
 
-        if (lastPose.isPresent()) {
+        if (lastPose.isPresent())
+        {
             var pose = lastPose.get().estimatedPose;
             var translation = pose.getTranslation();
             var rotation = pose.getRotation();
 
-            SmartDashboard.putNumberArray("Robot translation", new double[] {
-                translation.getX(),
-                translation.getY(),
-                translation.getZ()
-            });
+            SmartDashboard.putNumberArray("Robot translation", new double[] {translation.getX(), translation.getY(), translation.getZ()});
 
-            SmartDashboard.putNumberArray("Robot rotation", new double[] {
-                rotation.getX(),
-                rotation.getY(),
-                rotation.getZ()
-            });
+            SmartDashboard.putNumberArray("Robot rotation", new double[] {rotation.getX(), rotation.getY(), rotation.getZ()});
 
             field.setRobotPose(pose.toPose2d());
             SmartDashboard.putData("Simulated field", field);
         }
     }
 
-    public PhotonTrackedTarget getTargets() {
+    public PhotonTrackedTarget getTargets()
+    {
         var result = camera.getLatestResult();
-        if (result.hasTargets()) {
+        if (result.hasTargets())
+        {
             return result.getBestTarget();
         }
 
         return null;
+    }
+
+    public Command doAutoAlign()
+    {
+        return Commands.run(() -> {
+            
+        });
     }
 }
