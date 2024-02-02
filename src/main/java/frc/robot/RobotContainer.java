@@ -53,8 +53,7 @@ public class RobotContainer
     {
         // m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.test());
 
-        driverController.leftTrigger()
-            .onTrue(visionSubsystem.doAutoAlign());
+        driverController.leftTrigger().onTrue(visionSubsystem.doAutoAlign());
     }
 
     /**
