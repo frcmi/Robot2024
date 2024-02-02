@@ -65,6 +65,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new DriveToPosition(swerveSubsystem, swerveSubsystem.swerveOdometry::getPoseMeters, new Pose2d(3d,3d, new Rotation2d(0)));
+    return new DriveToPosition(swerveSubsystem, swerveSubsystem::getPose, new Pose2d(3d,3d, new Rotation2d(0)));
   }
 }

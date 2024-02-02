@@ -60,23 +60,19 @@ public class VisionSubsystem extends SubsystemBase {
             var translation = pose.getTranslation();
             var rotation = pose.getRotation();
 
-            SmartDashboard.putNumberArray("Robot translation", new double[] {
-                translation.getX(),
-                translation.getY(),
-                translation.getZ()
-            });
+            SmartDashboard.putNumber("Vision X", translation.getX());
+            SmartDashboard.putNumber("Vision Y", translation.getY());
+            SmartDashboard.putNumber("Vision Z", translation.getZ());
 
-            SmartDashboard.putNumberArray("Robot rotation", new double[] {
-                rotation.getX(),
-                rotation.getY(),
-                rotation.getZ()
-            });
+            SmartDashboard.putNumber("Vision pitch", rotation.getX());
+            SmartDashboard.putNumber("Vision roll", rotation.getY());
+            SmartDashboard.putNumber("Vision yaw", rotation.getZ());
 
             var pose2d = pose.toPose2d();
             swerve.swerveDrivePoseEstimator.addVisionMeasurement(pose2d, (double)System.currentTimeMillis() / 1000);
 
             field.setRobotPose(pose2d);
-            SmartDashboard.putData("Simulated field", field);
+            SmartDashboard.putData("Vision field", field);
         }
     }
 
