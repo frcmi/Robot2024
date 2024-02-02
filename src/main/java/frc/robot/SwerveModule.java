@@ -51,14 +51,24 @@ public class SwerveModule {
 
     }
 
+    /**
+     * Sets the desired state of the module
+     * @param desiredState the state the module should be
+     * @param isOpenLoop whether the module should use open or closed loop control
+     */
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle); 
         mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
         setSpeed(desiredState, isOpenLoop);
     }
 
+    /**
+     * Sets the drive motor of the module to a speed, preferable to use {@link frc.robot.SwerveModule.SetDesiredState}
+     * @param desiredState
+     * @param isOpenLoop
+     */
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
-        if(isOpenLoop){
+        if (isOpenLoop) {
             driveDutyCycle.Output = desiredState.speedMetersPerSecond / Constants.SwerveConstants.maxSpeed;
             mDriveMotor.setControl(driveDutyCycle);
         }
@@ -69,15 +79,24 @@ public class SwerveModule {
         }
     }
 
-    public Rotation2d getCANcoder(){
+    /**
+     * @return the reading of the CANcoder as a rotation2d
+     */
+    public Rotation2d getCANcoderReading(){
         return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValue());
     }
 
+    /**
+     * Sets the module to face wheels forward
+     */
     public void resetToAbsolute(){
-        double absolutePosition = getCANcoder().getRotations() - angleOffset.getRotations();
+        double absolutePosition = getCANcoderReading().getRotations() - angleOffset.getRotations();
         mAngleMotor.setPosition(absolutePosition);
     }
 
+    /**
+     * @return the current state of the module
+     */
     public SwerveModuleState getState(){
         return new SwerveModuleState(
             Conversions.RPSToMPS(mDriveMotor.getVelocity().getValue(), Constants.SwerveConstants.wheelCircumference), 
@@ -85,6 +104,9 @@ public class SwerveModule {
         );
     }
 
+    /**
+     * @return the position of the module based on measured values
+     */
     public SwerveModulePosition getPosition(){
         return new SwerveModulePosition(
             Conversions.rotationsToMeters(mDriveMotor.getPosition().getValue(), Constants.SwerveConstants.wheelCircumference), 
