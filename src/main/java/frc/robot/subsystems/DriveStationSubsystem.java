@@ -28,7 +28,7 @@ public class DriveStationSubsystem extends SubsystemBase {
 
   public DriveStationSubsystem() {
     m_led = new AddressableLED(LEDConstants.kLedPort);
-    m_ledBuffer = new AddressableLEDBuffer(15);
+    m_ledBuffer = new AddressableLEDBuffer(73);
     m_led.setLength(m_ledBuffer.getLength());
     m_led.setData(m_ledBuffer);
     m_led.start();
