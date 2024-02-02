@@ -24,8 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  private final VisionSubsystem visionSubsystem = new VisionSubsystem();
+  public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
