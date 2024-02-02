@@ -20,6 +20,9 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * The subsystem for the swerve drive train
+ */
 public class SwerveSubsystem extends SubsystemBase {
     public SwerveDrivePoseEstimator swerveDrivePoseEstimator;
     public SwerveModule[] mSwerveMods;
@@ -43,28 +46,36 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(Constants.SwerveConstants.swerveKinematics, getGyroYaw(), getModulePositions(), centerField);
     }
 
+    /**
+     * Drives the drive train with desired velocities
+     * @param translation the velocities the robot should drive laterally
+     * @param rotation the rotation speed of the robot
+     * @param fieldRelative whether forward is towards the end of the field or the front of the bot
+     * @param isOpenLoop whether the modules should use open or closed loop control
+     */
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-        SwerveModuleState[] swerveModuleStates =
-            Constants.SwerveConstants.swerveKinematics.toSwerveModuleStates(
-                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                                    translation.getX(), 
-                                    translation.getY(), 
-                                    rotation, 
-                                    getHeading()
-                                )
-                                : new ChassisSpeeds(
-                                    translation.getX(), 
-                                    translation.getY(), 
-                                    rotation)
-                                );
+        SwerveModuleState[] swerveModuleStates = Constants.SwerveConstants.swerveKinematics.toSwerveModuleStates(
+            fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                translation.getX(), 
+                translation.getY(), 
+                rotation, 
+                getHeading()
+            ) : new ChassisSpeeds(
+                translation.getX(), 
+                translation.getY(), 
+                rotation
+            )
+        );
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);
-
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
-    }    
-
-    /* Used by SwerveControllerCommand in Auto */
+    }
+    
+    /**
+     * Sets the modules to desired states
+     * @param desiredStates the desired states of the modules
+     */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.SwerveConstants.maxSpeed);
         
@@ -73,6 +84,9 @@ public class SwerveSubsystem extends SubsystemBase {
         }
     }
 
+    /**
+     * @return the states of the modules
+     */
     public SwerveModuleState[] getModuleStates(){
         SwerveModuleState[] states = new SwerveModuleState[4];
         for(SwerveModule mod : mSwerveMods){
@@ -81,6 +95,9 @@ public class SwerveSubsystem extends SubsystemBase {
         return states;
     }
 
+    /**
+     * @return the positions of the modules
+     */
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for(SwerveModule mod : mSwerveMods){
@@ -89,42 +106,66 @@ public class SwerveSubsystem extends SubsystemBase {
         return positions;
     }
 
+    /**
+     * @return the pose of the swerve odometry
+     */
     public Pose2d getPose() {
         return swerveDrivePoseEstimator.getEstimatedPosition();
     }
 
+    /**
+     * Sets the pose of the odometry to be a certain position
+     * @param pose the pose to set the odometry to
+     */
     public void setPose(Pose2d pose) {
         swerveDrivePoseEstimator.resetPosition(getGyroYaw(), getModulePositions(), pose);
     }
 
-    public Rotation2d getHeading(){
+    /**
+     * @return the heading of the odometry
+     */
+    public Rotation2d getHeading() {
         return getPose().getRotation();
     }
 
-    public void setHeading(Rotation2d heading){
+    /**
+     * Sets the heading of the odometry 
+     * @param heading the heading to set the odometry to
+     */
+    public void setHeading(Rotation2d heading) {
         swerveDrivePoseEstimator.resetPosition(getGyroYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), heading));
     }
 
-    public void zeroHeading(){
-        swerveDrivePoseEstimator.resetPosition(getGyroYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), new Rotation2d()));
+    /**
+     * Sets the heading of the odometry to 0 radians (0 degrees, 0 rotations, 0 gradians, 0 rogreedians)
+     */
+    public void zeroHeading() {
+        setHeading(new Rotation2d());
     }
 
-    public Rotation2d getGyroYaw() {
+    /**
+     * Returns the raw gyro reading, preferable to use the odometry
+     * @return the raw reading of the gyro
+     */
+    private Rotation2d getGyroYaw() {
         return Rotation2d.fromDegrees(gyro.getYaw().getValue());
     }
 
-    public void resetModulesToAbsolute(){
+    /**
+     * Sets the modules to point wheel forward
+     */
+    public void resetModulesToAbsolute() {
         for(SwerveModule mod : mSwerveMods){
             mod.resetToAbsolute();
         }
     }
 
     @Override
-    public void periodic(){
+    public void periodic() {
         swerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
 
-        for (SwerveModule mod : mSwerveMods) {
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
+        for(SwerveModule mod : mSwerveMods){
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoderReading().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
         }
