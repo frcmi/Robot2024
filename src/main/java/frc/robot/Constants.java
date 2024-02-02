@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -29,6 +30,14 @@ import frc.lib.util.SwerveModuleConstants;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+    public static class LEDConstants {
+      public static final int kStreakLength = 3; //TODO: Change Streak Length
+      public static final int kLedCount = 11;
+    
+      public static final int kLedPort = 1;
+      public static final int kLedPort2 = 0;
+    }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final double stickDeadband = 0.03;
@@ -188,4 +197,6 @@ public final class Constants {
     public static final double kAutoYI = 0;
     public static final double kAutoYD = 0;
   }
-}
+
+
+
