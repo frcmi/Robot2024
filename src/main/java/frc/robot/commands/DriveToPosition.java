@@ -8,12 +8,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.SwerveSubsystem;
 /**
  * Command that drives the robot to a field position
  */
 public class DriveToPosition extends Command {
-    Swerve m_swerveSubsystem;
+    SwerveSubsystem m_swerveSubsystem;
     Supplier<Pose2d> currentPosition;
     Pose2d destination;
     PIDController xPID = new PIDController(
@@ -35,7 +35,7 @@ public class DriveToPosition extends Command {
      * @param currentPosition a supplier that contains the consitently updated position of the bot
      * @param destination the position that the robot should drive to, relative to the field
      */
-    public DriveToPosition(Swerve swerveSubsystem, Supplier<Pose2d> currentPosition, Pose2d destination) {
+    public DriveToPosition(SwerveSubsystem swerveSubsystem, Supplier<Pose2d> currentPosition, Pose2d destination) {
         m_swerveSubsystem = swerveSubsystem;
         this.currentPosition = currentPosition;
         this.destination = destination;
