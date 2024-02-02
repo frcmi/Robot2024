@@ -13,6 +13,8 @@ import frc.robot.commands.Autos;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -24,8 +26,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  private final VisionSubsystem visionSubsystem = new VisionSubsystem();
+  public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -56,6 +58,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
     // m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.test());
   }
 
@@ -65,6 +68,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new DriveToPosition(swerveSubsystem, swerveSubsystem.swerveOdometry::getPoseMeters, new Pose2d(3d,3d, new Rotation2d(0)));
+    return new DriveToPosition(swerveSubsystem, swerveSubsystem::getPose, new Pose2d(3d,3d, new Rotation2d(0)));
   }
 }
