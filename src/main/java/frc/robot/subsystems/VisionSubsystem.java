@@ -89,9 +89,4 @@ public class VisionSubsystem extends SubsystemBase
 
         return null;
     }
-
-    public Command doAutoAlign()
-    {
-        return new AutoAlignCommand().andThen(new PrintCommand("AUTO-ALIGN: It works!"));
-    }
 }
