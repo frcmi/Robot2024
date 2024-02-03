@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.AutoAlignCommand;
 
 public class VisionSubsystem extends SubsystemBase {
-    private static final String CAMERA_NAME = "USB_Camera";
+    private static final String cameraName = "USB_Camera";
 
     private Optional<EstimatedRobotPose> lastPose;
     private Field2d field;
@@ -39,7 +39,7 @@ public class VisionSubsystem extends SubsystemBase {
         {
             var fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
 
-            camera = new PhotonCamera(CAMERA_NAME);
+            camera = new PhotonCamera(cameraName);
             estimator = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, robotToCamera);
         }
         catch (Exception exc)
