@@ -1,4 +1,13 @@
 {
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Field": "Field2d"
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  },
   "NetworkTables View": {
     "visible": false
   }

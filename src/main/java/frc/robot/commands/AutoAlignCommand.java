@@ -30,7 +30,7 @@ public class AutoAlignCommand extends Command
 
     private void calculateDestination()
     {
-        currentPosition.get()
+        // todo: ask hadrian
     }
 
     @Override

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -29,9 +30,18 @@ import frc.lib.util.SwerveModuleConstants;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+    public static class LEDConstants {
+      public static final int kStreakLength = 3; //TODO: Change Streak Length
+      public static final int kLedCount = 11;
+    
+      public static final int kLedPort = 1;
+      public static final int kLedPort2 = 0;
+    }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final double stickDeadband = 0.1;
+    public static final int kDriverButtonPort = 1;
+    public static final double stickDeadband = 0.03;
   }
 
   public static final class SwerveConstants {
@@ -68,14 +78,16 @@ public final class Constants {
     /* Angle Encoder Invert */
     public static final SensorDirectionValue cancoderInvert = chosenModule.cancoderInvert;
 
+    public static final float currentLimitModifier = 0.5f;
+
     /* Swerve Current Limiting */
-    public static final int angleCurrentLimit = 25;
-    public static final int angleCurrentThreshold = 40;
+    public static final int angleCurrentLimit = (int)(25 * currentLimitModifier);
+    public static final int angleCurrentThreshold = (int)(40 * currentLimitModifier);
     public static final double angleCurrentThresholdTime = 0.1;
     public static final boolean angleEnableCurrentLimit = true;
 
-    public static final int driveCurrentLimit = 35;
-    public static final int driveCurrentThreshold = 60;
+    public static final int driveCurrentLimit = (int)(35 * currentLimitModifier);
+    public static final int driveCurrentThreshold = (int)(60 * currentLimitModifier);
     public static final double driveCurrentThresholdTime = 0.1;
     public static final boolean driveEnableCurrentLimit = true;
 
@@ -187,3 +199,6 @@ public final class Constants {
     public static final double kAutoYD = 0;
   }
 }
+
+
+

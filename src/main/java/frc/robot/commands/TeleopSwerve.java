@@ -10,7 +10,9 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
-
+/**
+ * Command that drives the robot with controller inputs
+ */
 public class TeleopSwerve extends Command {    
     private SwerveSubsystem s_Swerve;    
     private DoubleSupplier translationSup;
@@ -31,9 +33,9 @@ public class TeleopSwerve extends Command {
     @Override
     public void execute() {
         /* Get Values, Deadband*/
-        double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.OperatorConstants.stickDeadband);
-        double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.OperatorConstants.stickDeadband);
-        double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.OperatorConstants.stickDeadband);
+        double translationVal = MathUtil.applyDeadband(Math.pow(translationSup.getAsDouble(), 3), Constants.OperatorConstants.stickDeadband);
+        double strafeVal = MathUtil.applyDeadband(Math.pow(strafeSup.getAsDouble(), 3), Constants.OperatorConstants.stickDeadband);
+        double rotationVal = MathUtil.applyDeadband(Math.pow(rotationSup.getAsDouble(), 3), Constants.OperatorConstants.stickDeadband);
 
         /* Drive */
         s_Swerve.drive(
