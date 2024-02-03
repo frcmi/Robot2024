@@ -10,6 +10,9 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.lib.math.Conversions;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -30,6 +33,13 @@ public class SwerveModule {
     /* angle motor control requests */
     private final PositionVoltage anglePosition = new PositionVoltage(0);
 
+    /* shuffleboard entries */
+    private final ShuffleboardTab shuffleboardTab;
+    private final GenericEntry CANCoderShuffleBoardItem;
+    private final GenericEntry angleShuffleBoardItem;
+    private final GenericEntry velocityShuffleBoardItem;
+
+
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants, boolean isInverted){
         this.moduleNumber = moduleNumber;
         this.angleOffset = moduleConstants.angleOffset;
@@ -49,6 +59,10 @@ public class SwerveModule {
         mDriveMotor.getConfigurator().setPosition(0.0);
         mDriveMotor.setInverted(isInverted);
 
+        shuffleboardTab = Shuffleboard.getTab("Swerve Module " + moduleNumber);
+        CANCoderShuffleBoardItem = shuffleboardTab.add("CANCoder", 0).getEntry();
+        angleShuffleBoardItem = shuffleboardTab.add("Angle", 0).getEntry();
+        velocityShuffleBoardItem = shuffleboardTab.add("Velocity", 0).getEntry();
     }
 
     /**
@@ -112,5 +126,14 @@ public class SwerveModule {
             Conversions.rotationsToMeters(mDriveMotor.getPosition().getValue(), Constants.SwerveConstants.wheelCircumference), 
             Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
         );
+    }
+
+    /**
+     * Logs all relevant values to shuffleboard. Should be called periodically.
+     */
+    public void logValues() {
+        CANCoderShuffleBoardItem.setDouble(getCANcoderReading().getDegrees());
+        angleShuffleBoardItem.setDouble(getPosition().angle.getDegrees());
+        velocityShuffleBoardItem.setDouble(getState().speedMetersPerSecond);
     }
 }
