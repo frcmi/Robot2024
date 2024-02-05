@@ -1,43 +1,50 @@
 package frc.robot.commands;
 
-import java.util.function.Supplier;
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 
-public class AutoAlignCommand extends Command
-{
-    public static final Translation2d TARGET_POSITION = new Translation2d(15, 22);
-    public static final float MAXIMUM_ANGLE_DIFFERENCE = 30f;
-    public static final float DESIRED_FIRING_DISTANCE = 10f;
+public class AutoAlignCommand extends Command {
+    private final SwerveSubsystem swerve;
 
-    private final VisionSubsystem visionSubsystem;
-    private final SwerveSubsystem swerveSubsystem;
-
-    private final Supplier<Pose2d> currentPosition;
-    Pose2d destination;
-
-    public AutoAlignCommand(VisionSubsystem visionSubsystem, SwerveSubsystem swerveSubsystem, Supplier<Pose2d> currentPosition)
-    {
-        this.swerveSubsystem = swerveSubsystem;
-        this.visionSubsystem = visionSubsystem;
-        this.currentPosition = currentPosition;
+    public AutoAlignCommand(SwerveSubsystem swerveSubsystem) {
+        swerve = swerveSubsystem;
     }
 
-    private void calculateDestination()
-    {
-        // todo: ask hadrian
+    private static final Pose2d speaker = new Pose2d();
+    private static final double maximumFiringAngle = 75 * Math.PI / 180;
+
+    private Pose2d calculateDestination() {
+        var currentPose = swerve.getPose();
+        var speakerToRobot = currentPose.minus(speaker);
+        
+        // restrict the angle to a -180 to 180 degree range
+        double angle = speakerToRobot.getRotation().getRadians();
+        while (Math.abs(angle) > Math.PI) {
+            angle -= Math.PI * 2 * Math.signum(angle);
+        }
+
+        // make sure were moving to a valid firing position
+        angle = MathUtil.clamp(angle, -maximumFiringAngle, maximumFiringAngle);
+
+        double directionRotation = angle + speaker.getRotation().getRadians();
+        double firingDistance = 2; // todo(nora?): calculate (measurements should be on robotics whiteboard)
+
+        var direction = new Translation2d(Math.cos(directionRotation), Math.sin(directionRotation));
+        var position = speaker.getTranslation().plus(direction.times(firingDistance));
+
+        return new Pose2d(position, new Rotation2d(-directionRotation));
     }
 
     @Override
-    public void execute()
-    {
-        DriveToPosition dtpCommand = new DriveToPosition(this.swerveSubsystem, currentPosition, destination);
-        
+    public void execute() {
+        var destination = calculateDestination();
+        var dtpCommand = new DriveToPosition(swerve, swerve::getPose, destination);
+
         // Run the drive command
         dtpCommand.schedule();
         new PrintCommand("[Auto Align]: It works").schedule();

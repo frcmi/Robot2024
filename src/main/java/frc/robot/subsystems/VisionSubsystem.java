@@ -10,6 +10,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -80,7 +81,7 @@ public class VisionSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("Vision yaw", rotation.getZ());
 
             var pose2d = pose.toPose2d();
-            swerve.swerveDrivePoseEstimator.addVisionMeasurement(pose2d, (double)System.currentTimeMillis() / 1000);
+            swerve.swerveDrivePoseEstimator.addVisionMeasurement(pose2d, MathSharedStore.getTimestamp());
 
             field.setRobotPose(pose2d);
             SmartDashboard.putData("Vision field", field);

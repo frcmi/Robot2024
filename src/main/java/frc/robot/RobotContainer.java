@@ -91,7 +91,7 @@ public class RobotContainer {
     driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
     // m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.test());
     
-    driverController.leftTrigger().onTrue(new AutoAlignCommand(visionSubsystem, swerveSubsystem, swerveSubsystem::getPose));
+    driverController.leftTrigger().onTrue(new AutoAlignCommand(swerveSubsystem));
   }
 
   /**
