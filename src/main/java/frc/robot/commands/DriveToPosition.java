@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
@@ -46,10 +47,12 @@ public class DriveToPosition extends Command {
 
     @Override
     public void execute() {
-        // m_swerveSubsystem.driveFieldCentric(
-        //     xPID.calculate(currentPosition.get().getX()), 
-        //     yPID.calculate(currentPosition.get().getY()), 
-        //     turnPID.calculate(currentPosition.get().getRotation().getRadians()));
+        double x = xPID.calculate(currentPosition.get().getX());
+        double y = yPID.calculate(currentPosition.get().getY());
+        double rotation = turnPID.calculate(currentPosition.get().getRotation().getRadians());
+
+        var translation = new Translation2d(x, y);
+        m_swerveSubsystem.drive(translation, rotation, true, false);
     }
 
     @Override
