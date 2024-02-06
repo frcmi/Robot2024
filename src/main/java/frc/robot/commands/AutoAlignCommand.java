@@ -4,12 +4,10 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import frc.lib.math.Transformations;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutoAlignCommand extends Command {
@@ -19,8 +17,8 @@ public class AutoAlignCommand extends Command {
         swerve = swerveSubsystem;
     }
 
-    private static final Transform3d robotToShooter = new Transform3d();
-    private static final Pose3d speaker = new Pose3d();
+    private static final Transform3d robotToShooter = new Transform3d(0, 0, 0, new Rotation3d(Math.PI / 6, 0, 0));
+    private static final Pose3d speaker = new Pose3d(16.427, 5.548, 2.032, new Rotation3d(0, 0, Math.PI));
     private static final double maximumFiringAngle = 75 * Math.PI / 180;
 
     private Pose2d calculateDestination() {
@@ -55,8 +53,6 @@ public class AutoAlignCommand extends Command {
         var destination = calculateDestination();
         var dtpCommand = new DriveToPosition(swerve, swerve::getPose, destination);
 
-        // Run the drive command
         dtpCommand.schedule();
-        new PrintCommand("[Auto Align]: It works").schedule();
     }
 }

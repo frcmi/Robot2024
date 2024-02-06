@@ -11,17 +11,11 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.MathSharedStore;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.AutoAlignCommand;
 
 public class VisionSubsystem extends SubsystemBase {
     private static final String cameraName = "USB_Camera";
@@ -34,7 +28,7 @@ public class VisionSubsystem extends SubsystemBase {
     private final SwerveSubsystem swerve;
 
     public VisionSubsystem(SwerveSubsystem swerveSubsystem) {
-        var robotToCamera = new Transform3d(0.5, 0.5, 0.5, new Rotation3d(0, 0, 0));
+        var robotToCamera = new Transform3d(0.3048, 0.0254, 0.5588, new Rotation3d(0, 0, Math.PI));
 
         try
         {
