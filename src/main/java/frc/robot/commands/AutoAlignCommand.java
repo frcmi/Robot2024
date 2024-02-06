@@ -47,7 +47,7 @@ public class AutoAlignCommand extends Command {
         var direction = new Translation2d(Math.cos(directionRotation), Math.sin(directionRotation));
         var position = speaker.getTranslation().toTranslation2d().plus(direction.times(firingDistance));
 
-        return new Pose2d(position, new Rotation2d(-directionRotation));
+        return new Pose2d(position, new Rotation2d(robotToShooter.getRotation().getZ() - directionRotation));
     }
 
     @Override
