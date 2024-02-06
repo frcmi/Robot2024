@@ -41,9 +41,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command intakeAmp() { //Subject to change due to motor shenanigans
         return run (
-                () -> {intakeMotor1.set(1);
-                    intakeMotor2.set(1);
-                    indexerMotor.set(1);
+                () -> {intakeMotor1.set(0.5);
+                    intakeMotor2.set(-0.5);
+                    indexerMotor.set(-0.5);
                     
                     
                 }
@@ -52,9 +52,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command intakeSpeaker()  { //Subject to change due to motor shenanigans
                 return run (
-                () -> {intakeMotor1.set(1);
-                    intakeMotor2.set(1);
-                    indexerMotor.set(-1); // Keep this negative
+                () -> {intakeMotor1.set(0.5);
+                    intakeMotor2.set(-0.5);
+                    indexerMotor.set(0.5); // Keep this negative
 
                 }
         ).withName("intakeSpeaker");

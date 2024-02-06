@@ -17,9 +17,9 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
   public static class IntakeConstants {
-    public static final int kintakeMotor1Id = 24;
-    public static final int kintakeMotor2Id = 0; //TODO: change it lol 
-    public static final int kindexerMotorId = 0; //TODO: change it lol
+    public static final int kintakeMotor1Id = 14;
+    public static final int kintakeMotor2Id = 25; //TODO: change it lol 
+    public static final int kindexerMotorId = 30; //TODO: change it lol
   }
   public static class SpeakerShooterConstants {
     public static final int kspeakerShooterMotorId = 26;

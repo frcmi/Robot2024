@@ -24,7 +24,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem();
+  // private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem();
   private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -56,8 +56,8 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
 
     // Shooter
-    // driverController.a().whileTrue(ampShooterSubsystem.shootAmp());
-    driverController.b().whileTrue(ampShooterSubsystem.shootAmp());
+    driverController.a().whileTrue(speakerShooterSubsystem.shootSpeaker());
+    // driverController.b().whileTrue(ampShooterSubsystem.shootAmp());
   }
 
   /**
