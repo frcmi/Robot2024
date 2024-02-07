@@ -46,6 +46,7 @@ public final class Constants {
 
   public static final class SwerveConstants {
     public static final double kAllowedDistanceToDestination = 0.1;
+    public static final double kAllowedRotationDifferenceToDestination = Math.PI / 12;
 
     public static final int pigeonID = 0;
 
