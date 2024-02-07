@@ -6,6 +6,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.math.Transformations;
 import frc.robot.Constants.AutoConstants;
@@ -31,6 +33,9 @@ public class DriveToPosition extends Command {
         AutoConstants.kRotationI,
         AutoConstants.kRotationD);
 
+    StructPublisher<Pose2d> setPosPublisher = NetworkTableInstance.getDefault()
+        .getStructTopic("DriveToPosition", Pose2d.struct).publish();
+
     /**
      * Drive robot to a given position using PID
      * @param swerveSubsystem the swerve subsystem to spin motors on
@@ -39,11 +44,15 @@ public class DriveToPosition extends Command {
      */
     public DriveToPosition(SwerveSubsystem swerveSubsystem, Supplier<Pose2d> currentPosition, Pose2d destination) {
         m_swerveSubsystem = swerveSubsystem;
+        
         this.currentPosition = currentPosition;
         this.destination = destination;
+
         xPID.setSetpoint(destination.getX());
         yPID.setSetpoint(destination.getY());
         turnPID.setSetpoint(destination.getRotation().getRadians());
+
+        setPosPublisher.set(destination);
     }
 
     @Override

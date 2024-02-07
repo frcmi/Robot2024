@@ -16,6 +16,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -160,6 +162,9 @@ public class SwerveSubsystem extends SubsystemBase {
         }
     }
 
+    StructPublisher<Pose2d> posePublisher = NetworkTableInstance.getDefault()
+            .getStructTopic("Robot Pose", Pose2d.struct).publish();
+
     @Override
     public void periodic() {
         swerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
@@ -167,8 +172,14 @@ public class SwerveSubsystem extends SubsystemBase {
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoderReading().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+            if (mod.moduleSetPosition != null) {
+                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle Setpoint", mod.moduleSetPosition.angle.getDegrees() - mod.angleOffset.getDegrees());
+                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Drive Setpoint", mod.moduleSetPosition.speedMetersPerSecond); 
+            }
         }
+
+        posePublisher.set(swerveDrivePoseEstimator.getEstimatedPosition());
 
         field.setRobotPose(getPose());
         SmartDashboard.putData(field);
