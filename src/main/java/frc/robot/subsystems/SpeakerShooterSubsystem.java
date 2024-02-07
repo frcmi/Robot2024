@@ -16,15 +16,15 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.SpeakerShooterConstants;
 
 public class SpeakerShooterSubsystem extends SubsystemBase{
-    public TalonFX speakerShooterMotor = new TalonFX(SpeakerShooterConstants.kspeakerShooterMotorId);
-    public TalonFX speakerShooterMotor2 = new TalonFX(SpeakerShooterConstants.kspeakerShooterMotorId2);
+    public TalonFX speakerShooterMotor = new TalonFX(SpeakerShooterConstants.kSpeakerShooterMotorId);
+    public TalonFX speakerShooterMotor2 = new TalonFX(SpeakerShooterConstants.kSpeakerShooterMotor2Id);
 
     public SpeakerShooterSubsystem() {
         speakerShooterMotor.setNeutralMode(NeutralModeValue.Coast);
         speakerShooterMotor2.setNeutralMode(NeutralModeValue.Coast);
         setDefaultCommand(stop());
 
-        SmartDashboard.setDefaultNumber("Shooter Speed", 0.373);
+        SmartDashboard.setDefaultNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class SpeakerShooterSubsystem extends SubsystemBase{
 
     public Command shootSpeaker() { //TODO: can change
         return run (
-                () -> {speakerShooterMotor.set(SmartDashboard.getNumber("Shooter Speed", 0.373)); 
-                    speakerShooterMotor2.set(SmartDashboard.getNumber("Shooter Speed", 0.373));
+                () -> {speakerShooterMotor.set(SmartDashboard.getNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed)); 
+                    speakerShooterMotor2.set(SmartDashboard.getNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed));
                 }
         ).withName("shootSpeaker");
     }   

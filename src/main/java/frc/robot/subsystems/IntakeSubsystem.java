@@ -16,9 +16,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
-    private final TalonFX intakeMotor1 = new TalonFX(IntakeConstants.kintakeMotor1Id);
-    private final TalonFX intakeMotor2 = new TalonFX(IntakeConstants.kintakeMotor2Id);
-    private final TalonFX indexerMotor = new TalonFX(IntakeConstants.kindexerMotorId);
+    private final TalonFX intakeMotor1 = new TalonFX(IntakeConstants.kIntakeMotor1Id);
+    private final TalonFX intakeMotor2 = new TalonFX(IntakeConstants.kIntakeMotor2Id);
+    private final TalonFX indexerMotor = new TalonFX(IntakeConstants.kIndexerMotorId);
 
 
     public IntakeSubsystem() {
@@ -41,20 +41,18 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command intakeAmp() { //Subject to change due to motor shenanigans
         return run (
-                () -> {intakeMotor1.set(0.5);
-                    intakeMotor2.set(-0.5);
-                    indexerMotor.set(-0.5);
-                    
-                    
+                () -> {intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed);
+                    intakeMotor2.set(-IntakeConstants.kIntakeMotorSpeed);
+                    indexerMotor.set(-IntakeConstants.kIndexerSpeed);
                 }
         ).withName("intakeAmp");
     }
 
     public Command intakeSpeaker()  { //Subject to change due to motor shenanigans
                 return run (
-                () -> {intakeMotor1.set(0.5);
-                    intakeMotor2.set(-0.5);
-                    indexerMotor.set(0.5); // Keep this negative
+                () -> {intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed);
+                    intakeMotor2.set(-IntakeConstants.kIntakeMotorSpeed);
+                    indexerMotor.set(IntakeConstants.kIndexerSpeed);
 
                 }
         ).withName("intakeSpeaker");

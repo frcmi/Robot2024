@@ -19,8 +19,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class AmpShooterSubsystem extends SubsystemBase{
     // private TalonFX ampShooterMotor = new TalonFX(AmpShooterConstants.kampShooterMotorId);
-    private final CANSparkMax upperMotor = new CANSparkMax(AmpShooterConstants.kupperAmpMotorId, MotorType.kBrushless);
-    private final CANSparkMax lowerMotor = new CANSparkMax(AmpShooterConstants.klowerAmpMotorId, MotorType.kBrushless);
+    private final CANSparkMax upperMotor = new CANSparkMax(AmpShooterConstants.kUpperAmpMotorId, MotorType.kBrushless);
+    private final CANSparkMax lowerMotor = new CANSparkMax(AmpShooterConstants.kLowerAmpMotorId, MotorType.kBrushless);
 
     public AmpShooterSubsystem() {
         upperMotor.setInverted(true);
@@ -39,8 +39,8 @@ public class AmpShooterSubsystem extends SubsystemBase{
 
     public Command shootAmp() { //TODO: can change
         return run (
-                () -> {upperMotor.set(-0.4); // Keep this motor negative
-                    lowerMotor.set(0.4);
+                () -> {upperMotor.set(-AmpShooterConstants.kAmpMotorSpeed); // Keep this motor negative
+                    lowerMotor.set(AmpShooterConstants.kAmpMotorSpeed);
                 }
         ).withName("shootAmp");
     }
