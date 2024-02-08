@@ -3,8 +3,10 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.SpeakerShooterSubsystem;
+import frc.robot.subsystems.AmpShooterSubsystem;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.TeleopSwerve;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -30,6 +32,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  // private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem();
+  private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
   private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem();
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
@@ -60,6 +65,13 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
+    // Intake
+    driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
+    driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
+
+    // Shooter
+    driverController.a().whileTrue(speakerShooterSubsystem.shootSpeaker());
+    // driverController.b().whileTrue(ampShooterSubsystem.shootAmp());
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // m_driveStationSubsystem.coop();
