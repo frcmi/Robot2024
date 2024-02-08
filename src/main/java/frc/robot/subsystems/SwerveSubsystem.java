@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -69,7 +70,7 @@ public class SwerveSubsystem extends SubsystemBase {
             )
         );
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);
-        for(SwerveModule mod : mSwerveMods){
+        for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
     }
@@ -163,7 +164,13 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     StructPublisher<Pose2d> posePublisher = NetworkTableInstance.getDefault()
-            .getStructTopic("Robot Pose", Pose2d.struct).publish();
+        .getStructTopic("Robot Pose", Pose2d.struct).publish();
+    StructArrayPublisher<SwerveModuleState> statesPublisherSet = NetworkTableInstance.getDefault()
+        .getStructArrayTopic("Module Set States", SwerveModuleState.struct).publish();
+    StructArrayPublisher<SwerveModuleState> statesPublisherActual = NetworkTableInstance.getDefault()
+        .getStructArrayTopic("Module Measured States", SwerveModuleState.struct).publish();
+    StructArrayPublisher<SwerveModulePosition> positionsPublisher = NetworkTableInstance.getDefault()
+        .getStructArrayTopic("Module Positions", SwerveModulePosition.struct).publish();
 
     @Override
     public void periodic() {
@@ -173,13 +180,24 @@ public class SwerveSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoderReading().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-            if (mod.moduleSetPosition != null) {
-                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle Setpoint", mod.moduleSetPosition.angle.getDegrees() - mod.angleOffset.getDegrees());
-                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Drive Setpoint", mod.moduleSetPosition.speedMetersPerSecond); 
+            if (mod.moduleSetState != null) {
+                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle Setpoint", mod.moduleSetState.angle.getDegrees() - mod.angleOffset.getDegrees());
+                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Drive Setpoint", mod.moduleSetState.speedMetersPerSecond); 
             }
         }
 
         posePublisher.set(swerveDrivePoseEstimator.getEstimatedPosition());
+
+        statesPublisherSet.set(new SwerveModuleState[] {
+            mSwerveMods[0].moduleSetState,
+            mSwerveMods[1].moduleSetState,
+            mSwerveMods[2].moduleSetState,
+            mSwerveMods[3].moduleSetState
+        });
+
+        positionsPublisher.set(getModulePositions());
+
+        statesPublisherActual.set(getModuleStates());
 
         field.setRobotPose(getPose());
         SmartDashboard.putData(field);
