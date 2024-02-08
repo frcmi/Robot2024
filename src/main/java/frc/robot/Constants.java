@@ -51,7 +51,7 @@ public final class Constants {
     public static final int pigeonID = 0;
 
     public static final COTSTalonFXSwerveConstants chosenModule =
-        COTSTalonFXSwerveConstants.SDS.MK4i.Falcon500(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);
+        COTSTalonFXSwerveConstants.SDS.MK4i.Falcon500(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L3);
 
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(28);
@@ -63,10 +63,11 @@ public final class Constants {
      * rectangular/square 4 module swerve
      */
     public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
-        new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
-        new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
-        new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
-        new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
+      new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
+      new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
+      new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
+      new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0)
+    );
 
     /* Module Gear Ratios */
     public static final double driveGearRatio = chosenModule.driveGearRatio;
@@ -118,7 +119,7 @@ public final class Constants {
 
     /* Swerve Profiling Values */
     /** Meters per Second */
-    public static final double maxSpeed = 0.04; // TODO: This must be tuned to specific robot
+    public static final double maxSpeed = 0.2; // TODO: This must be tuned to specific robot
     /** Radians per Second */
     public static final double maxAngularVelocity = 0.13; // TODO: This must be tuned to specific robot
 
@@ -135,7 +136,7 @@ public final class Constants {
       public static final Rotation2d angleOffset = Rotation2d.fromDegrees(151.611328125);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
-      public static final boolean isInverted = false;
+      public static final boolean isInverted = true;
     }
 
     /* Front Right Module - Module 1 */
@@ -146,7 +147,7 @@ public final class Constants {
       public static final Rotation2d angleOffset = Rotation2d.fromDegrees(8.701171875);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
-      public static final boolean isInverted = false;
+      public static final boolean isInverted = true;
     }
 
     /* Back Left Module - Module 2 */
@@ -157,7 +158,7 @@ public final class Constants {
       public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-3.33984375);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
-      public static final boolean isInverted = false;
+      public static final boolean isInverted = true;
     }
 
     /* Back Right Module - Module 3 */
@@ -168,7 +169,7 @@ public final class Constants {
       public static final Rotation2d angleOffset = Rotation2d.fromDegrees(406.23046875);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
-      public static final boolean isInverted = false;
+      public static final boolean isInverted = true;
     }
   }
 
@@ -191,11 +192,11 @@ public final class Constants {
     public static final double kRotationI = 0;
     public static final double kRotationD = 0;
 
-    public static final double kAutoXP = 0;
+    public static final double kAutoXP = 0.2;
     public static final double kAutoXI = 0;
     public static final double kAutoXD = 0;
 
-    public static final double kAutoYP = 0;
+    public static final double kAutoYP = 0.2;
     public static final double kAutoYI = 0;
     public static final double kAutoYD = 0;
   }

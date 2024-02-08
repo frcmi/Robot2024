@@ -21,7 +21,7 @@ public class SwerveModule {
     private TalonFX mDriveMotor;
     private CANcoder angleEncoder;
 
-    public SwerveModuleState moduleSetPosition;
+    public SwerveModuleState moduleSetState;
 
     private final SimpleMotorFeedforward driveFeedForward = new SimpleMotorFeedforward(Constants.SwerveConstants.driveKS, Constants.SwerveConstants.driveKV, Constants.SwerveConstants.driveKA);
 
@@ -50,7 +50,6 @@ public class SwerveModule {
         mDriveMotor.getConfigurator().apply(Robot.ctreConfigs.swerveDriveFXConfig);
         mDriveMotor.getConfigurator().setPosition(0.0);
         mDriveMotor.setInverted(isInverted);
-
     }
 
     /**
@@ -59,7 +58,7 @@ public class SwerveModule {
      * @param isOpenLoop whether the module should use open or closed loop control
      */
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
-        moduleSetPosition = desiredState;
+        moduleSetState = desiredState;
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle); 
         mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
         setSpeed(desiredState, isOpenLoop);
@@ -100,7 +99,7 @@ public class SwerveModule {
     /**
      * @return the current state of the module
      */
-    public SwerveModuleState getState(){
+    public SwerveModuleState getState() {
         return new SwerveModuleState(
             Conversions.RPSToMPS(mDriveMotor.getVelocity().getValue(), Constants.SwerveConstants.wheelCircumference), 
             Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
@@ -110,7 +109,7 @@ public class SwerveModule {
     /**
      * @return the position of the module based on measured values
      */
-    public SwerveModulePosition getPosition(){
+    public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(
             Conversions.rotationsToMeters(mDriveMotor.getPosition().getValue(), Constants.SwerveConstants.wheelCircumference), 
             Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
