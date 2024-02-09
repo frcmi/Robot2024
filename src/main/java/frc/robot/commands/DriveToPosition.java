@@ -45,6 +45,7 @@ public class DriveToPosition extends Command {
      * @param destination the position that the robot should drive to, relative to the field
      */
     public DriveToPosition(SwerveSubsystem swerveSubsystem, Supplier<Pose2d> currentPosition, Pose2d destination) {
+        this.addRequirements(swerveSubsystem);
         // SmartDashboard.setDefaultNumber("move pid P", 0.2);
         // SmartDashboard.setDefaultNumber("move pid I", 0);
         // SmartDashboard.setDefaultNumber("move pid D", 0);

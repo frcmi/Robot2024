@@ -45,8 +45,8 @@ public final class Constants {
   }
 
   public static final class SwerveConstants {
-    public static final double kAllowedDistanceToDestination = 0.1;
-    public static final double kAllowedRotationDifferenceToDestination = Math.PI / 12;
+    public static final double kAllowedDistanceToDestination = 0.01;
+    public static final double kAllowedRotationDifferenceToDestination = 0.1;
 
     public static final int pigeonID = 0;
 
@@ -214,6 +214,8 @@ public final class Constants {
     public static final int kSpeakerShooterMotor2Id = 27;
 
     public static final double kSpeakerMotorSpeed = 0.373;
+    
+    public static final double kSpeakerShootDuration = 0.5;
   }
 
   public static class AmpShooterConstants {

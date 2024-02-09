@@ -112,6 +112,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new DriveToPosition(swerveSubsystem, swerveSubsystem::getPose, new Pose2d(14,4, new Rotation2d(1.5)));
+    Command driveToPosition = new DriveToPosition(swerveSubsystem, swerveSubsystem::getPose, new Pose2d(14,4, new Rotation2d(1.5)));
+    Command autoAlign = new AutoAlignCommand(swerveSubsystem);
+    Command shootSpeaker = speakerShooterSubsystem.shootSpeakerAndStop();
+    return driveToPosition.andThen(autoAlign).andThen(shootSpeaker);
   }
 }

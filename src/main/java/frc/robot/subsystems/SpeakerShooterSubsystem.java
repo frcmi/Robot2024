@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -15,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.SpeakerShooterConstants;
 
-public class SpeakerShooterSubsystem extends SubsystemBase{
+public class SpeakerShooterSubsystem extends SubsystemBase {
     public TalonFX speakerShooterMotor = new TalonFX(SpeakerShooterConstants.kSpeakerShooterMotorId);
     public TalonFX speakerShooterMotor2 = new TalonFX(SpeakerShooterConstants.kSpeakerShooterMotor2Id);
 
@@ -36,18 +37,22 @@ public class SpeakerShooterSubsystem extends SubsystemBase{
             SmartDashboard.putString("Speakershoot Command", "");
         }
     }
-
     public Command shootSpeaker() { //TODO: can change
-        return run (
-                () -> {speakerShooterMotor.set(SmartDashboard.getNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed)); 
+        return run(
+                () -> {
+                    speakerShooterMotor.set(SmartDashboard.getNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed)); 
                     speakerShooterMotor2.set(SmartDashboard.getNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed));
                 }
         ).withName("shootSpeaker");
-    }   
+    }
+    public Command shootSpeakerAndStop() {
+        return shootSpeaker().andThen(Commands.waitSeconds(SpeakerShooterConstants.kSpeakerShootDuration)).andThen(stop());
+    }
 
     public Command stop() { //TODO: can change
-        return run (
-                () -> {speakerShooterMotor.set(0); 
+        return run(
+                () -> {
+                    speakerShooterMotor.set(0); 
                     speakerShooterMotor2.set(0);
                 }
         ).withName("stop");
