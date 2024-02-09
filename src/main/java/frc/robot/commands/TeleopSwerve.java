@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
+import frc.robot.Constants.SimulationConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.function.BooleanSupplier;
@@ -8,6 +10,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -39,9 +42,9 @@ public class TeleopSwerve extends Command {
 
         /* Drive */
         s_Swerve.drive(
-            new Translation2d(translationVal, strafeVal).times(Constants.SwerveConstants.maxSpeed), 
-            rotationVal * Constants.SwerveConstants.maxAngularVelocity, 
-            !robotCentricSup.getAsBoolean(), 
+            new Translation2d(translationVal, strafeVal).times(RobotBase.isReal() ? SwerveConstants.maxSpeed : SimulationConstants.kSimulationMaxSpeed), 
+            rotationVal * (RobotBase.isReal() ? SwerveConstants.maxAngularVelocity : SimulationConstants.kSimulationMaxRotationSpeed), 
+            !robotCentricSup.getAsBoolean(),
             true
         );
     }

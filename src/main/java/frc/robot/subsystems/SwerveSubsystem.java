@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
+import frc.robot.Constants.SimulationConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -18,6 +20,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,6 +33,8 @@ public class SwerveSubsystem extends SubsystemBase {
     public SwerveDrivePoseEstimator swerveDrivePoseEstimator;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
+    public AnalogGyroSim simGyro = new AnalogGyroSim(0);
+    double simHeadingOffset = 0;
 
     private Field2d field = new Field2d();
 
@@ -36,6 +42,8 @@ public class SwerveSubsystem extends SubsystemBase {
         gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
+
+        if (RobotBase.isSimulation()) simGyro.setAngle(0);
 
         mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, Constants.SwerveConstants.Mod0.constants, Constants.SwerveConstants.Mod0.isInverted),
@@ -56,6 +64,7 @@ public class SwerveSubsystem extends SubsystemBase {
      * @param isOpenLoop whether the modules should use open or closed loop control
      */
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+        if (RobotBase.isSimulation()) simGyro.setAngle(simGyro.getAngle() + rotation * Constants.SimulationConstants.kSimulationMaxRotationSpeed * 0.002);
         SwerveModuleState[] swerveModuleStates = Constants.SwerveConstants.swerveKinematics.toSwerveModuleStates(
             fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                 translation.getX(), 
@@ -68,8 +77,10 @@ public class SwerveSubsystem extends SubsystemBase {
                 rotation
             )
         );
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);
-        for(SwerveModule mod : mSwerveMods){
+
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, RobotBase.isReal() ? SwerveConstants.maxSpeed : SimulationConstants.kSimulationMaxSpeed);
+
+        for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
     }
@@ -81,7 +92,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.SwerveConstants.maxSpeed);
         
-        for(SwerveModule mod : mSwerveMods){
+        for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(desiredStates[mod.moduleNumber], false);
         }
     }
@@ -100,7 +111,7 @@ public class SwerveSubsystem extends SubsystemBase {
     /**
      * @return the positions of the modules
      */
-    public SwerveModulePosition[] getModulePositions(){
+    public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for(SwerveModule mod : mSwerveMods){
             positions[mod.moduleNumber] = mod.getPosition();
@@ -142,7 +153,11 @@ public class SwerveSubsystem extends SubsystemBase {
      * Sets the heading of the odometry to 0 radians (0 degrees, 0 rotations, 0 gradians, 0 rogreedians)
      */
     public void zeroHeading() {
-        setHeading(new Rotation2d());
+        // if (RobotBase.isReal()) {
+            setHeading(new Rotation2d());
+        // } else {
+        //     setHeading(simGyro.getAngle());
+        // }
     }
 
     /**
@@ -150,7 +165,11 @@ public class SwerveSubsystem extends SubsystemBase {
      * @return the raw reading of the gyro
      */
     private Rotation2d getGyroYaw() {
-        return Rotation2d.fromDegrees(gyro.getYaw().getValue());
+        if (RobotBase.isReal()) {
+            return Rotation2d.fromDegrees(gyro.getYaw().getValue());
+        } else {
+            return Rotation2d.fromRotations(simGyro.getAngle());
+        }
     }
 
     /**
@@ -162,6 +181,9 @@ public class SwerveSubsystem extends SubsystemBase {
         }
     }
 
+    StructArrayPublisher<SwerveModuleState> swerveStatesPublisher = NetworkTableInstance.getDefault()
+        .getStructArrayTopic("Swerve States", SwerveModuleState.struct).publish();
+
     @Override
     public void periodic() {
         swerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
@@ -171,8 +193,7 @@ public class SwerveSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
         }
-
-        StructArrayPublisher<SwerveModuleState> publisher = NetworkTableInstance.getDefault().getStructArrayTopic("Swerve States", SwerveModuleState.struct).publish(null);
+        swerveStatesPublisher.set(getModuleStates());
 
         field.setRobotPose(getPose());
         SmartDashboard.putData(field);

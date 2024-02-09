@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.lib.math.Conversions;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -21,6 +22,9 @@ public class SwerveModule {
     private TalonFX mDriveMotor;
     private CANcoder angleEncoder;
 
+    private SwerveModuleState simulatedState = new SwerveModuleState(0, new Rotation2d(0));
+    private SwerveModulePosition simulatedPosition = new SwerveModulePosition(0, new Rotation2d(0));
+
     private final SimpleMotorFeedforward driveFeedForward = new SimpleMotorFeedforward(Constants.SwerveConstants.driveKS, Constants.SwerveConstants.driveKV, Constants.SwerveConstants.driveKA);
 
     /* drive motor control requests */
@@ -30,7 +34,7 @@ public class SwerveModule {
     /* angle motor control requests */
     private final PositionVoltage anglePosition = new PositionVoltage(0);
 
-    public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants, boolean isInverted){
+    public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants, boolean isInverted) {
         this.moduleNumber = moduleNumber;
         this.angleOffset = moduleConstants.angleOffset;
         
@@ -56,10 +60,14 @@ public class SwerveModule {
      * @param desiredState the state the module should be
      * @param isOpenLoop whether the module should use open or closed loop control
      */
-    public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
+    public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle); 
-        mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
-        setSpeed(desiredState, isOpenLoop);
+        if (RobotBase.isReal()) {
+            mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
+            setSpeed(desiredState, isOpenLoop);
+        } else {
+            simulatedState = desiredState;
+        }
     }
 
     /**
@@ -98,19 +106,29 @@ public class SwerveModule {
      * @return the current state of the module
      */
     public SwerveModuleState getState(){
-        return new SwerveModuleState(
-            Conversions.RPSToMPS(mDriveMotor.getVelocity().getValue(), Constants.SwerveConstants.wheelCircumference), 
-            Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
-        );
+        if (RobotBase.isReal()) {
+            return new SwerveModuleState(
+                Conversions.RPSToMPS(mDriveMotor.getVelocity().getValue(), Constants.SwerveConstants.wheelCircumference), 
+                Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
+            );
+        } else {
+            return simulatedState;
+        }
     }
 
     /**
      * @return the position of the module based on measured values
      */
     public SwerveModulePosition getPosition(){
-        return new SwerveModulePosition(
-            Conversions.rotationsToMeters(mDriveMotor.getPosition().getValue(), Constants.SwerveConstants.wheelCircumference), 
-            Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
-        );
+        if (RobotBase.isReal()) {
+            return new SwerveModulePosition(
+                Conversions.rotationsToMeters(mDriveMotor.getPosition().getValue(), Constants.SwerveConstants.wheelCircumference), 
+                Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
+            );
+        } else {
+            simulatedPosition.distanceMeters += simulatedState.speedMetersPerSecond * 0.02;
+            simulatedPosition.angle = simulatedState.angle;
+            return simulatedPosition;
+        }
     }
 }

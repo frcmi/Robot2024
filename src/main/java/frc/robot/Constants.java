@@ -190,11 +190,11 @@ public final class Constants {
     public static final double kRotationI = 0;
     public static final double kRotationD = 0;
 
-    public static final double kAutoXP = 0;
+    public static final double kAutoXP = 1;
     public static final double kAutoXI = 0;
     public static final double kAutoXD = 0;
 
-    public static final double kAutoYP = 0;
+    public static final double kAutoYP = 1;
     public static final double kAutoYI = 0;
     public static final double kAutoYD = 0;
   }
@@ -210,6 +210,10 @@ public final class Constants {
   public static class AmpShooterConstants {
       public static final int kupperAmpMotorId = 2;
       public static final int klowerAmpMotorId = 1;
+  }
+  public static class SimulationConstants {
+    public static final double kSimulationMaxSpeed = 5;
+    public static final double kSimulationMaxRotationSpeed = 0.3;
   }
 }
 
