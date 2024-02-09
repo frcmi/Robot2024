@@ -3,9 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+import frc.robot.Constants.AmpArmConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SpeakerShooterSubsystem;
+import frc.robot.subsystems.AmpArmSubsystem;
 import frc.robot.subsystems.AmpShooterSubsystem;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.TeleopSwerve;
@@ -32,7 +34,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  // private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem();
+  private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem();
+  private final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
   private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
   private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem();
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
@@ -87,6 +90,10 @@ public class RobotContainer {
     // m_driverController.leftBumper().onTrue(m_driveStationSubsystem.setLights());
     // m_driverController.rightBumper().onTrue(m_driveStationSubsystem.ledOff());
     //you have to press right bumper then left bumper to turn off the lights, I don't why, ask the lights
+
+    driverController.povUp().onTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
+    driverController.povDown().onTrue(ampArmSubsystem.moveTo(AmpArmConstants.kMinAngle));
+    driverController.rightBumper().whileTrue(ampShooterSubsystem.shootAmp());
     
 
     m_DriverButton.button(5).onTrue(m_driveStationSubsystem.dropDisk());
@@ -107,6 +114,8 @@ public class RobotContainer {
     // m_driveStationSubsystem.setLights().schedule();
     driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
     // m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.test());
+
+
   }
 
   /**

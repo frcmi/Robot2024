@@ -4,6 +4,10 @@ import java.util.Map;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -21,7 +25,7 @@ public class AmpShooterSubsystem extends SubsystemBase{
     // private TalonFX ampShooterMotor = new TalonFX(AmpShooterConstants.kampShooterMotorId);
     private final CANSparkMax upperMotor = new CANSparkMax(AmpShooterConstants.kUpperAmpMotorId, MotorType.kBrushless);
     private final CANSparkMax lowerMotor = new CANSparkMax(AmpShooterConstants.kLowerAmpMotorId, MotorType.kBrushless);
-
+ 
     public AmpShooterSubsystem() {
         upperMotor.setInverted(true);
         setDefaultCommand(stop());
@@ -53,5 +57,6 @@ public class AmpShooterSubsystem extends SubsystemBase{
                 }
         ).withName("stop");
     }
+
 }
     
