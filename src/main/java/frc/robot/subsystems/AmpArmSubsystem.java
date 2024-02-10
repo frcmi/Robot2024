@@ -65,7 +65,7 @@ public class AmpArmSubsystem extends SubsystemBase{
         double pidOutput = pidController.calculate(angle, goalAngle);
         double ffOutput = feedforward.calculate(pidController.getSetpoint().position, pidController.getSetpoint().velocity);
 
-        double outputVolts = pidOutput + ffOutput;
+        double outputVolts = pidOutput + ffOutput + Math.cos(angle) * AmpArmConstants.kAmpArmVoltageMultiplier;
 
         // Stop movement if outside bounds
         if (angle < AmpArmConstants.kMinAngle) 

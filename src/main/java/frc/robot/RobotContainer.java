@@ -95,8 +95,7 @@ public class RobotContainer {
     
     driverController.povDown().onTrue(ampArmSubsystem.moveTo(Math.toRadians(AmpArmConstants.kMinAngle)));
 
-    driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
-    
+    driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());    
 
     m_DriverButton.button(5).onTrue(m_driveStationSubsystem.dropDisk());
     
