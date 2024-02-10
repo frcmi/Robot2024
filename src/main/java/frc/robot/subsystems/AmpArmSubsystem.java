@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AmpArmConstants;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 
@@ -36,6 +37,10 @@ public class AmpArmSubsystem extends SubsystemBase{
 
     public AmpArmSubsystem() {
         armEncoder.setDistancePerRotation(1);
+        armEncoder.setPositionOffset(AmpArmConstants.kAmpEncoderOffset / 360);
+        armMotor.setIdleMode(IdleMode.kBrake);
+
+        armMotor.setInverted(false);
 
         setDefaultCommand(stop());
     }
@@ -47,7 +52,7 @@ public class AmpArmSubsystem extends SubsystemBase{
     }
 
     public double getAngle() {
-        return (armEncoder.getAbsolutePosition() * 2 * Math.PI) + AmpArmConstants.kAmpEncoderOffset; // Angle is in radians
+        return -((armEncoder.getAbsolutePosition()) * 2 * Math.PI) + Math.toRadians(AmpArmConstants.kAmpEncoderOffset); // Angle is in radians
     }     
 
     public void setGoal(double goalAngle) {

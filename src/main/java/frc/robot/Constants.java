@@ -130,7 +130,7 @@ public final class Constants {
     public static final class Mod0 {
       public static final int driveMotorID = 1;
       public static final int angleMotorID = 5;
-      public static final int canCoderID = 9; //
+      public static final int canCoderID = 9; 
       public static final Rotation2d angleOffset = Rotation2d.fromDegrees(151.611328125);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
@@ -215,20 +215,19 @@ public final class Constants {
   }
 
   public static class AmpShooterConstants {
-    public static final int kUpperAmpMotorId = 0; // TODO: Change IDs here and on motors
-    public static final int kLowerAmpMotorId = 0; // TODO: Change IDs here and on motors
+    public static final int kShootMotor = 31;
     public static final double kAmpMotorSpeed = 0.4;
 
   }
 
   public static class AmpArmConstants {
-    public static final int kAmpArmMotorId = 0; // TODO: Change IDs here and on motors
+    public static final int kAmpArmMotorId = 32;
     public static final int kArmEncoderId = 0; // TODO: Change ID based on DIO port
 
     // TODO: Tune all of these values
     // PID parameters
-    public static final double kP = 12;
-    public static final double kI = 0.0;
+    public static final double kP = 8.0;
+    public static final double kI = 1.0;
     public static final double kD = 0.0;
 
     // FeedForward parameters
@@ -244,10 +243,10 @@ public final class Constants {
     // Angles
     public static final double kMaxAngle = 90; // TODO: Maximum angle of arm
     public static final double kMinAngle = 0; // TODO: Change to resting position
-    public static final double kShootAngle = 90; // TODO: Change to shooting position
+    public static final double kShootAngle = 73; // TODO: Change to shooting position
 
 
-    public static final double kAmpEncoderOffset = 0; // Needs to be measured
+    public static final double kAmpEncoderOffset = 143; // Needs to be measured
 
   }
 }

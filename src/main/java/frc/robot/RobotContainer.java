@@ -91,9 +91,11 @@ public class RobotContainer {
     // m_driverController.rightBumper().onTrue(m_driveStationSubsystem.ledOff());
     //you have to press right bumper then left bumper to turn off the lights, I don't why, ask the lights
 
-    driverController.povUp().onTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
-    driverController.povDown().onTrue(ampArmSubsystem.moveTo(AmpArmConstants.kMinAngle));
-    driverController.rightBumper().whileTrue(ampShooterSubsystem.shootAmp());
+    driverController.povUp().onTrue(ampArmSubsystem.moveTo(Math.toRadians(AmpArmConstants.kShootAngle)));
+    
+    driverController.povDown().onTrue(ampArmSubsystem.moveTo(Math.toRadians(AmpArmConstants.kMinAngle)));
+
+    driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
     
 
     m_DriverButton.button(5).onTrue(m_driveStationSubsystem.dropDisk());
