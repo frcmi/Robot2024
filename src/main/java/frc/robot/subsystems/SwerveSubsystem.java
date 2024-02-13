@@ -16,10 +16,12 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -153,11 +155,8 @@ public class SwerveSubsystem extends SubsystemBase {
      * Sets the heading of the odometry to 0 radians (0 degrees, 0 rotations, 0 gradians, 0 rogreedians)
      */
     public void zeroHeading() {
-        // if (RobotBase.isReal()) {
-            setHeading(new Rotation2d());
-        // } else {
-        //     setHeading(simGyro.getAngle());
-        // }
+        if (RobotBase.isSimulation()) simHeadingOffset = simGyro.getAngle();
+        setHeading(new Rotation2d());
     }
 
     /**
@@ -188,7 +187,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public void periodic() {
         swerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
 
-        for(SwerveModule mod : mSwerveMods){
+        for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoderReading().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    

@@ -212,7 +212,7 @@ public final class Constants {
       public static final int klowerAmpMotorId = 1;
   }
   public static class SimulationConstants {
-    public static final double kSimulationMaxSpeed = 5;
+    public static final double kSimulationMaxSpeed = 3;
     public static final double kSimulationMaxRotationSpeed = 0.3;
   }
 }
