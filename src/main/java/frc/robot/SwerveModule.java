@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.Map;
+
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -11,10 +13,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.lib.math.Conversions;
 import frc.lib.util.SwerveModuleConstants;
+import frc.robot.Constants.SwerveConstants;
 
 public class SwerveModule {
     public int moduleNumber;
@@ -60,9 +64,9 @@ public class SwerveModule {
         mDriveMotor.setInverted(isInverted);
 
         shuffleboardTab = Shuffleboard.getTab("Swerve Module " + moduleNumber);
-        CANCoderShuffleBoardItem = shuffleboardTab.add("CANCoder", 0).getEntry();
-        angleShuffleBoardItem = shuffleboardTab.add("Angle", 0).getEntry();
-        velocityShuffleBoardItem = shuffleboardTab.add("Velocity", 0).getEntry();
+        CANCoderShuffleBoardItem = shuffleboardTab.add("CANCoder", 0).withSize(2,2).withWidget(BuiltInWidgets.kGyro).withPosition(2,0).getEntry();
+        angleShuffleBoardItem = shuffleboardTab.add("Angle", 0).withSize(2,2).withWidget(BuiltInWidgets.kGyro).withPosition(0,0).getEntry();
+        velocityShuffleBoardItem = shuffleboardTab.add("Velocity", 0).withSize(4,1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min", -SwerveConstants.maxSpeed, "Max", SwerveConstants.maxSpeed)).withPosition(0, 2).getEntry();
     }
 
     /**

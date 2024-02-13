@@ -37,9 +37,10 @@ public class VisionSubsystem extends SubsystemBase {
     private final GenericEntry pitchShuffleBoardItem = shuffleboardTab.add("Pitch", 0).getEntry();
     private final GenericEntry rollShuffleBoardItem = shuffleboardTab.add("Roll", 0).getEntry();
     private final GenericEntry yawShuffleBoardItem = shuffleboardTab.add("Yaw", 0).getEntry();
-    private final ComplexWidget fieldShuffleBoardItem = shuffleboardTab.add("Field", field).withWidget(BuiltInWidgets.kField).withSize(4,2);
+    private final ComplexWidget fieldShuffleBoardItem = shuffleboardTab.add("Field", field).withWidget(BuiltInWidgets.kField).withSize(6,3);
 
     public VisionSubsystem(SwerveSubsystem swerveSubsystem) {
+        // field.
         var robotToCamera = new Transform3d(0.5, 0.5, 0.5, new Rotation3d(0, 0, 0));
 
         try {
