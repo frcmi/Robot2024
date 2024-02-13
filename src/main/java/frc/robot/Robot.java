@@ -4,9 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+import java.util.Map;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -16,6 +20,14 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
+
+  private static final PowerDistribution pdh = new PowerDistribution();
+  private static final ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Status");
+  private static final ComplexWidget pdhShuffleboardEntry = shuffleboardTab.add("PDH", pdh)
+          .withWidget(BuiltInWidgets.kPowerDistribution)
+          .withPosition(0,0)
+          .withSize(3,3)
+          .withProperties(Map.of("Glyph", "POWER_OFF"));
 
   private Command m_autonomousCommand;
 
