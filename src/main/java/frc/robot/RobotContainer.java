@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+
 import frc.robot.Constants.AmpArmConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -48,15 +49,15 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    swerveSubsystem.setDefaultCommand(
-        new TeleopSwerve(
-            swerveSubsystem, 
-            () -> -driverController.getLeftY(), 
-            () -> -driverController.getLeftX(), 
-            () -> -driverController.getRightX(), 
-            () -> false //robotCentric.getAsBoolean()
-        )
-    );
+    // swerveSubsystem.setDefaultCommand(
+    //     // new TeleopSwerve(
+    //         swerveSubsystem, 
+    //         () -> -driverController.getLeftY(), 
+    //         () -> -driverController.getLeftX(), 
+    //         () -> -driverController.getRightX(), 
+    //         () -> false //robotCentric.getAsBoolean()
+    //     )
+    // );
     // Configure the trigger bindings
     configureBindings();
   }
@@ -92,10 +93,10 @@ public class RobotContainer {
     //you have to press right bumper then left bumper to turn off the lights, I don't why, ask the lights
 
     driverController.povUp().onTrue(ampArmSubsystem.moveTo(Math.toRadians(AmpArmConstants.kShootAngle)));
-    
+   
     driverController.povDown().onTrue(ampArmSubsystem.moveTo(Math.toRadians(AmpArmConstants.kMinAngle)));
 
-    driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());    
+    driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
 
     m_DriverButton.button(5).onTrue(m_driveStationSubsystem.dropDisk());
     

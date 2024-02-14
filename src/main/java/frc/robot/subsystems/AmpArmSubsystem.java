@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import java.util.Map;
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -24,7 +26,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 
 public class AmpArmSubsystem extends SubsystemBase{
-    private final CANSparkMax armMotor = new CANSparkMax(AmpArmConstants.kAmpArmMotorId, MotorType.kBrushless);
+    public final CANSparkMax armMotor = new CANSparkMax(AmpArmConstants.kAmpArmMotorId, MotorType.kBrushless);
     private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(AmpArmConstants.kArmEncoderId);
 
     // PID Controller for arm movement
@@ -58,14 +60,14 @@ public class AmpArmSubsystem extends SubsystemBase{
     public void setGoal(double goalAngle) {
         double angle = getAngle();
         double kg = feedforward.calculate(angle, 0);
-
+        
         SmartDashboard.putNumber("Goal Angle", goalAngle);
         SmartDashboard.putBoolean("Arm Bounds", !(angle > AmpArmConstants.kMaxAngle || angle < AmpArmConstants.kMinAngle));
 
         double pidOutput = pidController.calculate(angle, goalAngle);
-        double ffOutput = feedforward.calculate(pidController.getSetpoint().position, pidController.getSetpoint().velocity);
+        // double ffOutput = feedforward.calculate(pidController.getSetpoint().position, pidController.getSetpoint().velocity);
 
-        double outputVolts = pidOutput + ffOutput + Math.cos(angle) * AmpArmConstants.kAmpArmVoltageMultiplier;
+        double outputVolts = pidOutput + /*ffOutput +*/ Math.cos(angle) * (goalAngle < AmpArmConstants.kGravityLimit ? 0 : AmpArmConstants.kTorqueArmConstant);
 
         // Stop movement if outside bounds
         if (angle < AmpArmConstants.kMinAngle) 
@@ -78,7 +80,7 @@ public class AmpArmSubsystem extends SubsystemBase{
 
     
     public Command moveTo(double goalAngle) {
-        return run(() -> setGoal(goalAngle)).until(pidController::atGoal);
+        return run(() -> setGoal(goalAngle));
     }
       
     public Command stop() { //TODO: can change

@@ -223,12 +223,14 @@ public final class Constants {
   public static class AmpArmConstants {
     public static final int kAmpArmMotorId = 32;
     public static final int kArmEncoderId = 0; // TODO: Change ID based on DIO port
-    public static final double kAmpArmVoltageMultiplier = 5;
+    public static final double kTorqueArmConstant = 0.5;
+    public static final double kGravityLimit = 0.3;
+    // Gareths law of constants
     // TODO: Tune all of these values
     // PID parameters
-    public static final double kP = 2.0;
+    public static final double kP = 4.3;
     public static final double kI = 0;
-    public static final double kD = 0.0;
+    public static final double kD = 0.1;
 
     // FeedForward parameters
     public static final double kS = 0.0;
@@ -243,10 +245,10 @@ public final class Constants {
     // Angles
     public static final double kMaxAngle = 90; // TODO: Maximum angle of arm
     public static final double kMinAngle = 0; // TODO: Change to resting position
-    public static final double kShootAngle = 73; // TODO: Change to shooting position
+    public static final double kShootAngle = 100; // TODO: Change to shooting position
 
 
-    public static final double kAmpEncoderOffset = 143; // Needs to be measured
+    public static final double kAmpEncoderOffset = 179 + 140 + 4.2; // Needs to be measured
 
   }
 }
