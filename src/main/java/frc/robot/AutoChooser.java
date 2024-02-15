@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.util.Semaphore;
 
 public class AutoChooser {
     public static final int TARGET_COUNT = 5;
@@ -24,6 +26,8 @@ public class AutoChooser {
     }
 
     public AutoChooser() {
+        semaphore = new Semaphore();
+
         shuffleboard = Shuffleboard.getTab("Autos");
         targetChoosers = new ArrayList<>(TARGET_COUNT);
 
@@ -62,8 +66,26 @@ public class AutoChooser {
             }
         }
     }
+
+    /**
+     * Stops the previous strategy and begins a new one.
+     * @param strategy The new strategy to begin executing.
+     */
+    public void startStrategy(Strategy strategy) {
+        // signal the semaphore so the previous auto stops
+        semaphore.signal();
+
+        // make sure we wait for the semaphore to be reset before we queue a new command
+        semaphore.onReady(() -> {
+            var command = Commands.print("Placeholder").repeatedly();
+
+            semaphore.addDependent();
+            command.until(semaphore::checkStatus).schedule();
+        });
+    }
     
     private ShuffleboardTab shuffleboard;
     private SendableChooser<Strategy> strategyChooser;
     private ArrayList<SendableChooser<Pose2d>> targetChoosers;
+    private Semaphore semaphore;
 }
