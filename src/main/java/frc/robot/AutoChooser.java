@@ -2,6 +2,7 @@ package frc.robot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -33,30 +34,24 @@ public class AutoChooser {
         targetChoosers = new ArrayList<>(TARGET_COUNT);
 
         for (int i = 0; i < TARGET_COUNT; i++) {
-            var chooser = new SendableChooser<Pose2d>();
+            var chooser = new SendableChooser<Optional<Pose2d>>();
+            chooser.setDefaultOption("<none>", Optional.empty());
 
             shuffleboard.add("Target " + (i + 1), chooser);
             targetChoosers.add(chooser);
         }
 
-        boolean setDefault = false;
         for (var entry : TARGETS.entrySet()) {
             for (int i = 0; i < TARGET_COUNT; i++) {
                 var chooser = targetChoosers.get(i);
-                if (setDefault) {
-                    chooser.addOption(entry.getKey(), entry.getValue());
-                } else {
-                    chooser.setDefaultOption(entry.getKey(), entry.getValue());
-                }
+                chooser.addOption(entry.getKey(), Optional.of(entry.getValue()));
             }
-
-            setDefault = true;
         }
 
         strategyChooser = new SendableChooser<>();
         shuffleboard.add("Strategy", strategyChooser);
-        
-        setDefault = false;
+
+        boolean setDefault = false;
         for (var strategy : Strategy.values()) {
             var name = strategy.toString();
             if (setDefault) {
@@ -76,6 +71,7 @@ public class AutoChooser {
 
     /**
      * Stops the previous strategy and begins a new one.
+     * 
      * @param strategy The new strategy to begin executing.
      */
     public void startStrategy(Strategy strategy) {
@@ -107,7 +103,7 @@ public class AutoChooser {
         if (running) {
             return;
         }
-        
+
         var strategy = getStrategy();
         startStrategy(strategy);
 
@@ -132,10 +128,31 @@ public class AutoChooser {
     public Strategy getStrategy() {
         return strategyChooser.getSelected();
     }
-    
+
+    /**
+     * Retrieves Shuffleboard-selected target positions.
+     * @return The positions of the selected targets.
+     */
+    public Pose2d[] getTargets() {
+        var targets = new ArrayList<Pose2d>();
+        for (int i = 0; i < TARGET_COUNT; i++) {
+            var chooser = targetChoosers.get(i);
+            var value = chooser.getSelected();
+
+            if (value.isPresent()) {
+                targets.add(value.get());
+            }
+        }
+
+        var result = new Pose2d[TARGET_COUNT];
+        targets.toArray(result);
+
+        return result;
+    }
+
     private ShuffleboardTab shuffleboard;
     private SendableChooser<Strategy> strategyChooser;
-    private ArrayList<SendableChooser<Pose2d>> targetChoosers;
+    private ArrayList<SendableChooser<Optional<Pose2d>>> targetChoosers;
     private Semaphore semaphore;
     private boolean running;
 }
