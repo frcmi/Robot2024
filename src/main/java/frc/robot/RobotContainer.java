@@ -6,10 +6,8 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SpeakerShooterSubsystem;
-import frc.robot.commands.DriveToPosition;
+import frc.robot.commands.AutoChooserCommand;
 import frc.robot.commands.TeleopSwerve;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.commands.SetTrailLights;
 import frc.robot.subsystems.DriveStationSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -113,6 +111,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new DriveToPosition(swerveSubsystem, swerveSubsystem::getPose, new Pose2d(3d,3d, new Rotation2d(0)));
+    return new AutoChooserCommand(autoChooser);
   }
 }

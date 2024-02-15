@@ -27,6 +27,7 @@ public class AutoChooser {
 
     public AutoChooser() {
         semaphore = new Semaphore();
+        running = false;
 
         shuffleboard = Shuffleboard.getTab("Autos");
         targetChoosers = new ArrayList<>(TARGET_COUNT);
@@ -65,6 +66,12 @@ public class AutoChooser {
                 setDefault = true;
             }
         }
+
+        strategyChooser.onChange(strategy -> {
+            if (!running) {
+                return;
+            }
+        });
     }
 
     /**
@@ -72,8 +79,8 @@ public class AutoChooser {
      * @param strategy The new strategy to begin executing.
      */
     public void startStrategy(Strategy strategy) {
-        // signal the semaphore so the previous auto stops
-        semaphore.signal();
+        // stop the previous auto
+        stop();
 
         // make sure we wait for the semaphore to be reset before we queue a new command
         semaphore.onReady(() -> {
@@ -83,9 +90,52 @@ public class AutoChooser {
             command.until(semaphore::checkStatus).schedule();
         });
     }
+
+    /**
+     * Stops the current strategy.
+     */
+    public void stop() {
+        if (semaphore.hasDependents()) {
+            semaphore.signal();
+        }
+    }
+
+    /**
+     * Starts the auto chooser process with the currently selected strategy.
+     */
+    public void startChooser() {
+        if (running) {
+            return;
+        }
+        
+        var strategy = getStrategy();
+        startStrategy(strategy);
+
+        running = true;
+    }
+
+    /**
+     * Stops the auto chooser process.
+     */
+    public void stopChooser() {
+        if (!running) {
+            return;
+        }
+
+        running = false;
+        stop();
+    }
+
+    /**
+     * Gets the currently selected strategy.
+     */
+    public Strategy getStrategy() {
+        return strategyChooser.getSelected();
+    }
     
     private ShuffleboardTab shuffleboard;
     private SendableChooser<Strategy> strategyChooser;
     private ArrayList<SendableChooser<Pose2d>> targetChoosers;
     private Semaphore semaphore;
+    private boolean running;
 }
