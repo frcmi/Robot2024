@@ -9,6 +9,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SpeakerShooterSubsystem;
 import frc.robot.subsystems.AmpArmSubsystem;
 import frc.robot.subsystems.AmpShooterSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.TeleopSwerve;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -38,6 +39,7 @@ public class RobotContainer {
   private final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
   private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
   private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem();
+  private final ClimberSubsystem climbSubsystem = new ClimberSubsystem();
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
@@ -71,25 +73,16 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
+    // Climber
+    driverController.y().whileTrue(climbSubsystem.climb());
+    driverController.x().whileTrue(climbSubsystem.descend());
     // Intake
     driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
     driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
 
     // Shooter
     driverController.a().whileTrue(speakerShooterSubsystem.shootSpeaker());
-    // driverController.b().whileTrue(ampShooterSubsystem.shootAmp());
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    // m_driveStationSubsystem.coop();
-    // m_driverController.x().onTrue(m_driveStationSubsystem.ampSpeaker());//new SetTrailLights(m_driveStationSubsystem));
-    // m_driverController.b().onTrue(new SetTrailLights(m_driveStationSubsystem, false));
-    // m_driverController.a().whileTrue(new SetTrailLights(m_driveStationSubsystem, true));
-    // m_driverController.y().onTrue(m_driveStationSubsystem.dropDisk());
-    // m_driverController.leftBumper().onTrue(m_driveStationSubsystem.setLights());
-    // m_driverController.rightBumper().onTrue(m_driveStationSubsystem.ledOff());
-    //you have to press right bumper then left bumper to turn off the lights, I don't why, ask the lights
 
     driverController.povUp().onTrue(ampArmSubsystem.moveTo(Math.toRadians(AmpArmConstants.kShootAngle)));
     
@@ -97,7 +90,7 @@ public class RobotContainer {
 
     driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
     
-
+    // Driver Station (LEDs)
     m_DriverButton.button(5).onTrue(m_driveStationSubsystem.dropDisk());
     
     m_DriverButton.button(7).onTrue(m_driveStationSubsystem.coop());

@@ -249,6 +249,11 @@ public final class Constants {
     public static final double kAmpEncoderOffset = 143; // Needs to be measured
 
   }
+  public static class ClimberConstants {
+    public static final int kClimberMotorL = 40;
+    public static final int kClimberMotorR = 0; // TODO: input correct
+    public static final double kClimbSpeed = 0.1; // Can be changed
+  }
 }
 
 
