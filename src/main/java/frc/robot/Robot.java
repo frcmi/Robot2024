@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
           .getEntry();
 
   public static final GenericEntry stationShuffleboardEntry = shuffleboardTab
-          .add("Alliance", 0)
+          .add("Station", 0)
           .withWidget(BuiltInWidgets.kTextView)
           .withPosition(3, 1)
           .withSize(2, 1)
