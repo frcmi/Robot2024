@@ -23,21 +23,27 @@ public class VisionSubsystem extends SubsystemBase {
     private static final String cameraName = "USB_Camera";
 
     private Optional<EstimatedRobotPose> lastPose;
-    private Field2d field = new Field2d();
+    private static Field2d field = new Field2d();
 
     private PhotonPoseEstimator estimator;
     private PhotonCamera camera;
     private final SwerveSubsystem swerve;
 
     /* shuffleboard entries */
-    private final ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Vision");
-    private final GenericEntry xShuffleBoardItem = shuffleboardTab.add("X", 0).getEntry();
-    private final GenericEntry yShuffleBoardItem = shuffleboardTab.add("Y", 0).getEntry();
-    private final GenericEntry zShuffleBoardItem = shuffleboardTab.add("Z", 0).getEntry();
-    private final GenericEntry pitchShuffleBoardItem = shuffleboardTab.add("Pitch", 0).getEntry();
-    private final GenericEntry rollShuffleBoardItem = shuffleboardTab.add("Roll", 0).getEntry();
-    private final GenericEntry yawShuffleBoardItem = shuffleboardTab.add("Yaw", 0).getEntry();
-    private final ComplexWidget fieldShuffleBoardItem = shuffleboardTab.add("Field", field).withWidget(BuiltInWidgets.kField).withSize(6,3);
+    private static final ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Vision");
+    private static final GenericEntry xShuffleBoardItem = shuffleboardTab.add("X", 0).getEntry();
+    private static final GenericEntry yShuffleBoardItem = shuffleboardTab.add("Y", 0).getEntry();
+    private static final GenericEntry zShuffleBoardItem = shuffleboardTab.add("Z", 0).getEntry();
+    private static final GenericEntry pitchShuffleBoardItem = shuffleboardTab.add("Pitch", 0).getEntry();
+    private static final GenericEntry rollShuffleBoardItem = shuffleboardTab.add("Roll", 0).getEntry();
+    private static final GenericEntry yawShuffleBoardItem = shuffleboardTab.add("Yaw", 0).getEntry();
+
+    static {
+        shuffleboardTab
+                .add("Field", field)
+                .withWidget(BuiltInWidgets.kField)
+                .withSize(6,3);
+    }
 
     public VisionSubsystem(SwerveSubsystem swerveSubsystem) {
         // field.

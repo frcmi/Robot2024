@@ -4,13 +4,19 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+import java.sql.Driver;
 import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -23,11 +29,34 @@ public class Robot extends TimedRobot {
 
   private static final PowerDistribution pdh = new PowerDistribution();
   private static final ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Status");
-  private static final ComplexWidget pdhShuffleboardEntry = shuffleboardTab.add("PDH", pdh)
-          .withWidget(BuiltInWidgets.kPowerDistribution)
-          .withPosition(0,0)
-          .withSize(3,3)
-          .withProperties(Map.of("Glyph", "POWER_OFF"));
+
+  public static final GenericEntry allianceShuffleboardEntry = shuffleboardTab
+          .add("Alliance", true)
+          .withWidget(BuiltInWidgets.kBooleanBox)
+          .withPosition(3, 0)
+          .withSize(2, 1)
+          .withProperties(
+                  Map.of(
+                          "Color when true", "red",
+                          "Color when false", "blue"
+                  )
+          )
+          .getEntry();
+
+  public static final GenericEntry stationShuffleboardEntry = shuffleboardTab
+          .add("Alliance", 0)
+          .withWidget(BuiltInWidgets.kTextView)
+          .withPosition(3, 1)
+          .withSize(2, 1)
+          .getEntry();
+
+  static {
+    shuffleboardTab.add("PDH", pdh)
+            .withWidget(BuiltInWidgets.kPowerDistribution)
+            .withPosition(0,0)
+            .withSize(3,3)
+            .withProperties(Map.of("Glyph", "POWER_OFF"));
+  }
 
   private Command m_autonomousCommand;
 
@@ -53,6 +82,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    // TODO: measure if this has a perf impact?
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    alliance.ifPresent(value -> allianceShuffleboardEntry.setBoolean(value == Alliance.Red));
+
+    OptionalInt station = DriverStation.getLocation();
+    station.ifPresent(stationShuffleboardEntry::setInteger);
+
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic

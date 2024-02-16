@@ -36,7 +36,6 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_DriverButton = new CommandXboxController(OperatorConstants.kDriverButtonPort);
 
-  private final AutoStuff m_autoStuff = new AutoStuff();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(
@@ -75,7 +74,6 @@ public class RobotContainer {
     // m_driverController.rightBumper().onTrue(m_driveStationSubsystem.ledOff());
     //you have to press right bumper then left bumper to turn off the lights, I don't why, ask the lights
     
-    driverController.button(1).onTrue(new RunCommand(m_autoStuff::test));
     m_DriverButton.button(5).onTrue(m_driveStationSubsystem.dropDisk());
     
     m_DriverButton.button(7).onTrue(m_driveStationSubsystem.coop());
