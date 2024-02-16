@@ -10,12 +10,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class AutoAlignCommand extends Command
-{
+public class AutoAlignCommand extends Command {
     private final SwerveSubsystem swerve;
 
-    public AutoAlignCommand(SwerveSubsystem swerveSubsystem)
-    {
+    public AutoAlignCommand(SwerveSubsystem swerveSubsystem) {
         addRequirements(swerveSubsystem);
 
         swerve = swerveSubsystem;
@@ -25,8 +23,7 @@ public class AutoAlignCommand extends Command
     private static final Pose3d speaker = new Pose3d(16.427, 5.548, 2.032, new Rotation3d(0, 0, Math.PI));
     private static final double maximumFiringAngle = 75 * Math.PI / 180;
 
-    private Pose2d calculateDestination()
-    {
+    private Pose2d calculateDestination() {
         Pose3d currentPose = new Pose3d(swerve.getPose());
         Transform3d speakerToRobot = currentPose.minus(speaker);
 
@@ -55,8 +52,7 @@ public class AutoAlignCommand extends Command
     }
 
     @Override
-    public void execute()
-    {
+    public void execute() {
         Pose2d destination = calculateDestination();
         Command driveCommand = new DriveToPosition(swerve, swerve::getPose, destination);
 
