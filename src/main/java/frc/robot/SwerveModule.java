@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.Map;
+
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -10,8 +12,13 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.lib.math.Conversions;
 import frc.lib.util.SwerveModuleConstants;
+import frc.robot.Constants.SwerveConstants;
 
 public class SwerveModule {
     public int moduleNumber;
@@ -29,6 +36,13 @@ public class SwerveModule {
 
     /* angle motor control requests */
     private final PositionVoltage anglePosition = new PositionVoltage(0);
+
+    /* shuffleboard entries */
+    private final ShuffleboardTab shuffleboardTab;
+    private final GenericEntry CANCoderShuffleBoardItem;
+    private final GenericEntry angleShuffleBoardItem;
+    private final GenericEntry velocityShuffleBoardItem;
+
 
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants, boolean isInverted){
         this.moduleNumber = moduleNumber;
@@ -49,6 +63,34 @@ public class SwerveModule {
         mDriveMotor.getConfigurator().setPosition(0.0);
         mDriveMotor.setInverted(isInverted);
 
+        String modName;
+        switch (moduleNumber) {
+            case 0: {
+                modName = "Front Left Swerve";
+                break;
+            }
+            case 1: {
+                modName = "Front Right Swerve";
+                break;
+            }
+            case 2: {
+                modName = "Back Left Swerve";
+                break;
+            }
+            case 3: {
+                modName = "Back Right Swerve";
+                break;
+            }
+            default: {
+                modName = "Unknown Swerve Mod " + moduleNumber;
+                System.err.println("UNKNOWN SWERVE MODULES " + moduleNumber + ", module should be between 0 and 3");
+            }
+        }
+
+        shuffleboardTab = Shuffleboard.getTab(modName);
+        CANCoderShuffleBoardItem = shuffleboardTab.add("CANCoder", 0).withSize(2,2).withWidget(BuiltInWidgets.kGyro).withPosition(2,0).getEntry();
+        angleShuffleBoardItem = shuffleboardTab.add("Angle", 0).withSize(2,2).withWidget(BuiltInWidgets.kGyro).withPosition(0,0).getEntry();
+        velocityShuffleBoardItem = shuffleboardTab.add("Velocity", 0).withSize(4,1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min", -SwerveConstants.maxSpeed, "Max", SwerveConstants.maxSpeed)).withPosition(0, 2).getEntry();
     }
 
     /**
@@ -112,5 +154,14 @@ public class SwerveModule {
             Conversions.rotationsToMeters(mDriveMotor.getPosition().getValue(), Constants.SwerveConstants.wheelCircumference), 
             Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
         );
+    }
+
+    /**
+     * Logs all relevant values to shuffleboard. Should be called periodically.
+     */
+    public void logValues() {
+        CANCoderShuffleBoardItem.setDouble(getCANcoderReading().getDegrees());
+        angleShuffleBoardItem.setDouble(getPosition().angle.getDegrees());
+        velocityShuffleBoardItem.setDouble(getState().speedMetersPerSecond);
     }
 }
