@@ -198,6 +198,28 @@ public final class Constants {
     public static final double kAutoYI = 0;
     public static final double kAutoYD = 0;
   }
+  public static class IntakeConstants {
+    public static final int kIntakeMotor1Id = 14;
+    public static final int kIntakeMotor2Id = 25; 
+    public static final int kIndexerMotorId = 30;
+
+    public static final double kIntakeMotorSpeed = 0.5;
+    public static final double kIndexerSpeed = 0.5;
+  }
+
+  public static class SpeakerShooterConstants {
+    public static final int kSpeakerShooterMotorId = 26;
+    public static final int kSpeakerShooterMotor2Id = 27;
+
+    public static final double kSpeakerMotorSpeed = 0.373;
+  }
+
+  public static class AmpShooterConstants {
+    public static final int kUpperAmpMotorId = 0; // TODO: Change IDs here and on motors
+    public static final int kLowerAmpMotorId = 0; // TODO: Change IDs here and on motors
+
+    public static final double kAmpMotorSpeed = 0.4;
+  }
 }
 
 

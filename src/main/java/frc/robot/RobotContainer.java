@@ -5,8 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.RunCommand;
+
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.DriveToPosition;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.SpeakerShooterSubsystem;
+import frc.robot.commands.AutoChooserCommand;
 import frc.robot.commands.TeleopSwerve;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -27,6 +30,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  // private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem();
+  private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
   private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem();
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
@@ -35,6 +41,8 @@ public class RobotContainer {
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_DriverButton = new CommandXboxController(OperatorConstants.kDriverButtonPort);
+
+  private final AutoChooser autoChooser = new AutoChooser();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -63,6 +71,13 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
+    // Intake
+    driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
+    driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
+
+    // Shooter
+    driverController.a().whileTrue(speakerShooterSubsystem.shootSpeaker());
+    // driverController.b().whileTrue(ampShooterSubsystem.shootAmp());
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // m_driveStationSubsystem.coop();
@@ -100,6 +115,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new DriveToPosition(swerveSubsystem, swerveSubsystem::getPose, new Pose2d(3d,3d, new Rotation2d(0)));
+    return new AutoChooserCommand(autoChooser);
   }
 }
