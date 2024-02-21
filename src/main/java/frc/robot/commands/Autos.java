@@ -25,14 +25,12 @@ public final class Autos {
 
   public static Command testAuto(SwerveSubsystem drive, IntakeSubsystem intake, Supplier<Pose2d> currentPosition) {
     DriveToPositionPathPlanner path = new DriveToPositionPathPlanner(drive, currentPosition, new Pose2d(new Translation2d(0, 2), new Rotation2d(0)));
-
-    return intake.intakeSpeaker().withTimeout(0.5)
-    .andThen(intake.stop()).withTimeout(1)
-    .andThen(path.alongWith(intake.intakeSpeaker())).withTimeout(5)
-    .andThen(intake.intakeSpeaker());
-
+    DriveToPositionPathPlanner path2 = new DriveToPositionPathPlanner(drive, currentPosition, new Pose2d(new Translation2d(0, 6), new Rotation2d(0)));
+    return intake.intakeSpeaker().withTimeout(5)
+    .andThen(intake.stop()).withTimeout(3)
+    .andThen(path.andThen(intake.intakeSpeaker()).withTimeout(3))
+    .andThen(intake.stop()).withTimeout(3);
     // return new DriveToPositionPathPlanner(drive, currentPosition, new Pose2d(new Translation2d(2, 2), new Rotation2d(0))).withTimeout(2)
-    // .andThen(intake.intakeSpeaker())
     // .andThen(new DriveToPosition(drive, currentPosition, new Pose2d(new Translation2d(0, -2), new Rotation2d(Math.toRadians(180)))));
   }
 }
