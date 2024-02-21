@@ -13,6 +13,7 @@ import frc.robot.commands.AutoChooserCommand;
 import frc.robot.commands.TeleopSwerve;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.SetTrailLights;
@@ -118,6 +119,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new AutoChooserCommand(autoChooser);
+    return Autos.testAuto(swerveSubsystem, intakeSubsystem,  () -> swerveSubsystem.getPose()); // Just for testing, will implement autoChooser later
+    // return new AutoChooserCommand(autoChooser);
   }
 }

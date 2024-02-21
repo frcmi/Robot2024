@@ -49,13 +49,18 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command intakeSpeaker()  { //Subject to change due to motor shenanigans
-                return run (
+            System.out.println("Intaking Speaker");
+            Command intake = Commands.run (
                 () -> {intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed);
                     intakeMotor2.set(-IntakeConstants.kIntakeMotorSpeed);
                     indexerMotor.set(IntakeConstants.kIndexerSpeed);
-
                 }
         ).withName("intakeSpeaker");
+        intake.addRequirements(this);
+
+        System.out.println("Finished intaking speaker");
+
+        return intake;
     }
     public Command stop() {
         return run(
