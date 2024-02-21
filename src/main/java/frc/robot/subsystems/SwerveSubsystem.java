@@ -29,6 +29,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -217,6 +220,10 @@ public class SwerveSubsystem extends SubsystemBase {
         for(SwerveModule mod : mSwerveMods){
             mod.resetToAbsolute();
         }
+    }
+
+    public Command stop() {
+        return Commands.run(() -> driveRobotRelative(new ChassisSpeeds(0, 0, 0)), this);
     }
 
     StructPublisher<Pose2d> posePublisher = NetworkTableInstance.getDefault()

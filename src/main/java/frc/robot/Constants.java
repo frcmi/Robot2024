@@ -46,7 +46,7 @@ public final class Constants {
 
   public static final class SwerveConstants {
     public static final double kAllowedDistanceToDestination = 0.1;
-    public static double kAllowedRotationDifferenceToDestination = 0.1;
+    public static final double kAllowedRotationDifferenceToDestination = 0.1; // Radians
 
     public static final int pigeonID = 0;
 
@@ -200,7 +200,7 @@ public final class Constants {
     public static final double kAutoYD = 0;
 
     // For PathPlanner
-    public static final double kP = 5.0;
+    public static final double kP = 20.0;
     public static final double kI = 0;
     public static final double kD = 0;
   }
