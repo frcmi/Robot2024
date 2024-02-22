@@ -35,7 +35,6 @@ public final class Autos {
     // .andThen(intake.intakeSpeaker());
 
     // return new DriveToPositionPathPlanner(drive, currentPosition, new Pose2d(new Translation2d(2, 2), new Rotation2d(0))).withTimeout(2)
-    // .andThen(intake.intakeSpeaker())
     // .andThen(new DriveToPosition(drive, currentPosition, new Pose2d(new Translation2d(0, -2), new Rotation2d(Math.toRadians(180)))));
   }
 
