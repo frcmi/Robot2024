@@ -135,7 +135,7 @@ public final class Constants {
       public static final Rotation2d angleOffset = Rotation2d.fromDegrees(151.611328125);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
-      public static final boolean isInverted = false;
+      public static final boolean isInverted = true;
     }
 
     /* Front Right Module - Module 1 */
@@ -146,7 +146,7 @@ public final class Constants {
       public static final Rotation2d angleOffset = Rotation2d.fromDegrees(8.701171875);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
-      public static final boolean isInverted = false;
+      public static final boolean isInverted = true;
     }
 
     /* Back Left Module - Module 2 */
@@ -157,7 +157,7 @@ public final class Constants {
       public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-3.33984375);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
-      public static final boolean isInverted = false;
+      public static final boolean isInverted = true;
     }
 
     /* Back Right Module - Module 3 */
@@ -168,14 +168,14 @@ public final class Constants {
       public static final Rotation2d angleOffset = Rotation2d.fromDegrees(406.23046875);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
-      public static final boolean isInverted = false;
+      public static final boolean isInverted = true;
     }
   }
 
   public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be tuned
                                             // to specific robot
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    public static final double kMaxSpeedMetersPerSecond = 3.0;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3.0;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
@@ -187,7 +187,7 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
         
-    public static final double kRotationP = 5.0;
+    public static final double kRotationP = 2.5;
     public static final double kRotationI = 0;
     public static final double kRotationD = 0;
 
@@ -200,7 +200,7 @@ public final class Constants {
     public static final double kAutoYD = 0;
 
     // For PathPlanner
-    public static final double kP = 20.0;
+    public static final double kP = 1.5;
     public static final double kI = 0;
     public static final double kD = 0;
   }

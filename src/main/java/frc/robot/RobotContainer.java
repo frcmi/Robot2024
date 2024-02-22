@@ -79,7 +79,7 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
 
     // Shooter
-    driverController.a().whileTrue(speakerShooterSubsystem.shootSpeaker());
+    driverController.rightTrigger().whileTrue(speakerShooterSubsystem.shootSpeaker());
     // driverController.b().whileTrue(ampShooterSubsystem.shootAmp());
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -119,7 +119,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return Autos.testAuto(swerveSubsystem, intakeSubsystem,  () -> swerveSubsystem.getPose()); // Just for testing, will implement autoChooser later
+    // return Autos.testAuto(swerveSubsystem, intakeSubsystem,  () -> swerveSubsystem.getPose()); // Just for testing, will implement autoChooser later
     // return new AutoChooserCommand(autoChooser);
+    return Autos.ppAuto(intakeSubsystem, speakerShooterSubsystem);
   }
 }

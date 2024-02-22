@@ -25,9 +25,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -67,8 +69,9 @@ public class SwerveSubsystem extends SubsystemBase {
             new SwerveModule(3, Constants.SwerveConstants.Mod3.constants, Constants.SwerveConstants.Mod3.isInverted)
         };
 
-        var centerField = new Pose2d(11.2775, 4.5675, new Rotation2d(0));
-        swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(Constants.SwerveConstants.swerveKinematics, getGyroYaw(), getModulePositions(), centerField);
+        Pose2d centerField = new Pose2d(11.2775, 4.5675, new Rotation2d(0));
+        Pose2d speakerStart = new Pose2d(15.27, 5.55, new Rotation2d(Math.toRadians(-180)));
+        swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(Constants.SwerveConstants.swerveKinematics, getGyroYaw(), getModulePositions(), speakerStart);
 
         AutoBuilder.configureHolonomic(
             this::getPose, // Robot pose supplier
@@ -79,7 +82,7 @@ public class SwerveSubsystem extends SubsystemBase {
                     translationConstants, // Translation PID constants
                     rotationConstants, // Rotation PID constants
                     AutoConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
-                    Math.sqrt((SwerveConstants.wheelBase / 2)*(SwerveConstants.wheelBase / 2)*2), // Drive base radius in meters. Distance from robot center to furthest module.
+                    Math.sqrt((Units.inchesToMeters(SwerveConstants.wheelBase) / 2)*(Units.inchesToMeters(SwerveConstants.wheelBase) / 2)*2), // Drive base radius in meters. Distance from robot center to furthest module.
                     new ReplanningConfig() // Default path replanning config. See the API for the options here
             ),
             () -> {
@@ -90,7 +93,7 @@ public class SwerveSubsystem extends SubsystemBase {
               if (alliance.isPresent()) {
                 return alliance.get() == DriverStation.Alliance.Red;
               }
-              return false;
+              return true;
             },
             this // Reference to this subsystem to set requirements
     );
@@ -126,7 +129,7 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveModuleState[] swerveModuleStates = SwerveConstants.swerveKinematics.toSwerveModuleStates(chassisSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);
         for (SwerveModule mod : mSwerveMods) {
-            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], false);
+            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], true);
         }
     }
     
@@ -138,7 +141,7 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.SwerveConstants.maxSpeed);
         
         for(SwerveModule mod : mSwerveMods){
-            mod.setDesiredState(desiredStates[mod.moduleNumber], false);
+            mod.setDesiredState(desiredStates[mod.moduleNumber], true);
         }
     }
 
