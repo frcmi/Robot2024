@@ -187,9 +187,9 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
         
-    public static final double kRotationP = 2.5;
+    public static final double kRotationP = 0.1;
     public static final double kRotationI = 0;
-    public static final double kRotationD = 0;
+    public static final double kRotationD = 0.1;
 
     public static final double kAutoXP = 0;
     public static final double kAutoXI = 0;
@@ -200,9 +200,9 @@ public final class Constants {
     public static final double kAutoYD = 0;
 
     // For PathPlanner
-    public static final double kP = 1.5;
-    public static final double kI = 0;
-    public static final double kD = 0;
+    public static final double kP = 1.3;
+    public static final double kI = 0.4;
+    public static final double kD = 0.5;
   }
   public static class IntakeConstants {
     public static final int kIntakeMotor1Id = 14;
@@ -229,6 +229,3 @@ public final class Constants {
     public static int kShootMotor;
   }
 }
-
-
-

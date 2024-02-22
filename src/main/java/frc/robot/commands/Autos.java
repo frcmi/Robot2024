@@ -40,8 +40,8 @@ public final class Autos {
   }
 
   public static Command ppAuto(IntakeSubsystem intake, SpeakerShooterSubsystem shooter) {
-    return ((new PathPlannerAuto("Example Auto")).withTimeout(5)
-      .alongWith(intake.intakeSpeaker()));
+    return ((new PathPlannerAuto("Example Auto"))
+      .alongWith(intake.intakeAmp()));
       // .andThen(shooter.shootSpeaker()).withTimeout(2);
   }
 }
