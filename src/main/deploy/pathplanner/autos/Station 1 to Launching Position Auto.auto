@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 10.762943276505876,
-      "y": 6.494895764358002
+      "x": 16.274171210605015,
+      "y": 7.068555177572782
     },
-    "rotation": 0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -14,13 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Pickup Note 4-1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Pickup Note 4-2"
+            "pathName": "Station 1 to LaunchingPosition"
           }
         }
       ]

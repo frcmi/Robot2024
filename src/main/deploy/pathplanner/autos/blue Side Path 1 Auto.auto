@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 10.762943276505876,
-      "y": 6.494895764358002
+      "x": 0.19804908313367406,
+      "y": 7.123189407402762
     },
     "rotation": 0
   },
@@ -14,13 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Pickup Note 4-1"
+            "pathName": "blue Side Path 1-1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Pickup Note 4-2"
+            "pathName": "blue Side Path 1-2"
           }
         }
       ]

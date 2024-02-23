@@ -97,6 +97,7 @@ public final class Constants {
      * loop driving.
      * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc
      */
+    public static final double kOdometryProportionalityConstant = 1.1771;
     public static final double openLoopRamp = 0.25;
     public static final double closedLoopRamp = 0.0;
 
@@ -187,9 +188,9 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
         
-    public static final double kRotationP = 0.1;
+    public static final double kRotationP = 0.5;
     public static final double kRotationI = 0;
-    public static final double kRotationD = 0.1;
+    public static final double kRotationD = 0;
 
     public static final double kAutoXP = 0;
     public static final double kAutoXI = 0;
@@ -201,8 +202,8 @@ public final class Constants {
 
     // For PathPlanner
     public static final double kP = 1.3;
-    public static final double kI = 0.4;
-    public static final double kD = 0.5;
+    public static final double kI = 0;
+    public static final double kD = 0;
   }
   public static class IntakeConstants {
     public static final int kIntakeMotor1Id = 14;

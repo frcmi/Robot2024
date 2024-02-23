@@ -39,8 +39,9 @@ public final class Autos {
   }
 
   public static Command ppAuto(IntakeSubsystem intake, SpeakerShooterSubsystem shooter) {
-    return ((new PathPlannerAuto("Example Auto"))
-      .alongWith(intake.intakeAmp()));
+    return new PathPlannerAuto("blue Side Path 1 Auto");//.andThen(new PathPlannerAuto("Pickup Note 4 Auto")));
+    
+      // now goes from another starting postition to its actual starting position
       // .andThen(shooter.shootSpeaker()).withTimeout(2);
   }
 }

@@ -56,7 +56,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 .withWidget(BuiltInWidgets.kField)
                 .withSize(7, 4);
     }
-
+    
     public SwerveSubsystem() {
         gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
@@ -71,7 +71,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
         Pose2d centerField = new Pose2d(11.2775, 4.5675, new Rotation2d(0));
         Pose2d speakerStart = new Pose2d(15.27, 5.55, new Rotation2d(Math.toRadians(-180)));
-        swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(Constants.SwerveConstants.swerveKinematics, getGyroYaw(), getModulePositions(), speakerStart);
+        Pose2d station1 = new Pose2d(16.27, 7.07, new Rotation2d(Math.toRadians(180)));
+        Pose2d blueStation = new Pose2d(0.53, 7.11, new Rotation2d(0));
+        swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(Constants.SwerveConstants.swerveKinematics, getGyroYaw(), getModulePositions(), blueStation);
 
         AutoBuilder.configureHolonomic(
             this::getPose, // Robot pose supplier
@@ -93,7 +95,7 @@ public class SwerveSubsystem extends SubsystemBase {
               if (alliance.isPresent()) {
                 return alliance.get() == DriverStation.Alliance.Red;
               }
-              return true;
+              return false;
             },
             this // Reference to this subsystem to set requirements
     );
@@ -171,7 +173,8 @@ public class SwerveSubsystem extends SubsystemBase {
      * @return the pose of the swerve odometry
      */
     public Pose2d getPose() {
-        return swerveDrivePoseEstimator.getEstimatedPosition();
+        Pose2d estimatedPose = swerveDrivePoseEstimator.getEstimatedPosition();
+        return new Pose2d(estimatedPose.getX() * SwerveConstants.kOdometryProportionalityConstant, estimatedPose.getY() * SwerveConstants.kOdometryProportionalityConstant, estimatedPose.getRotation());
     }
 
     /**
@@ -247,6 +250,8 @@ public class SwerveSubsystem extends SubsystemBase {
         }
 
         posePublisher.set(swerveDrivePoseEstimator.getEstimatedPosition());
+        SmartDashboard.putNumber("Robot X", getPose().getTranslation().getX());
+        SmartDashboard.putNumber("Robot Y", getPose().getTranslation().getY());
 
         statesPublisherSet.set(new SwerveModuleState[] {
             mSwerveMods[0].moduleSetState,
