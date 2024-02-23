@@ -121,6 +121,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // return Autos.testAuto(swerveSubsystem, intakeSubsystem,  () -> swerveSubsystem.getPose()); // Just for testing, will implement autoChooser later
     // return new AutoChooserCommand(autoChooser);
-    return Autos.ppAuto(intakeSubsystem, speakerShooterSubsystem);
+    return Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
   }
 }

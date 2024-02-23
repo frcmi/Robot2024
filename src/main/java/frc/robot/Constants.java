@@ -121,7 +121,7 @@ public final class Constants {
     /** Meters per Second */
     public static final double maxSpeed = 0.04; // TODO: This must be tuned to specific robot
     /** Radians per Second */
-    public static final double maxAngularVelocity = 0.13; // TODO: This must be tuned to specific robot
+    public static final double maxAngularVelocity = 0.04; // TODO: This must be tuned to specific robot
 
     /* Neutral Modes */
     public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
@@ -188,7 +188,7 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
         
-    public static final double kRotationP = 0.5;
+    public static final double kRotationP = 0.1;
     public static final double kRotationI = 0;
     public static final double kRotationD = 0;
 
@@ -201,13 +201,14 @@ public final class Constants {
     public static final double kAutoYD = 0;
 
     // For PathPlanner
-    public static final double kP = 1.3;
+    public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
+    // need to be tuned, a lot
   }
   public static class IntakeConstants {
     public static final int kIntakeMotor1Id = 14;
-    public static final int kIntakeMotor2Id = 25; 
+    public static final int kIntakeMotor2Id = 25;
     public static final int kIndexerMotorId = 30;
 
     public static final double kIntakeMotorSpeed = 0.5;

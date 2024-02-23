@@ -95,7 +95,7 @@ public class VisionSubsystem extends SubsystemBase {
             yawShuffleBoardItem.setDouble(rotation.getZ());
 
             var pose2d = pose.toPose2d();
-            swerve.swerveDrivePoseEstimator.addVisionMeasurement(pose2d, MathSharedStore.getTimestamp());
+           // swerve.swerveDrivePoseEstimator.addVisionMeasurement(pose2d, MathSharedStore.getTimestamp());
 
             field.setRobotPose(pose2d);
         }

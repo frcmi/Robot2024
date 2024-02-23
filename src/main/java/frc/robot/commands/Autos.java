@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import java.util.Set;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -38,9 +39,10 @@ public final class Autos {
     // .andThen(new DriveToPosition(drive, currentPosition, new Pose2d(new Translation2d(0, -2), new Rotation2d(Math.toRadians(180)))));
   }
 
-  public static Command ppAuto(IntakeSubsystem intake, SpeakerShooterSubsystem shooter) {
-    return new PathPlannerAuto("blue Side Path 1 Auto");//.andThen(new PathPlannerAuto("Pickup Note 4 Auto")));
-    
+  public static Command ppAuto(SwerveSubsystem drive, IntakeSubsystem intake, SpeakerShooterSubsystem shooter) {
+    return Commands.runOnce(() -> drive.setPose(PathPlannerAuto.getStaringPoseFromAutoFile("blue Side Path 1 Auto")), drive)
+    .andThen(new PathPlannerAuto("blue Side Path 1 Auto"));
+      //.andThen(new PathPlannerAuto("Pickup Note 4 Auto")));
       // now goes from another starting postition to its actual starting position
       // .andThen(shooter.shootSpeaker()).withTimeout(2);
   }
