@@ -40,6 +40,7 @@ public class VisionSubsystem extends SubsystemBase {
     private static final GenericEntry pitchShuffleBoardItem = shuffleboardTab.add("Pitch", 0).getEntry();
     private static final GenericEntry rollShuffleBoardItem = shuffleboardTab.add("Roll", 0).getEntry();
     private static final GenericEntry yawShuffleBoardItem = shuffleboardTab.add("Yaw", 0).getEntry();
+    private static final GenericEntry updateSwerveItem = shuffleboardTab.add("Update swerve pose", true).getEntry();
 
     static {
         shuffleboardTab
@@ -95,9 +96,11 @@ public class VisionSubsystem extends SubsystemBase {
             yawShuffleBoardItem.setDouble(rotation.getZ());
 
             var pose2d = pose.toPose2d();
-            swerve.swerveDrivePoseEstimator.addVisionMeasurement(pose2d, MathSharedStore.getTimestamp());
-
             field.setRobotPose(pose2d);
+
+            if (updateSwerveItem.getBoolean(true)) {
+                swerve.swerveDrivePoseEstimator.addVisionMeasurement(pose2d, MathSharedStore.getTimestamp());
+            }
         }
     }
 
