@@ -30,6 +30,8 @@ public class SwerveModule {
 
     public SwerveModuleState moduleSetState;
 
+    public boolean isInverted;
+
     private final SimpleMotorFeedforward driveFeedForward = new SimpleMotorFeedforward(Constants.SwerveConstants.driveKS, Constants.SwerveConstants.driveKV, Constants.SwerveConstants.driveKA);
 
     /* drive motor control requests */
@@ -47,6 +49,7 @@ public class SwerveModule {
 
 
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants, boolean isInverted){
+        this.isInverted = isInverted;
         this.moduleNumber = moduleNumber;
         this.angleOffset = moduleConstants.angleOffset;
         

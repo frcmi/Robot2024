@@ -4,12 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.*;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -83,12 +85,18 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    
+    Pose2d currentPose = m_robotContainer.swerveSubsystem.getPose();
+    e.setRobotPose(m_robotContainer.gotoAutoThing);
+    SmartDashboard.putData("I want to be at", e);
+    SmartDashboard.putNumber("Dist from want", Math.sqrt(Math.pow(m_robotContainer.gotoAutoThing.getX() - currentPose.getX(), 2) + Math.pow(m_robotContainer.gotoAutoThing.getY() - currentPose.getY(), 2)));
+  
     // TODO: measure if this has a perf impact?
-    Optional<Alliance> alliance = DriverStation.getAlliance();
-    alliance.ifPresent(value -> allianceShuffleboardEntry.setBoolean(value == Alliance.Red));
+    // Optional<Alliance> alliance = DriverStation.getAlliance();
+    // alliance.ifPresent(value -> allianceShuffleboardEntry.setBoolean(value == Alliance.Red));
 
-    OptionalInt station = DriverStation.getLocation();
-    station.ifPresent(stationShuffleboardEntry::setInteger);
+    // OptionalInt station = DriverStation.getLocation();
+    // station.ifPresent(stationShuffleboardEntry::setInteger);
 
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
@@ -116,10 +124,11 @@ public class Robot extends TimedRobot {
     }
   }
 
+  public Field2d e = new Field2d();
+
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {

@@ -234,8 +234,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
     StructPublisher<Pose2d> posePublisher = NetworkTableInstance.getDefault()
         .getStructTopic("Robot Pose", Pose2d.struct).publish();
+
     StructArrayPublisher<SwerveModuleState> statesPublisherSet = NetworkTableInstance.getDefault()
-        .getStructArrayTopic("Module Set States", SwerveModuleState.struct).publish();
+        .getStructArrayTopic("SmartDashboard/Module Set States", SwerveModuleState.struct).publish();
     StructArrayPublisher<SwerveModuleState> statesPublisherActual = NetworkTableInstance.getDefault()
         .getStructArrayTopic("Module Measured States", SwerveModuleState.struct).publish();
     StructArrayPublisher<SwerveModulePosition> positionsPublisher = NetworkTableInstance.getDefault()
@@ -265,5 +266,6 @@ public class SwerveSubsystem extends SubsystemBase {
         statesPublisherActual.set(getModuleStates());
 
         field.setRobotPose(getPose());
+        // System.out.println("EEEEEEEEEEEEEEEE");
     }
 }

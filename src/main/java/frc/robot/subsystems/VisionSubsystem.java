@@ -17,8 +17,6 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.MathSharedStore;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -82,9 +80,10 @@ public class VisionSubsystem extends SubsystemBase {
 
         if (lastPose.isPresent())
         {
-            var pose = lastPose.get().estimatedPose;
-            var translation = pose.getTranslation();
-            var rotation = pose.getRotation();
+            EstimatedRobotPose estimatedPoseObject = lastPose.get();
+            Pose3d pose = estimatedPoseObject.estimatedPose;
+            Translation3d translation = pose.getTranslation();
+            Rotation3d rotation = pose.getRotation();
 
             xShuffleBoardItem.setDouble(translation.getX());
             yShuffleBoardItem.setDouble(translation.getY());
@@ -94,8 +93,9 @@ public class VisionSubsystem extends SubsystemBase {
             rollShuffleBoardItem.setDouble(rotation.getY());
             yawShuffleBoardItem.setDouble(rotation.getZ());
 
-            var pose2d = pose.toPose2d();
-           // swerve.swerveDrivePoseEstimator.addVisionMeasurement(pose2d, MathSharedStore.getTimestamp());
+            Pose2d pose2d = pose.toPose2d();
+            
+            swerve.swerveDrivePoseEstimator.addVisionMeasurement(pose2d, estimatedPoseObject.timestampSeconds);
 
             field.setRobotPose(pose2d);
         }

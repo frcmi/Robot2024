@@ -16,15 +16,15 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
-    private final TalonFX intakeMotor1 = new TalonFX(IntakeConstants.kIntakeMotor1Id);
-    private final TalonFX intakeMotor2 = new TalonFX(IntakeConstants.kIntakeMotor2Id);
-    private final TalonFX indexerMotor = new TalonFX(IntakeConstants.kIndexerMotorId);
+    // private final TalonFX intakeMotor1 = new TalonFX(IntakeConstants.kIntakeMotor1Id);
+    // private final TalonFX intakeMotor2 = new TalonFX(IntakeConstants.kIntakeMotor2Id);
+    // private final TalonFX indexerMotor = new TalonFX(IntakeConstants.kIndexerMotorId);
 
 
     public IntakeSubsystem() {
-        intakeMotor1.setNeutralMode(NeutralModeValue.Brake);
-        intakeMotor2.setNeutralMode(NeutralModeValue.Brake);
-        indexerMotor.setNeutralMode(NeutralModeValue.Brake);
+        // intakeMotor1.setNeutralMode(NeutralModeValue.Brake);
+        // intakeMotor2.setNeutralMode(NeutralModeValue.Brake);
+        // indexerMotor.setNeutralMode(NeutralModeValue.Brake);
         setDefaultCommand(stop());
     }
 
@@ -41,9 +41,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command intakeAmp() { //Subject to change due to motor shenanigans
         return run (
-                () -> {intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed);
-                    intakeMotor2.set(-IntakeConstants.kIntakeMotorSpeed);
-                    indexerMotor.set(-IntakeConstants.kIndexerSpeed);
+                () -> {
+                    // intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed);
+                    // intakeMotor2.set(-IntakeConstants.kIntakeMotorSpeed);
+                    // indexerMotor.set(-IntakeConstants.kIndexerSpeed);
                 }
         ).withName("intakeAmp");
     }
@@ -51,9 +52,10 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command intakeSpeaker()  { //Subject to change due to motor shenanigans
             System.out.println("Intaking Speaker");
             Command intake = Commands.run (
-                () -> {intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed);
-                    intakeMotor2.set(-IntakeConstants.kIntakeMotorSpeed);
-                    indexerMotor.set(IntakeConstants.kIndexerSpeed);
+                () -> {
+                    // intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed);
+                    // intakeMotor2.set(-IntakeConstants.kIntakeMotorSpeed);
+                    // indexerMotor.set(IntakeConstants.kIndexerSpeed);
                 }
         ).withName("intakeSpeaker");
         intake.addRequirements(this);
@@ -64,9 +66,10 @@ public class IntakeSubsystem extends SubsystemBase {
     }
     public Command stop() {
         return run(
-            () -> {intakeMotor1.set(0);
-                intakeMotor2.set(0);
-                indexerMotor.set(0);
+            () -> {
+                // intakeMotor1.set(0);
+                // intakeMotor2.set(0);
+                // indexerMotor.set(0);
                 }
         ).withName("stop");
     }

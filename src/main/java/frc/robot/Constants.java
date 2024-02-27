@@ -51,7 +51,7 @@ public final class Constants {
     public static final int pigeonID = 0;
 
     public static final COTSTalonFXSwerveConstants chosenModule =
-        COTSTalonFXSwerveConstants.SDS.MK4i.Falcon500(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);
+        COTSTalonFXSwerveConstants.SDS.MK4i.Falcon500(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L3);
 
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(28);
@@ -97,7 +97,8 @@ public final class Constants {
      * loop driving.
      * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc
      */
-    public static final double kOdometryProportionalityConstant = 1.1771;
+    // TODO: REMOVE
+    public static final double kOdometryProportionalityConstant = 1;
     public static final double openLoopRamp = 0.25;
     public static final double closedLoopRamp = 0.0;
 
@@ -175,8 +176,8 @@ public final class Constants {
 
   public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be tuned
                                             // to specific robot
-    public static final double kMaxSpeedMetersPerSecond = 3.0;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3.0;
+    public static final double kMaxSpeedMetersPerSecond = 0.5;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 0.25;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
@@ -188,10 +189,11 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
         
-    public static final double kRotationP = 0.1;
+    public static final double kRotationP = 0.01;
     public static final double kRotationI = 0;
     public static final double kRotationD = 0;
 
+    // DONT USE
     public static final double kAutoXP = 0;
     public static final double kAutoXI = 0;
     public static final double kAutoXD = 0;
@@ -201,7 +203,7 @@ public final class Constants {
     public static final double kAutoYD = 0;
 
     // For PathPlanner
-    public static final double kP = 0;
+    public static final double kP = 0.25;
     public static final double kI = 0;
     public static final double kD = 0;
     // need to be tuned, a lot

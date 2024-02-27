@@ -14,8 +14,10 @@ import frc.robot.commands.TeleopSwerve;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.StructPublisher;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.Autos;
+import frc.robot.commands.DriveToPositionPathPlanner;
 import frc.robot.commands.SetTrailLights;
 import frc.robot.subsystems.DriveStationSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -36,7 +38,7 @@ public class RobotContainer {
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   // private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem();
   private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
-  private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem();
+  // private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem();
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
@@ -47,14 +49,16 @@ public class RobotContainer {
 
   private final AutoChooser autoChooser = new AutoChooser();
 
+  public final Pose2d gotoAutoThing = new Pose2d(5.0,5.26, new Rotation2d(Math.PI));
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(
         new TeleopSwerve(
             swerveSubsystem, 
-            () -> -driverController.getLeftY(), 
-            () -> -driverController.getLeftX(), 
-            () -> -driverController.getRightX(), 
+            () -> driverController.getLeftY(), 
+            () -> driverController.getLeftX(), 
+            () -> driverController.getRightX(), 
             () -> false //robotCentric.getAsBoolean()
         )
     );
@@ -92,19 +96,19 @@ public class RobotContainer {
     // m_driverController.rightBumper().onTrue(m_driveStationSubsystem.ledOff());
     //you have to press right bumper then left bumper to turn off the lights, I don't why, ask the lights
     
-    m_DriverButton.button(5).onTrue(m_driveStationSubsystem.dropDisk());
+    // m_DriverButton.button(5).onTrue(m_driveStationSubsystem.dropDisk());
     
-    m_DriverButton.button(7).onTrue(m_driveStationSubsystem.coop());
+    // m_DriverButton.button(7).onTrue(m_driveStationSubsystem.coop());
 
-    m_DriverButton.button(1).onTrue(m_driveStationSubsystem.ampSpeaker());
+    // m_DriverButton.button(1).onTrue(m_driveStationSubsystem.ampSpeaker());
 
-    m_DriverButton.button(9).onTrue(m_driveStationSubsystem.readyToAmp());
+    // m_DriverButton.button(9).onTrue(m_driveStationSubsystem.readyToAmp());
 
-    m_DriverButton.button(3).onTrue(m_driveStationSubsystem.readyToSpeaker());
+    // m_DriverButton.button(3).onTrue(m_driveStationSubsystem.readyToSpeaker());
 
-    m_DriverButton.button(2).whileTrue(new SetTrailLights(m_driveStationSubsystem, true));
+    // m_DriverButton.button(2).whileTrue(new SetTrailLights(m_driveStationSubsystem, true));
     
-     m_DriverButton.button(3).and(m_DriverButton.button(4).and(m_DriverButton.button(5))).whileTrue(m_driveStationSubsystem.runRainbow());
+    //  m_DriverButton.button(3).and(m_DriverButton.button(4).and(m_DriverButton.button(5))).whileTrue(m_driveStationSubsystem.runRainbow());
     //made a rainbow command because its funny, probably won't use at comps though
     // m_driveStationSubsystem.coop();
     // m_driveStationSubsystem.setLights().schedule();
@@ -118,9 +122,12 @@ public class RobotContainer {
    * Use this to pass the autonomous command to the main {@link Robot} class.
    * @return the command to run in autonomous
    */
+
   public Command getAutonomousCommand() {
     // return Autos.testAuto(swerveSubsystem, intakeSubsystem,  () -> swerveSubsystem.getPose()); // Just for testing, will implement autoChooser later
     // return new AutoChooserCommand(autoChooser);
-    return Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
+    return new DriveToPositionPathPlanner(swerveSubsystem, swerveSubsystem::getPose, gotoAutoThing).gimmeCommand(); //Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
   }
+
+  
 }

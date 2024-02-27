@@ -22,7 +22,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class DriveToPositionPathPlanner extends Command {
+public class DriveToPositionPathPlanner {
     private Supplier<Pose2d> currentPose;
     private Rotation2d targetRotation;
     private Pose2d taregtPose;
@@ -33,7 +33,7 @@ public class DriveToPositionPathPlanner extends Command {
     private PIDConstants rotationConstants = new PIDConstants(AutoConstants.kRotationP, AutoConstants.kRotationI, AutoConstants.kRotationD);
 
     public DriveToPositionPathPlanner(SwerveSubsystem drive, Supplier<Pose2d> currentPoseSupplier, Pose2d targetPosition) {
-        addRequirements(drive);
+        // addRequirements(drive);
         currentPose = currentPoseSupplier;
         taregtPose = targetPosition;
         bezierPoints = PathPlannerPath.bezierFromPoses(
@@ -45,10 +45,9 @@ public class DriveToPositionPathPlanner extends Command {
         System.out.println("Constructing Path");
     }
 
-    @Override
-    public void execute() {
+    public Command gimmeCommand() { 
         System.out.println("Moving to " + bezierPoints.get(bezierPoints.size()-1));
-        new FollowPathHolonomic(
+        return new FollowPathHolonomic(
             new PathPlannerPath(bezierPoints,
              new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared, AutoConstants.kMaxAngularSpeedRadiansPerSecond, AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared),
              new GoalEndState(0, targetRotation)),
@@ -73,25 +72,25 @@ public class DriveToPositionPathPlanner extends Command {
               return false;
             },
             swerve
-        ).schedule();
+        );
     }
 
-    @Override
-    public boolean isFinished() {
-        if ((currentPose.get().getTranslation().getDistance(taregtPose.getTranslation()) <= SwerveConstants.kAllowedDistanceToDestination)
-            && (Math.abs(currentPose.get().getRotation().getRadians() - targetRotation.getRadians()) <= SwerveConstants.kAllowedRotationDifferenceToDestination)) {
-                    System.out.println("Finishing movement");
-                    return true; // Yes, I know I could just put the conditional in the return statement, but I need the print statement for testing
-        }
+    // @Override
+    // public boolean isFinished() {
+    //     if ((currentPose.get().getTranslation().getDistance(taregtPose.getTranslation()) <= SwerveConstants.kAllowedDistanceToDestination)
+    //         && (Math.abs(currentPose.get().getRotation().getRadians() - targetRotation.getRadians()) <= SwerveConstants.kAllowedRotationDifferenceToDestination)) {
+    //                 System.out.println("Finishing movement");
+    //                 return true; // Yes, I know I could just put the conditional in the return statement, but I need the print statement for testing
+    //     }
 
-        else if (swerve.getChassisSpeeds().equals(new ChassisSpeeds(0,0,0))) {
-            System.out.println("Finishing movement");
-            return true;
-        }
+    //     else if (swerve.getChassisSpeeds().equals(new ChassisSpeeds(0,0,0))) {
+    //         System.out.println("Finishing movement");
+    //         return true;
+    //     }
 
-        else {
-            return false;
-        }
-    }
+    //     else {
+    //         return false;
+    //     }
+    // }
 
 }
