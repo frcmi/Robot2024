@@ -16,16 +16,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.AmpArmConstants;
 import frc.robot.Constants.AmpShooterConstants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 
 public class AmpShooterSubsystem extends SubsystemBase{
-    // private TalonFX ampShooterMotor = new TalonFX(AmpShooterConstants.kampShooterMotorId);
     private final CANSparkMax shootMotor = new CANSparkMax(AmpShooterConstants.kShootMotor, MotorType.kBrushless);
+    private final AmpArmSubsystem ampArmSubsystem;
  
-    public AmpShooterSubsystem() {
+    public AmpShooterSubsystem(AmpArmSubsystem ampArm) {
+        ampArmSubsystem = ampArm;
         shootMotor.setInverted(true);
         setDefaultCommand(stop());
     }
@@ -48,11 +50,13 @@ public class AmpShooterSubsystem extends SubsystemBase{
     }
 
     public Command stop() { //TODO: can change
-        return run (
-                () -> { //ampShooterMotor.set(0);
+        return runOnce (
+                () -> {
                     shootMotor.set(0);
                 }
-        ).withName("stop");
+        )
+        .andThen(ampArmSubsystem.moveTo(AmpArmConstants.kMinAngle))
+        .withName("stop");
     }
 
 }

@@ -5,20 +5,17 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.RunCommand;
-
-
 import frc.robot.Constants.AmpArmConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SpeakerShooterSubsystem;
 import frc.robot.commands.AutoChooserCommand;
-import frc.robot.subsystems.AmpArmSubsystem;
-import frc.robot.subsystems.AmpShooterSubsystem;
-import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.TeleopSwerve;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.commands.SetTrailLights;
+import frc.robot.subsystems.AmpArmSubsystem;
+import frc.robot.subsystems.AmpShooterSubsystem;
 import frc.robot.subsystems.DriveStationSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -36,8 +33,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem();
   private final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
+  private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
   private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
   private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem();
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
@@ -52,15 +49,15 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // swerveSubsystem.setDefaultCommand(
-    //     // new TeleopSwerve(
-    //         swerveSubsystem, 
-    //         () -> -driverController.getLeftY(), 
-    //         () -> -driverController.getLeftX(), 
-    //         () -> -driverController.getRightX(), 
-    //         () -> false //robotCentric.getAsBoolean()
-    //     )
-    // );
+    swerveSubsystem.setDefaultCommand(
+        new TeleopSwerve(
+            swerveSubsystem, 
+            () -> -driverController.getLeftY(), 
+            () -> -driverController.getLeftX(), 
+            () -> -driverController.getRightX(), 
+            () -> false //robotCentric.getAsBoolean()
+        )
+    );
     // Configure the trigger bindings
     configureBindings();
   }
@@ -77,12 +74,38 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    // Intake
-    driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
+    // Ben Control Scheme *****************************
+
+    // RB Intake speaker
     driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
 
-    // Shooter
-    driverController.a().whileTrue(speakerShooterSubsystem.shootSpeaker());
+    // RT Shoot speaker
+    driverController.rightTrigger().whileTrue(speakerShooterSubsystem.shootSpeaker());
+
+    // LB Intake amp
+    driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
+
+    // LT Shoot amp
+    driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
+
+    // A Raise amp arm
+    driverController.a().onTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
+
+    // Y Reset Field Orientation
+    driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
+
+    // B Spit out note
+
+    // povUp Raise Climber
+    // povDown Lower Climber
+
+    // povLeft Auto Shoot amp
+    // povRight Auto Shoot speaker
+
+    // X Toggle Sensitivity (translation and rotation)
+
+    // ***********************************************
+
     // driverController.b().whileTrue(ampShooterSubsystem.shootAmp());
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -95,13 +118,6 @@ public class RobotContainer {
     // m_driverController.rightBumper().onTrue(m_driveStationSubsystem.ledOff());
     //you have to press right bumper then left bumper to turn off the lights, I don't why, ask the lights
     
-
-    driverController.povUp().onTrue(ampArmSubsystem.moveTo(Math.toRadians(AmpArmConstants.kShootAngle)));
-   
-    driverController.povDown().onTrue(ampArmSubsystem.moveTo(Math.toRadians(AmpArmConstants.kMinAngle)));
-
-    driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
-
     m_DriverButton.button(5).onTrue(m_driveStationSubsystem.dropDisk());
     
     m_DriverButton.button(7).onTrue(m_driveStationSubsystem.coop());
@@ -118,10 +134,7 @@ public class RobotContainer {
     //made a rainbow command because its funny, probably won't use at comps though
     // m_driveStationSubsystem.coop();
     // m_driveStationSubsystem.setLights().schedule();
-    driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
     // m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.test());
-
-
   }
 
   /**
