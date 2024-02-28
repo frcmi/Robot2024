@@ -176,7 +176,7 @@ public final class Constants {
 
   public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be tuned
                                             // to specific robot
-    public static final double kMaxSpeedMetersPerSecond = 0.5;
+    public static final double kMaxSpeedMetersPerSecond = 0;
     public static final double kMaxAccelerationMetersPerSecondSquared = 0.25;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
@@ -189,9 +189,9 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
         
-    public static final double kRotationP = 0.01;
+    public static final double kRotationP = 25;
     public static final double kRotationI = 0;
-    public static final double kRotationD = 0;
+    public static final double kRotationD = 0.6;
 
     // DONT USE
     public static final double kAutoXP = 0;
@@ -203,9 +203,9 @@ public final class Constants {
     public static final double kAutoYD = 0;
 
     // For PathPlanner
-    public static final double kP = 0.25;
-    public static final double kI = 0;
-    public static final double kD = 0;
+    public static final double kAccelerationP = 55;
+    public static final double kAccelerationI = 0;
+    public static final double kAccelerationD = 0.01;
     // need to be tuned, a lot
   }
   public static class IntakeConstants {

@@ -48,7 +48,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private static final Field2d field = new Field2d();
 
-    private PIDConstants translationConstants = new PIDConstants(AutoConstants.kP, AutoConstants.kI, AutoConstants.kD);
+    private PIDConstants translationConstants = new PIDConstants(AutoConstants.kAccelerationP, AutoConstants.kAccelerationI, AutoConstants.kAccelerationD);
     private PIDConstants rotationConstants = new PIDConstants(AutoConstants.kRotationP, AutoConstants.kRotationI, AutoConstants.kRotationD);
 
     static {
@@ -184,8 +184,7 @@ public class SwerveSubsystem extends SubsystemBase {
      * @return the pose of the swerve odometry
      */
     public Pose2d getPose() {
-        Pose2d estimatedPose = swerveDrivePoseEstimator.getEstimatedPosition();
-        return new Pose2d(estimatedPose.getX() * SwerveConstants.kOdometryProportionalityConstant, estimatedPose.getY() * SwerveConstants.kOdometryProportionalityConstant, estimatedPose.getRotation());
+        return swerveDrivePoseEstimator.getEstimatedPosition();
     }
 
     /**
@@ -260,6 +259,7 @@ public class SwerveSubsystem extends SubsystemBase {
         // posePublisher.set(swerveDrivePoseEstimator.getEstimatedPosition());
         SmartDashboard.putNumber("Robot X", getPose().getTranslation().getX());
         SmartDashboard.putNumber("Robot Y", getPose().getTranslation().getY());
+        SmartDashboard.putNumber("Robot Angular Velocity", gyro.getAngularVelocityZWorld().getValueAsDouble());
 
         field.setRobotPose(getPose());
         // System.out.println("EEEEEEEEEEEEEEEE");

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
@@ -16,6 +17,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
@@ -25,17 +27,17 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class DriveToPositionPathPlanner {
     private Supplier<Pose2d> currentPose;
     private Rotation2d targetRotation;
-    private Pose2d taregtPose;
+    private Pose2d targetPose;
     private SwerveSubsystem swerve;
     private List<Translation2d> bezierPoints;
 
-    private PIDConstants translationConstants = new PIDConstants(AutoConstants.kP, AutoConstants.kI, AutoConstants.kD);
+    private PIDConstants translationConstants = new PIDConstants(AutoConstants.kAccelerationP, AutoConstants.kAccelerationI, AutoConstants.kAccelerationD);
     private PIDConstants rotationConstants = new PIDConstants(AutoConstants.kRotationP, AutoConstants.kRotationI, AutoConstants.kRotationD);
 
     public DriveToPositionPathPlanner(SwerveSubsystem drive, Supplier<Pose2d> currentPoseSupplier, Pose2d targetPosition) {
         // addRequirements(drive);
         currentPose = currentPoseSupplier;
-        taregtPose = targetPosition;
+        this.targetPose = targetPosition;
         bezierPoints = PathPlannerPath.bezierFromPoses(
             currentPoseSupplier.get(),
             targetPosition);
@@ -47,31 +49,17 @@ public class DriveToPositionPathPlanner {
 
     public Command gimmeCommand() { 
         System.out.println("Moving to " + bezierPoints.get(bezierPoints.size()-1));
-        return new FollowPathHolonomic(
-            new PathPlannerPath(bezierPoints,
-             new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared, AutoConstants.kMaxAngularSpeedRadiansPerSecond, AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared),
-             new GoalEndState(0, targetRotation)),
-            () -> swerve.getPose(),
-            swerve::getChassisSpeeds,
-            swerve::driveRobotRelative,
-            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    translationConstants, // Translation PID constants
-                    rotationConstants, // Rotation PID constants
-                    AutoConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
-                    Math.sqrt((SwerveConstants.wheelBase / 2)*(SwerveConstants.wheelBase / 2)*2), // Drive base radius in meters. Distance from robot center to furthest module.
-                    new ReplanningConfig() // Default path replanning config. See the API for the options here
-            ),
-            () -> {
-              // Boolean supplier that controls when the path will be mirrored for the red alliance
-              // This will flip the path being followed to the red side of the field.
-              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
-              return false;
-            },
-            swerve
+        PathConstraints constraints = new PathConstraints(
+            3.0, 4.0,
+            Units.degreesToRadians(540), Units.degreesToRadians(720)
+        );
+
+// Since AutoBuilder is configured, we can use it to build pathfinding commands
+        return AutoBuilder.pathfindToPose(
+                targetPose,
+                constraints,
+                0.0, // Goal end velocity in meters/sec
+                0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
         );
     }
 

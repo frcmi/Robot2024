@@ -40,8 +40,8 @@ public final class Autos {
   }
 
   public static Command ppAuto(SwerveSubsystem drive, IntakeSubsystem intake, SpeakerShooterSubsystem shooter) {
-    return Commands.runOnce(() -> drive.setPose(PathPlannerAuto.getStaringPoseFromAutoFile("blue Side Path 1 Auto")), drive)
-    .andThen(new PathPlannerAuto("blue Side Path 1 Auto"));
+    return Commands.runOnce(() -> drive.setPose(PathPlannerAuto.getStaringPoseFromAutoFile("RE-ADD NAME")), drive)
+    .andThen(new PathPlannerAuto("RE-ADD NAME"));
       //.andThen(new PathPlannerAuto("Pickup Note 4 Auto")));
       // now goes from another starting postition to its actual starting position
       // .andThen(shooter.shootSpeaker()).withTimeout(2);
