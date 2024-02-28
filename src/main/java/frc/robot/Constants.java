@@ -121,6 +121,10 @@ public final class Constants {
     /** Radians per Second */
     public static final double maxAngularVelocity = 0.13; // TODO: This must be tuned to specific robot
 
+    /* Sensitivity Values */
+    public static final double translationSensitivity = 0.75;
+    public static final double rotationSensitivity = 0.5;
+
     /* Neutral Modes */
     public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
     public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;

@@ -39,7 +39,7 @@ public class RobotContainer {
   private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
   private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem();
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
+  // public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -50,20 +50,12 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    swerveSubsystem.setDefaultCommand( swerveSubsystem.sensitivitySwitch ?
+    swerveSubsystem.setDefaultCommand(
         new TeleopSwerve(
             swerveSubsystem, 
-            () -> -driverController.getLeftY() * SwerveConstants.rotationSensitivity, 
-            () -> -driverController.getLeftX() * SwerveConstants.translationSensitivity, 
-            () -> -driverController.getRightX() * SwerveConstants.translationSensitivity, 
-            () -> false //robotCentric.getAsBoolean()
-        )
-        :
-        new TeleopSwerve(
-            swerveSubsystem, 
-            () -> -driverController.getLeftY(), 
-            () -> -driverController.getLeftX(), 
-            () -> -driverController.getRightX(), 
+            () -> -driverController.getLeftY() * swerveSubsystem.rotationSensitivity, 
+            () -> -driverController.getLeftX() * swerveSubsystem.translationSensitivity, 
+            () -> -driverController.getRightX() * swerveSubsystem.translationSensitivity, 
             () -> false //robotCentric.getAsBoolean()
         )
     );
