@@ -254,20 +254,12 @@ public class SwerveSubsystem extends SubsystemBase {
             mod.logValues();
         }
 
-        posePublisher.set(swerveDrivePoseEstimator.getEstimatedPosition());
+        swerveStatePublisher.set(getModuleStates());
+        swerveSetpointPublisher.set(getModuleSetpoints());
+
+        // posePublisher.set(swerveDrivePoseEstimator.getEstimatedPosition());
         SmartDashboard.putNumber("Robot X", getPose().getTranslation().getX());
         SmartDashboard.putNumber("Robot Y", getPose().getTranslation().getY());
-
-        statesPublisherSet.set(new SwerveModuleState[] {
-            mSwerveMods[0].moduleSetState,
-            mSwerveMods[1].moduleSetState,
-            mSwerveMods[2].moduleSetState,
-            mSwerveMods[3].moduleSetState
-        });
-
-        positionsPublisher.set(getModulePositions());
-
-        statesPublisherActual.set(getModuleStates());
 
         field.setRobotPose(getPose());
         // System.out.println("EEEEEEEEEEEEEEEE");
