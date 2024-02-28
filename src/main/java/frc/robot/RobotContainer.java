@@ -35,12 +35,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  // private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   // private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem();
   private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
   // private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem();
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
+  // public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -79,11 +79,13 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Intake
-    driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
-    driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
+    // driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
+    // driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
 
     // Shooter
     driverController.rightTrigger().whileTrue(speakerShooterSubsystem.shootSpeaker());
+    // // Shooter
+    // driverController.a().whileTrue(speakerShooterSubsystem.shootSpeaker());
     // driverController.b().whileTrue(ampShooterSubsystem.shootAmp());
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -96,19 +98,21 @@ public class RobotContainer {
     // m_driverController.rightBumper().onTrue(m_driveStationSubsystem.ledOff());
     //you have to press right bumper then left bumper to turn off the lights, I don't why, ask the lights
     
-    // m_DriverButton.button(5).onTrue(m_driveStationSubsystem.dropDisk());
+    // // m_DriverButton.button(5).onTrue(m_driveStationSubsystem.dropDisk());
     
-    // m_DriverButton.button(7).onTrue(m_driveStationSubsystem.coop());
+    // // m_DriverButton.button(7).onTrue(m_driveStationSubsystem.coop());
 
-    // m_DriverButton.button(1).onTrue(m_driveStationSubsystem.ampSpeaker());
+    // // m_DriverButton.button(1).onTrue(m_driveStationSubsystem.ampSpeaker());
 
-    // m_DriverButton.button(9).onTrue(m_driveStationSubsystem.readyToAmp());
+    // // m_DriverButton.button(9).onTrue(m_driveStationSubsystem.readyToAmp());
 
-    // m_DriverButton.button(3).onTrue(m_driveStationSubsystem.readyToSpeaker());
+    // // m_DriverButton.button(3).onTrue(m_driveStationSubsystem.readyToSpeaker());
 
+    // m_DriverButton.button(2).whileTrue(new SetTrailLights(m_driveStationSubsystem, true));
     // m_DriverButton.button(2).whileTrue(new SetTrailLights(m_driveStationSubsystem, true));
     
     //  m_DriverButton.button(3).and(m_DriverButton.button(4).and(m_DriverButton.button(5))).whileTrue(m_driveStationSubsystem.runRainbow());
+    //made a rainbow command because its funny, probably won't use at comps though
     //made a rainbow command because its funny, probably won't use at comps though
     // m_driveStationSubsystem.coop();
     // m_driveStationSubsystem.setLights().schedule();

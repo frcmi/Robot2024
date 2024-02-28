@@ -25,6 +25,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
@@ -121,7 +123,9 @@ public class SwerveSubsystem extends SubsystemBase {
                 rotation
             )
         );
+        
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);
+
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
@@ -154,6 +158,13 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for(SwerveModule mod : mSwerveMods){
             states[mod.moduleNumber] = mod.getState();
+        }
+        return states;
+    }
+    public SwerveModuleState[] getModuleSetpoints() {
+        SwerveModuleState[] states = new SwerveModuleState[4];
+        for (SwerveModule mod : mSwerveMods) {
+            states[mod.moduleNumber] = mod.getSetState();
         }
         return states;
     }
@@ -228,19 +239,12 @@ public class SwerveSubsystem extends SubsystemBase {
         }
     }
 
+    StructArrayPublisher<SwerveModuleState> swerveStatePublisher = NetworkTableInstance.getDefault().getStructArrayTopic("Swerve/Current States", SwerveModuleState.struct).publish();
+    StructArrayPublisher<SwerveModuleState> swerveSetpointPublisher = NetworkTableInstance.getDefault().getStructArrayTopic("Swerve/Set States", SwerveModuleState.struct).publish();
+
     public Command stop() {
         return Commands.run(() -> driveRobotRelative(new ChassisSpeeds(0, 0, 0)), this);
     }
-
-    StructPublisher<Pose2d> posePublisher = NetworkTableInstance.getDefault()
-        .getStructTopic("Robot Pose", Pose2d.struct).publish();
-
-    StructArrayPublisher<SwerveModuleState> statesPublisherSet = NetworkTableInstance.getDefault()
-        .getStructArrayTopic("SmartDashboard/Module Set States", SwerveModuleState.struct).publish();
-    StructArrayPublisher<SwerveModuleState> statesPublisherActual = NetworkTableInstance.getDefault()
-        .getStructArrayTopic("Module Measured States", SwerveModuleState.struct).publish();
-    StructArrayPublisher<SwerveModulePosition> positionsPublisher = NetworkTableInstance.getDefault()
-        .getStructArrayTopic("Module Positions", SwerveModulePosition.struct).publish();
 
     @Override
     public void periodic() {
