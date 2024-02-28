@@ -28,6 +28,8 @@ public class SwerveSubsystem extends SubsystemBase {
     public SwerveDrivePoseEstimator swerveDrivePoseEstimator;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
+    
+    public boolean sensitivitySwitch = false;
 
     private static final Field2d field = new Field2d();
 
@@ -167,6 +169,13 @@ public class SwerveSubsystem extends SubsystemBase {
         for(SwerveModule mod : mSwerveMods){
             mod.resetToAbsolute();
         }
+    }
+
+    /**
+     * Toggles the sensitivity switch
+     */
+    public void switchSensitivity() {
+        sensitivitySwitch = !sensitivitySwitch;
     }
 
     @Override

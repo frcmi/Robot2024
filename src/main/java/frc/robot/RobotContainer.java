@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.AmpArmConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SpeakerShooterSubsystem;
 import frc.robot.commands.AutoChooserCommand;
@@ -49,7 +50,15 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    swerveSubsystem.setDefaultCommand(
+    swerveSubsystem.setDefaultCommand( swerveSubsystem.sensitivitySwitch ?
+        new TeleopSwerve(
+            swerveSubsystem, 
+            () -> -driverController.getLeftY() * SwerveConstants.rotationSensitivity, 
+            () -> -driverController.getLeftX() * SwerveConstants.translationSensitivity, 
+            () -> -driverController.getRightX() * SwerveConstants.translationSensitivity, 
+            () -> false //robotCentric.getAsBoolean()
+        )
+        :
         new TeleopSwerve(
             swerveSubsystem, 
             () -> -driverController.getLeftY(), 
@@ -71,9 +80,8 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
+  private void configureBindings() {
     // Ben Control Scheme *****************************
 
     // RB Intake speaker
@@ -95,6 +103,7 @@ public class RobotContainer {
     driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
 
     // B Spit out note
+    driverController.b().whileTrue(intakeSubsystem.extractNote());
 
     // povUp Raise Climber
     // povDown Lower Climber
@@ -103,6 +112,7 @@ public class RobotContainer {
     // povRight Auto Shoot speaker
 
     // X Toggle Sensitivity (translation and rotation)
+    driverController.x().onTrue(new InstantCommand(swerveSubsystem::switchSensitivity, swerveSubsystem));
 
     // ***********************************************
 

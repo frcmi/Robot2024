@@ -57,6 +57,17 @@ public class IntakeSubsystem extends SubsystemBase {
                 }
         ).withName("intakeSpeaker");
     }
+
+    public Command extractNote() {
+        return run (
+                () -> {intakeMotor1.set(-IntakeConstants.kIntakeMotorSpeed);
+                    intakeMotor2.set(IntakeConstants.kIntakeMotorSpeed);
+                    indexerMotor.set(-IntakeConstants.kIndexerSpeed);
+
+                } 
+        ).withName("extractNote");
+    }
+    
     public Command stop() {
         return run(
             () -> {intakeMotor1.set(0);
