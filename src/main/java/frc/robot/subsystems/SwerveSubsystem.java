@@ -45,6 +45,10 @@ public class SwerveSubsystem extends SubsystemBase {
     public SwerveDrivePoseEstimator swerveDrivePoseEstimator;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
+    
+    public boolean sensitivitySwitch = false;
+    public double translationSensitivity = 1;
+    public double rotationSensitivity = 1;
 
     private static final Field2d field = new Field2d();
 
@@ -243,6 +247,15 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public Command stop() {
         return Commands.run(() -> driveRobotRelative(new ChassisSpeeds(0, 0, 0)), this);
+    }
+
+    /**
+     * Toggles the sensitivity switch
+     */
+    public void switchSensitivity() {
+        sensitivitySwitch = !sensitivitySwitch;
+        translationSensitivity = sensitivitySwitch ? SwerveConstants.translationSensitivity : 1;
+        rotationSensitivity = sensitivitySwitch ? SwerveConstants.rotationSensitivity : 1;
     }
 
     @Override

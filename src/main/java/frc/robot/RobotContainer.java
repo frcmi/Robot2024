@@ -5,8 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.RunCommand;
-
+import frc.robot.Constants.AmpArmConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SpeakerShooterSubsystem;
 import frc.robot.commands.TeleopSwerve;
@@ -21,6 +22,9 @@ import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveToPositionPathPlanner;
 import frc.robot.commands.SetTrailLights;
+import frc.robot.subsystems.AmpArmSubsystem;
+import frc.robot.subsystems.AmpShooterSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveStationSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -39,10 +43,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  // private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem();
+  // private final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
+  // private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
   private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
   // private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem();
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   // public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -59,9 +65,9 @@ public class RobotContainer {
     swerveSubsystem.setDefaultCommand(
         new TeleopSwerve(
             swerveSubsystem, 
-            () -> driverController.getLeftY(), 
-            () -> driverController.getLeftX(), 
-            () -> driverController.getRightX(), 
+            () -> -driverController.getLeftY() * swerveSubsystem.translationSensitivity, 
+            () -> -driverController.getLeftX() * swerveSubsystem.translationSensitivity, 
+            () -> -driverController.getRightX() * swerveSubsystem.rotationSensitivity, 
             () -> false //robotCentric.getAsBoolean()
         )
     );
@@ -78,18 +84,45 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
+
   private void configureBindings() {
-//    NamedCommands.registerCommand("E", new PrintCommand("YOOOOOO"));
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    // Ben Control Scheme *****************************
 
-    // Intake
-    // driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
-    // driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
+    // RB Intake speaker
+    driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
 
-    // Shooter
+    // RT Shoot speaker
     driverController.rightTrigger().whileTrue(speakerShooterSubsystem.shootSpeaker());
-    // // Shooter
-    // driverController.a().whileTrue(speakerShooterSubsystem.shootSpeaker());
+
+    // LB Intake amp
+    driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
+
+    // LT Shoot amp
+    // driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
+
+    // A Raise amp arm
+    // driverController.a().onTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
+
+    // Y Reset Field Orientation
+    driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
+
+    // B Spit out note
+    driverController.b().whileTrue(intakeSubsystem.extractNote());
+
+    // povUp Raise Climber
+    driverController.povUp().whileTrue(climberSubsystem.up());
+
+    // povDown Lower Climber
+    driverController.povDown().whileTrue(climberSubsystem.down());
+
+    // povLeft Auto Shoot amp
+    // povRight Auto Shoot speaker
+
+    // X Toggle Sensitivity (translation and rotation)
+    driverController.x().onTrue(new InstantCommand(swerveSubsystem::switchSensitivity, swerveSubsystem));
+
+    // ***********************************************
+
     // driverController.b().whileTrue(ampShooterSubsystem.shootAmp());
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -120,7 +153,6 @@ public class RobotContainer {
     //made a rainbow command because its funny, probably won't use at comps though
     // m_driveStationSubsystem.coop();
     // m_driveStationSubsystem.setLights().schedule();
-    driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
     // m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.test());
     
     driverController.leftTrigger().onTrue(new AutoAlignCommand(swerveSubsystem).getCommand());

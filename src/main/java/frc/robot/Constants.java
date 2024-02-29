@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -126,6 +125,10 @@ public final class Constants {
     /** Radians per Second */
     public static final double maxAngularVelocity = 1; // TODO: This must be tuned to specific robot
 
+    /* Sensitivity Values */
+    public static final double translationSensitivity = 0.75;
+    public static final double rotationSensitivity = 0.5;
+
     /* Neutral Modes */
     public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
     public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
@@ -211,19 +214,57 @@ public final class Constants {
   }
 
   public static class SpeakerShooterConstants {
-    public static final int kSpeakerShooterMotorId = 26;
-    public static final int kSpeakerShooterMotor2Id = 27;
+    public static final int kSpeakerShooterMotorId = 27;
 
     public static final double kSpeakerMotorSpeed = -1;
     public static double kSpeakerShootDuration;
   }
 
   public static class AmpShooterConstants {
-    public static final int kUpperAmpMotorId = 0; // TODO: Change IDs here and on motors
-    public static final int kLowerAmpMotorId = 0; // TODO: Change IDs here and on motors
-
     public static final double kAmpMotorSpeed = 0.4;
     public static int kShootMotor;
+
+  }
+
+  public static class AmpArmConstants {
+    public static final double kMaxArmVolts = 3;
+    public static final int kAmpArmMotorId = 32;
+    public static final int kArmEncoderId = 0; // TODO: Change ID based on DIO port
+    public static final double kTorqueArmConstant = 0.5;
+    public static final double kGravityLimit = 0.3;
+    // Gareths law of constants
+    // TODO: Tune all of these values
+    // PID parameters
+    public static final double kP = 4.3;
+    public static final double kI = 0;
+    public static final double kD = 0.1;
+
+    // FeedForward parameters
+    public static final double kS = 0.0;
+    public static final double kG = 0.16;
+    public static final double kV = 3.5;
+    public static final double kA = 0.01;
+
+    // Motion Profile
+    public static final double kMaxArmVel = 0.5;
+    public static final double kMaxArmAccel = 3;
+
+    // Angles
+    public static final double kMaxAngle = 90; // TODO: Maximum angle of arm
+    public static final double kMinAngle = 0; // TODO: Change to resting position
+    public static final double kShootAngle = 100; // TODO: Change to shooting position
+
+
+    public static final double kAmpEncoderOffset = 179 + 140 + 4.2; // Needs to be measured
+
+  }
+
+  public class ClimberConstants {
+    public static final int kRightClimberId = 50;
+    public static final int kLeftClimberId = 51;
+
+    public static final double kClimberUp = 0.3;
+    public static final double kClimberDown = -0.7;
   }
 
   public static class VisionConstants {
