@@ -9,10 +9,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SpeakerShooterSubsystem;
-import frc.robot.commands.AutoChooserCommand;
 import frc.robot.commands.TeleopSwerve;
 
-import com.pathplanner.lib.auto.NamedCommands;
+//import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -80,7 +79,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    NamedCommands.registerCommand("E", new PrintCommand("YOOOOOO"));
+//    NamedCommands.registerCommand("E", new PrintCommand("YOOOOOO"));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Intake
@@ -135,8 +134,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // return Autos.testAuto(swerveSubsystem, intakeSubsystem,  () -> swerveSubsystem.getPose()); // Just for testing, will implement autoChooser later
     // return new AutoChooserCommand(autoChooser);
-    return Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
+//    return Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
     //return new DriveToPositionPathPlanner(swerveSubsystem, swerveSubsystem::getPose, gotoAutoThing).gimmeCommand(); //Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
+    return autoChooser.getCommand();
   }
 
   

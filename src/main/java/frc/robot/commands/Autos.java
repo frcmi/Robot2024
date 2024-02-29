@@ -39,11 +39,19 @@ public final class Autos {
     // .andThen(new DriveToPosition(drive, currentPosition, new Pose2d(new Translation2d(0, -2), new Rotation2d(Math.toRadians(180)))));
   }
 
-  public static Command ppAuto(SwerveSubsystem drive, IntakeSubsystem intake, SpeakerShooterSubsystem shooter) {
+  public static Command ppAuto(SwerveSubsystem drive) {
     return Commands.runOnce(() -> drive.setPose(PathPlannerAuto.getStaringPoseFromAutoFile("RE-ADD NAME")), drive)
     .andThen(new PathPlannerAuto("RE-ADD NAME"));
       //.andThen(new PathPlannerAuto("Pickup Note 4 Auto")));
       // now goes from another starting postition to its actual starting position
       // .andThen(shooter.shootSpeaker()).withTimeout(2);
+  }
+
+  public static Command pathplannerPath(String path) {
+    return new PathPlannerAuto(path);
+  }
+
+  public static Command autoShoot() {
+    return null;
   }
 }

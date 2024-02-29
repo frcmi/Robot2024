@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -222,5 +224,9 @@ public final class Constants {
 
     public static final double kAmpMotorSpeed = 0.4;
     public static int kShootMotor;
+  }
+
+  public static class VisionConstants {
+      public static final Transform3d robotToCamera = new Transform3d(Units.inchesToMeters(-5), Units.inchesToMeters(9), Units.inchesToMeters(21.85), new Rotation3d(0, 0,Math.PI + Math.toRadians(8.5)));
   }
 }

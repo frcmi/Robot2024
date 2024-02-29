@@ -3,11 +3,13 @@ package frc.robot.subsystems;
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.Constants.VisionConstants;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -47,14 +49,14 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public VisionSubsystem(SwerveSubsystem swerveSubsystem) {
-        var robotToCamera = new Transform3d(0.3048, 0.0254, 0.5588, new Rotation3d(0, 0, Math.PI));
+        //21.85 up
 
         try
         {
             var fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
 
             camera = new PhotonCamera(cameraName);
-            estimator = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, robotToCamera);
+            estimator = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, VisionConstants.robotToCamera);
         }
         catch (Exception exc)
         {
