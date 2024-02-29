@@ -10,12 +10,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class AutoAlignCommand extends Command {
+public class AutoAlignCommand {
     private final SwerveSubsystem swerve;
 
     public AutoAlignCommand(SwerveSubsystem swerveSubsystem) {
-        addRequirements(swerveSubsystem);
-
         swerve = swerveSubsystem;
     }
 
@@ -51,11 +49,8 @@ public class AutoAlignCommand extends Command {
         return new Pose2d(position, new Rotation2d(robotToShooter.getRotation().getZ() - directionRotation));
     }
 
-    @Override
-    public void execute() {
+    public Command getCommand() {
         Pose2d destination = calculateDestination();
-        Command driveCommand = new DriveToPosition(swerve, swerve::getPose, destination);
-
-        driveCommand.schedule();
+        return new DriveToPositionPathPlanner(swerve.getPose(), destination).getCommand();
     }
 }

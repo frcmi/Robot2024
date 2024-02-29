@@ -193,15 +193,6 @@ public final class Constants {
     public static final double kRotationI = 0;
     public static final double kRotationD = 0.6;
 
-    // DONT USE
-    public static final double kAutoXP = 0;
-    public static final double kAutoXI = 0;
-    public static final double kAutoXD = 0;
-
-    public static final double kAutoYP = 0;
-    public static final double kAutoYI = 0;
-    public static final double kAutoYD = 0;
-
     // For PathPlanner
     public static final double kAccelerationP = 55;
     public static final double kAccelerationI = 0;

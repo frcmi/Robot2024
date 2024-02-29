@@ -28,7 +28,7 @@ public final class Autos {
   }
 
   public static Command testAuto(SwerveSubsystem drive, IntakeSubsystem intake, Supplier<Pose2d> currentPosition) {
-    DriveToPositionPathPlanner path = new DriveToPositionPathPlanner(drive, currentPosition, new Pose2d(new Translation2d(0, 2), new Rotation2d(0)));
+    DriveToPositionPathPlanner path = new DriveToPositionPathPlanner(currentPosition.get(), new Pose2d(new Translation2d(0, 2), new Rotation2d(0)));
 
     return intake.intakeSpeaker().withTimeout(0.5);
     // .andThen(intake.stop()).withTimeout(1)

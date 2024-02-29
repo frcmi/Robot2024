@@ -39,7 +39,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  // private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   // private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem();
   private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
   // private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem();
@@ -124,7 +124,7 @@ public class RobotContainer {
     driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
     // m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.test());
     
-    driverController.leftTrigger().onTrue(new AutoAlignCommand(swerveSubsystem));
+    driverController.leftTrigger().onTrue(new AutoAlignCommand(swerveSubsystem).getCommand());
   }
 
   /**
