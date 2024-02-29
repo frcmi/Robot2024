@@ -75,6 +75,8 @@ public class AmpArmSubsystem extends SubsystemBase{
         if (angle > AmpArmConstants.kMaxAngle)
             outputVolts = Math.max(-2, Math.min(kg, outputVolts));
 
+        outputVolts = Math.max(-AmpArmConstants.kMaxArmVolts, Math.min(AmpArmConstants.kMaxArmVolts, outputVolts));
+
         armMotor.setVoltage(outputVolts);  
     }
 

@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.commands.SetTrailLights;
 import frc.robot.subsystems.AmpArmSubsystem;
 import frc.robot.subsystems.AmpShooterSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveStationSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -34,11 +35,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
-  private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
+  // private final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
+  // private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
   private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
   private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem();
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   // public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -86,10 +88,10 @@ public class RobotContainer {
     driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
 
     // LT Shoot amp
-    driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
+    // driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
 
     // A Raise amp arm
-    driverController.a().onTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
+    // driverController.a().onTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
 
     // Y Reset Field Orientation
     driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
@@ -98,7 +100,10 @@ public class RobotContainer {
     driverController.b().whileTrue(intakeSubsystem.extractNote());
 
     // povUp Raise Climber
+    driverController.povUp().whileTrue(climberSubsystem.up());
+
     // povDown Lower Climber
+    driverController.povDown().whileTrue(climberSubsystem.down());
 
     // povLeft Auto Shoot amp
     // povRight Auto Shoot speaker

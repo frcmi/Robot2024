@@ -205,17 +205,16 @@ public final class Constants {
   public static class IntakeConstants {
     public static final int kIntakeMotor1Id = 14;
     public static final int kIntakeMotor2Id = 25; 
-    public static final int kIndexerMotorId = 30;
+    public static final int kIndexerMotorId = 26;
 
     public static final double kIntakeMotorSpeed = 0.5;
     public static final double kIndexerSpeed = 0.5;
   }
 
   public static class SpeakerShooterConstants {
-    public static final int kSpeakerShooterMotorId = 26;
-    public static final int kSpeakerShooterMotor2Id = 27;
+    public static final int kSpeakerShooterMotorId = 27;
 
-    public static final double kSpeakerMotorSpeed = 0.373;
+    public static final double kSpeakerMotorSpeed = -1;
   }
 
   public static class AmpShooterConstants {
@@ -225,6 +224,7 @@ public final class Constants {
   }
 
   public static class AmpArmConstants {
+    public static final double kMaxArmVolts = 3;
     public static final int kAmpArmMotorId = 32;
     public static final int kArmEncoderId = 0; // TODO: Change ID based on DIO port
     public static final double kTorqueArmConstant = 0.5;
@@ -243,7 +243,7 @@ public final class Constants {
     public static final double kA = 0.01;
 
     // Motion Profile
-    public static final double kMaxArmVel = 3;
+    public static final double kMaxArmVel = 0.5;
     public static final double kMaxArmAccel = 3;
 
     // Angles
@@ -254,6 +254,14 @@ public final class Constants {
 
     public static final double kAmpEncoderOffset = 179 + 140 + 4.2; // Needs to be measured
 
+  }
+
+  public class ClimberConstants {
+    public static final int kRightClimberId = 50;
+    public static final int kLeftClimberId = 51;
+
+    public static final double kClimberUp = 0.3;
+    public static final double kClimberDown = -0.7;
   }
 }
 
