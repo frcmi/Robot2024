@@ -65,7 +65,7 @@ public class AmpArmSubsystem extends SubsystemBase{
         SmartDashboard.putBoolean("Arm Bounds", !(angle > AmpArmConstants.kMaxAngle || angle < AmpArmConstants.kMinAngle));
 
         double pidOutput = pidController.calculate(angle, goalAngle);
-        // double ffOutput = feedforward.calculate(pidController.getSetpoint().position, pidController.getSetpoint().velocity);
+       // double ffOutput = feedforward.calculate(pidController.getSetpoint().position, pidController.getSetpoint().velocity);
 
         double outputVolts = pidOutput + /*ffOutput +*/ Math.cos(angle) * (goalAngle < AmpArmConstants.kGravityLimit ? 0 : AmpArmConstants.kTorqueArmConstant);
 

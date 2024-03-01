@@ -42,12 +42,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   // private final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
   // private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
-  private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
-  // private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem(intakeSubsystem);
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem(swerveSubsystem);
   public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
@@ -58,16 +58,16 @@ public class RobotContainer {
 
   private final AutoChooser autoChooser = new AutoChooser();
 
-  public final Pose2d gotoAutoThing = new Pose2d(5.0,5.0, new Rotation2d(Math.PI));
+  public final Pose2d gotoAutoThing = new Pose2d(2.916,5.898, new Rotation2d(Math.PI));
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(
         new TeleopSwerve(
             swerveSubsystem, 
-            () -> -driverController.getLeftY() * swerveSubsystem.translationSensitivity, 
-            () -> -driverController.getLeftX() * swerveSubsystem.translationSensitivity, 
-            () -> -driverController.getRightX() * swerveSubsystem.rotationSensitivity, 
+            () -> driverController.getLeftY() * swerveSubsystem.translationSensitivity, 
+            () -> driverController.getLeftX() * swerveSubsystem.translationSensitivity, 
+            () -> driverController.getRightX() * swerveSubsystem.rotationSensitivity, 
             () -> false //robotCentric.getAsBoolean()
         )
     );
@@ -95,10 +95,9 @@ public class RobotContainer {
     // driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
 
     // RT Shoot speaker
-    driverController.rightTrigger().whileTrue(speakerShooterSubsystem.shootSpeaker());
+    driverController.rightTrigger().whileTrue(intakeSubsystem.intakeSpeakerNoBeamBreak(2));
 
     // LB Intake amp
-    driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
 
     // LT Shoot amp
     // driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
@@ -170,8 +169,8 @@ public class RobotContainer {
     // return Autos.testAuto(swerveSubsystem, intakeSubsystem,  () -> swerveSubsystem.getPose()); // Just for testing, will implement autoChooser later
     // return new AutoChooserCommand(autoChooser);
 //    return Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
-    //return new DriveToPositionPathPlanner(swerveSubsystem, swerveSubsystem::getPose, gotoAutoThing).gimmeCommand(); //Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
-    return autoChooser.getCommand();
+    return new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing).getCommand(); //Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
+    // return autoChooser.getCommand();
   }
 
   

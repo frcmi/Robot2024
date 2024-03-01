@@ -5,7 +5,7 @@ import java.util.Map;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,11 +14,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.subsystems.DriveStationSubsystem;
 
 public class IntakeSubsystem extends SubsystemBase {
     private final TalonFX intakeMotor1 = new TalonFX(IntakeConstants.kIntakeMotor1Id);
     private final TalonFX intakeMotor2 = new TalonFX(IntakeConstants.kIntakeMotor2Id);
     private final TalonFX indexerMotor = new TalonFX(IntakeConstants.kIndexerMotorId);
+
+    public DigitalInput beambreak = new DigitalInput(1);
+
 
 
     public IntakeSubsystem() {
@@ -38,6 +42,8 @@ public class IntakeSubsystem extends SubsystemBase {
         } else {
             SmartDashboard.putString("Intake Command", "");
         }
+
+        // SmartDashboard.putBoolean("Beam Break", beambreak.get());
     }
 
     public Command intakeAmp() { //Subject to change due to motor shenanigans
@@ -51,20 +57,24 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command intakeSpeaker()  { //Subject to change due to motor shenanigans
+                return intakeSpeakerNoBeamBreak(1).until(() -> !beambreak.get()).andThen(stop()).withName("intakeSpeaker with beambreak");
+    }
+
+    public Command intakeSpeakerNoBeamBreak(double speed )  { //Subject to change due to motor shenanigans
             System.out.println("Intaking Speaker");
-            Command intake = Commands.run (
+            Command intake = run(
                 () -> {
-                    intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed);
-                    intakeMotor2.set(-IntakeConstants.kIntakeMotorSpeed);
-                    indexerMotor.set(IntakeConstants.kIndexerSpeed);
+                    intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed * speed);
+                    intakeMotor2.set(-IntakeConstants.kIntakeMotorSpeed * speed);
+                    indexerMotor.set(IntakeConstants.kIndexerSpeed * speed);
                 }
         ).withName("intakeSpeaker");
-        intake.addRequirements(this);
 
         System.out.println("Finished intaking speaker");
 
         return intake;
     }
+
 
     public Command extractNote() {
         return run (
@@ -86,6 +96,3 @@ public class IntakeSubsystem extends SubsystemBase {
         ).withName("stop");
     }
 }
-
-
-

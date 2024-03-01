@@ -22,7 +22,7 @@ import frc.robot.Constants.IntakeConstants;
 public class ClimberSubsystem extends SubsystemBase {
     private final CANSparkMax leftClimberMotor = new CANSparkMax(ClimberConstants.kLeftClimberId, MotorType.kBrushless);
     private final CANSparkMax rightClimberMotor = new CANSparkMax(ClimberConstants.kRightClimberId, MotorType.kBrushless);
-
+    // defines the two motors being used for the climbers
 
 
     public ClimberSubsystem() {

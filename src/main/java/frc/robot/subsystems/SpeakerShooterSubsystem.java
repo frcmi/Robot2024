@@ -11,16 +11,18 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.SpeakerShooterConstants;
 
 public class SpeakerShooterSubsystem extends SubsystemBase {
     public TalonFX speakerShooterMotor = new TalonFX(SpeakerShooterConstants.kSpeakerShooterMotorId);
-
-    public SpeakerShooterSubsystem() {
-        speakerShooterMotor.setNeutralMode(NeutralModeValue.Coast);
-        setDefaultCommand(stop());
+    public IntakeSubsystem intakeSubsystem;
+    public SpeakerShooterSubsystem(IntakeSubsystem intake) {
+        this.intakeSubsystem = intake;
+        speakerShooterMotor.setNeutralMode(NeutralModeValue.Brake);
+        // setDefaultCommand(stop());
 
         SmartDashboard.setDefaultNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed);
     }
@@ -33,25 +35,32 @@ public class SpeakerShooterSubsystem extends SubsystemBase {
         } else {
             SmartDashboard.putString("Speakershoot Command", "");
         }
+
+        if (!intakeSubsystem.beambreak.get()) {
+            speakerShooterMotor.set(SmartDashboard.getNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed));
+        } else {
+            speakerShooterMotor.set(0);
+        }
     }
 
-    public Command shootSpeaker() { // TODO: can change
-        return run(
-                () -> {
-                    speakerShooterMotor
-                            .set(SmartDashboard.getNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed));
-                }).withName("shootSpeaker");
-    }
+    // public Command shootSpeaker() { // TODO: can change
+    //     return new ParallelCommandGroup(run(
+    //             () -> {
+    //                 speakerShooterMotor
+    //                         .set(SmartDashboard.getNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed));
+    //             }), new WaitCommand(0.7).andThen(intakeSubsystem.intakeSpeakerNoBeamBreak(2))
+    //         ).withName("shootSpeaker");
+    // }
 
-    public Command shootSpeakerAndStop() {
-        return shootSpeaker().andThen(Commands.waitSeconds(SpeakerShooterConstants.kSpeakerShootDuration))
-                .andThen(stop());
-    }
+    // public Command shootSpeakerAndStop() {
+    //     return shootSpeaker().andThen(Commands.waitSeconds(SpeakerShooterConstants.kSpeakerShootDuration))
+    //             .andThen(stop());
+    // }
 
-    public Command stop() { // TODO: can change
-        return run(
-                () -> {
-                    speakerShooterMotor.set(0);
-                }).withName("stop");
-    }
+    // public Command stop() { // TODO: can change
+    //     return run(
+    //             () -> {
+    //                 speakerShooterMotor.set(0);
+    //             }).withName("stop");
+    // }
 }

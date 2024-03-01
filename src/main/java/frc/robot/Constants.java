@@ -120,9 +120,9 @@ public final class Constants {
     public static final double driveKA = 0.27;
 
     /* Swerve Profiling Values */
-    /** Meters per Second */
-    public static final double maxSpeed = 8; // TODO: This must be tuned to specific robot
-    /** Radians per Second */
+    /** Volts (out of 12) */
+    public static final double maxSpeed = 12; // TODO: This must be tuned to specific robot
+    /** Volts (out of 12) */
     public static final double maxAngularVelocity = 8; // TODO: This must be tuned to specific robot
 
     /* Sensitivity Values */
@@ -197,7 +197,6 @@ public final class Constants {
     public static final double kRotationP = 25;
     public static final double kRotationI = 0;
     public static final double kRotationD = 0.6;
-
     // For PathPlanner
     public static final double kAccelerationP = 55;
     public static final double kAccelerationI = 0;
@@ -209,14 +208,14 @@ public final class Constants {
     public static final int kIntakeMotor2Id = 25;
     public static final int kIndexerMotorId = 26;
 
-    public static final double kIntakeMotorSpeed = 0.5;
-    public static final double kIndexerSpeed = 0.5;
+    public static final double kIntakeMotorSpeed = 0.27;
+    public static final double kIndexerSpeed = 0.27;
   }
 
   public static class SpeakerShooterConstants {
     public static final int kSpeakerShooterMotorId = 27;
 
-    public static final double kSpeakerMotorSpeed = -1;
+    public static final double kSpeakerMotorSpeed = -0.85;
     public static double kSpeakerShootDuration;
   }
 
@@ -268,6 +267,6 @@ public final class Constants {
   }
 
   public static class VisionConstants {
-      public static final Transform3d robotToCamera = new Transform3d(Units.inchesToMeters(-5), Units.inchesToMeters(9), Units.inchesToMeters(21.85), new Rotation3d(0, 0,Math.PI + Math.toRadians(8.5)));
+      public static final Transform3d robotToCamera = new Transform3d(Units.inchesToMeters(-5), Units.inchesToMeters(9), Units.inchesToMeters(21.85), new Rotation3d(0, Math.toRadians(8.5),Math.PI));
   }
 }
