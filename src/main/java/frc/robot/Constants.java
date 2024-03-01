@@ -207,7 +207,7 @@ public final class Constants {
   public static class IntakeConstants {
     public static final int kIntakeMotor1Id = 14;
     public static final int kIntakeMotor2Id = 25;
-    public static final int kIndexerMotorId = 30;
+    public static final int kIndexerMotorId = 26;
 
     public static final double kIntakeMotorSpeed = 0.5;
     public static final double kIndexerSpeed = 0.5;
