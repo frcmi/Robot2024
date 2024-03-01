@@ -51,6 +51,10 @@ public final class Autos {
     return new PathPlannerAuto(path);
   }
 
+  public static Command pathfindAuto(Pose2d currentPose, Pose2d pose) {
+    return new DriveToPositionPathPlanner(currentPose, pose).getCommand();
+  }
+
   public static Command autoShoot() {
     return null;
   }

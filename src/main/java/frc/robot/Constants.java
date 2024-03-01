@@ -254,8 +254,7 @@ public final class Constants {
     public static final double kShootAngle = 100; // TODO: Change to shooting position
 
 
-    public static final double kAmpEncoderOffset = 179 + 140 + 4.2; // Needs to be measured
-
+    public static final double kAmpEncoderOffset = 179 + 140 + 4.2 - 124 + 1.5; // Needs to be measured
   }
 
   public class ClimberConstants {

@@ -211,8 +211,6 @@ public class SwerveSubsystem extends SubsystemBase {
      * @param heading the heading to set the odometry to
      */
     public void setHeading(Rotation2d heading) {
-        gyro.setYaw(heading.getDegrees());
-
         swerveDrivePoseEstimator.resetPosition(getGyroYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), heading));
     }
 

@@ -72,7 +72,7 @@ public class AmpArmSubsystem extends SubsystemBase{
         // Stop movement if outside bounds
         if (angle < AmpArmConstants.kMinAngle) 
             outputVolts = Math.max(kg, Math.min(2, outputVolts));
-        if (angle > AmpArmConstants.kMaxAngle)
+        if (angle > (AmpArmConstants.kMaxAngle))
             outputVolts = Math.max(-2, Math.min(kg, outputVolts));
 
         outputVolts = Math.max(-AmpArmConstants.kMaxArmVolts, Math.min(AmpArmConstants.kMaxArmVolts, outputVolts));
@@ -92,6 +92,5 @@ public class AmpArmSubsystem extends SubsystemBase{
                 }
         ).withName("stop");
     }
-
 }
     

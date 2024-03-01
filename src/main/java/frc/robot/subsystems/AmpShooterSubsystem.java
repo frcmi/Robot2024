@@ -29,7 +29,7 @@ public class AmpShooterSubsystem extends SubsystemBase{
     public AmpShooterSubsystem(AmpArmSubsystem ampArm) {
         ampArmSubsystem = ampArm;
         shootMotor.setInverted(true);
-        setDefaultCommand(stop());
+        // setDefaultCommand(stop());
     }
 
     @Override
@@ -55,9 +55,7 @@ public class AmpShooterSubsystem extends SubsystemBase{
                     shootMotor.set(0);
                 }
         )
-        .andThen(ampArmSubsystem.moveTo(AmpArmConstants.kMinAngle))
         .withName("stop");
     }
-
 }
     

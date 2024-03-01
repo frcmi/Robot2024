@@ -42,8 +42,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  // private final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
-  // private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
+  private final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
+  private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem(intakeSubsystem);
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
@@ -100,10 +100,10 @@ public class RobotContainer {
     // LB Intake amp
 
     // LT Shoot amp
-    // driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
+    driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
 
     // A Raise amp arm
-    // driverController.a().onTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
+    driverController.a().whileTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
 
     // Y Reset Field Orientation
     driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
@@ -125,7 +125,6 @@ public class RobotContainer {
 
     // ***********************************************
 
-    // driverController.b().whileTrue(ampShooterSubsystem.shootAmp());
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // m_driveStationSubsystem.coop();
