@@ -57,7 +57,11 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command intakeSpeaker()  { //Subject to change due to motor shenanigans
-                return intakeSpeakerNoBeamBreak(1).until(() -> !beambreak.get()).andThen(stop()).withName("intakeSpeaker with beambreak");
+                return intakeSpeakerNoBeamBreak().until(() -> beambreak.get()).andThen(stop()).withName("intakeSpeaker with beambreak");
+    }
+
+    public Command intakeSpeakerNoBeamBreak()  { //Subject to change due to motor shenanigans
+                return intakeSpeakerNoBeamBreak(1);
     }
 
     public Command intakeSpeakerNoBeamBreak(double speed )  { //Subject to change due to motor shenanigans

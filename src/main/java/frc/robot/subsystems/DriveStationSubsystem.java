@@ -9,8 +9,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 public class DriveStationSubsystem extends SubsystemBase {
@@ -21,11 +23,7 @@ public class DriveStationSubsystem extends SubsystemBase {
   public AddressableLEDBuffer m_ledBuffer2;
   private SwerveSubsystem swerve;
 
-<<<<<<< Updated upstream
-  // public DigitalInput beambreak = new DigitalInput(0);
-=======
-  public DigitalInput beambreak = new DigitalInput(0);
->>>>>>> Stashed changes
+  // public DigitalInput beambreak = new DigitalInput(1);
 
   public void setLight(int ID, Color8Bit color){
     m_ledBuffer.setLED(ID, color);
@@ -111,18 +109,10 @@ public class DriveStationSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_led.setData(m_ledBuffer);
-
     Pose2d pose = swerve.getPose();
-
-<<<<<<< Updated upstream
     // if (beambreak.get()) {
     //   readyToSpeaker().schedule();
     // }
-=======
-    if (beambreak.get()) {
-      readyToSpeaker().schedule();
-    }
->>>>>>> Stashed changes
     
   }
 

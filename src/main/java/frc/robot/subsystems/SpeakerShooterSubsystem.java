@@ -22,7 +22,6 @@ public class SpeakerShooterSubsystem extends SubsystemBase {
     public SpeakerShooterSubsystem(IntakeSubsystem intake) {
         this.intakeSubsystem = intake;
         speakerShooterMotor.setNeutralMode(NeutralModeValue.Coast);
-        setDefaultCommand(stop());
 
         SmartDashboard.setDefaultNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed);
     }
@@ -42,23 +41,4 @@ public class SpeakerShooterSubsystem extends SubsystemBase {
             speakerShooterMotor.set(0);
         }
     }
-
-    public Command shootSpeaker() { //TODO: can change
-        return new ParallelCommandGroup(run (
-                () -> {speakerShooterMotor.set(SmartDashboard.getNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed)); 
-                }
-        ), new WaitCommand(1).andThen(intakeSubsystem.intakeSpeakerNoBeamBreak())).withName("shootSpeaker");
-    }   
-
-    // public Command shootSpeakerAndStop() {
-    //     return shootSpeaker().andThen(Commands.waitSeconds(SpeakerShooterConstants.kSpeakerShootDuration))
-    //             .andThen(stop());
-    // }
-
-    // public Command stop() { // TODO: can change
-    //     return run(
-    //             () -> {
-    //                 speakerShooterMotor.set(0);
-    //             }).withName("stop");
-    // }
 }
