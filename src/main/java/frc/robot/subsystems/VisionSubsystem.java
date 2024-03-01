@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
-    private static final String cameraName = "USB_Camera";
+    private static final String cameraName = "Arducam_OV9281_USB_Camera";
 
     private Optional<EstimatedRobotPose> lastPose;
     private static Field2d field = new Field2d();

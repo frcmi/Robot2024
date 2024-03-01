@@ -52,7 +52,7 @@ public final class Constants {
     public static final int pigeonID = 0;
 
     public static final COTSTalonFXSwerveConstants chosenModule =
-        COTSTalonFXSwerveConstants.SDS.MK4i.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);
+        COTSTalonFXSwerveConstants.SDS.MK4i.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L3);
 
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(28);
@@ -121,9 +121,9 @@ public final class Constants {
 
     /* Swerve Profiling Values */
     /** Meters per Second */
-    public static final double maxSpeed = 1; // TODO: This must be tuned to specific robot
+    public static final double maxSpeed = 8; // TODO: This must be tuned to specific robot
     /** Radians per Second */
-    public static final double maxAngularVelocity = 1; // TODO: This must be tuned to specific robot
+    public static final double maxAngularVelocity = 8; // TODO: This must be tuned to specific robot
 
     /* Sensitivity Values */
     public static final double translationSensitivity = 0.75;

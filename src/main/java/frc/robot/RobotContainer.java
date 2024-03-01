@@ -49,7 +49,7 @@ public class RobotContainer {
   // private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem();
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
-  // public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
+  public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -88,8 +88,11 @@ public class RobotContainer {
   private void configureBindings() {
     // Ben Control Scheme *****************************
 
-    // RB Intake speaker
+    // Intake
+    driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
     driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
+    // RB Intake speaker
+    // driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
 
     // RT Shoot speaker
     driverController.rightTrigger().whileTrue(speakerShooterSubsystem.shootSpeaker());

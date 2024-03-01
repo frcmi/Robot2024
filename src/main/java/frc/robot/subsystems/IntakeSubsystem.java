@@ -43,9 +43,9 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command intakeAmp() { //Subject to change due to motor shenanigans
         return run (
                 () -> {
-                    // intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed);
-                    // intakeMotor2.set(-IntakeConstants.kIntakeMotorSpeed);
-                    // indexerMotor.set(-IntakeConstants.kIndexerSpeed);
+                    intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed);
+                    intakeMotor2.set(-IntakeConstants.kIntakeMotorSpeed);
+                    indexerMotor.set(-IntakeConstants.kIndexerSpeed);
                 }
         ).withName("intakeAmp");
     }
@@ -54,9 +54,9 @@ public class IntakeSubsystem extends SubsystemBase {
             System.out.println("Intaking Speaker");
             Command intake = Commands.run (
                 () -> {
-                    // intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed);
-                    // intakeMotor2.set(-IntakeConstants.kIntakeMotorSpeed);
-                    // indexerMotor.set(IntakeConstants.kIndexerSpeed);
+                    intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed);
+                    intakeMotor2.set(-IntakeConstants.kIntakeMotorSpeed);
+                    indexerMotor.set(IntakeConstants.kIndexerSpeed);
                 }
         ).withName("intakeSpeaker");
         intake.addRequirements(this);
@@ -79,9 +79,9 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command stop() {
         return run(
             () -> {
-                // intakeMotor1.set(0);
-                // intakeMotor2.set(0);
-                // indexerMotor.set(0);
+                intakeMotor1.set(0);
+                intakeMotor2.set(0);
+                indexerMotor.set(0);
                 }
         ).withName("stop");
     }
