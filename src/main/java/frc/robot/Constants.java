@@ -208,15 +208,14 @@ public final class Constants {
     public static final int kIntakeMotor2Id = 25;
     public static final int kIndexerMotorId = 26;
 
-    public static final double kIntakeMotorSpeed = 0.27;
-    public static final double kIndexerSpeed = 0.27;
+    public static final double kIntakeMotorSpeed = 0.25;
+    public static final double kIndexerSpeed = 0.5;
   }
 
   public static class SpeakerShooterConstants {
     public static final int kSpeakerShooterMotorId = 27;
 
     public static final double kSpeakerMotorSpeed = -0.85;
-    public static double kSpeakerShootDuration;
   }
 
   public static class AmpShooterConstants {

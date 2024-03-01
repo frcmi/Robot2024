@@ -21,7 +21,11 @@ public class DriveStationSubsystem extends SubsystemBase {
   public AddressableLEDBuffer m_ledBuffer2;
   private SwerveSubsystem swerve;
 
+<<<<<<< Updated upstream
   // public DigitalInput beambreak = new DigitalInput(0);
+=======
+  public DigitalInput beambreak = new DigitalInput(0);
+>>>>>>> Stashed changes
 
   public void setLight(int ID, Color8Bit color){
     m_ledBuffer.setLED(ID, color);
@@ -110,9 +114,15 @@ public class DriveStationSubsystem extends SubsystemBase {
 
     Pose2d pose = swerve.getPose();
 
+<<<<<<< Updated upstream
     // if (beambreak.get()) {
     //   readyToSpeaker().schedule();
     // }
+=======
+    if (beambreak.get()) {
+      readyToSpeaker().schedule();
+    }
+>>>>>>> Stashed changes
     
   }
 
