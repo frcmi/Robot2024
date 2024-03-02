@@ -106,7 +106,7 @@ public class RobotContainer {
     // LB Intake amp
 
     // LT Shoot amp
-    // driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
+    driverController.leftTrigger().whileTrue(speakerShooterSubsystem.shoot());
 
     // A Raise amp arm
     // driverController.a().whileTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));

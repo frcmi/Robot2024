@@ -29,6 +29,7 @@ public class SpeakerShooterSubsystem extends SubsystemBase {
         speakerShooterMotor.setNeutralMode(NeutralModeValue.Brake);
 
         SmartDashboard.setDefaultNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed);
+        setDefaultCommand(stop());
     }
 
     @Override
@@ -40,10 +41,18 @@ public class SpeakerShooterSubsystem extends SubsystemBase {
             SmartDashboard.putString("Speakershoot Command", "");
         }
 
-        if (!intakeSubsystem.beambreak.get() || this.overrideBeamBreak.getAsBoolean()) {
-            speakerShooterMotor.set(SmartDashboard.getNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed));
-        } else {
-            speakerShooterMotor.set(0);
-        }
+        // if (!intakeSubsystem.beambreak.get() || this.overrideBeamBreak.getAsBoolean()) {
+        //     speakerShooterMotor.set(SmartDashboard.getNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed));
+        // } else {
+        //     speakerShooterMotor.set(0);
+        // }
+    }
+
+     public Command shoot() {
+        return run(() -> {speakerShooterMotor.set(SpeakerShooterConstants.kSpeakerMotorSpeed);}).withName("stop");
+    }
+
+    public Command stop() {
+        return run(() -> {speakerShooterMotor.set(0);}).withName("stop");
     }
 }
