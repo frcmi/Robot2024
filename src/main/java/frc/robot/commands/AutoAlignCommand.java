@@ -32,8 +32,7 @@ public class AutoAlignCommand {
         Translation3d speakerToRobotTranslation = speakerToRobot.getTranslation();
         double targetAngle = Math.atan2(speakerToRobotTranslation.getY(), speakerToRobotTranslation.getX());
 
-        while (Math.abs(targetAngle) > Math.PI)
-        {
+        while (Math.abs(targetAngle) > Math.PI) {
             targetAngle -= Math.PI * 2 * Math.signum(targetAngle);
         }
 
