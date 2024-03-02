@@ -55,13 +55,13 @@ public class SwerveSubsystem extends SubsystemBase {
     private PIDConstants translationConstants = new PIDConstants(AutoConstants.kAccelerationP, AutoConstants.kAccelerationI, AutoConstants.kAccelerationD);
     private PIDConstants rotationConstants = new PIDConstants(AutoConstants.kRotationP, AutoConstants.kRotationI, AutoConstants.kRotationD);
 
-    static {
-        ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Pose Estimator");
-        shuffleboardTab
-                .add("Field", field)
-                .withWidget(BuiltInWidgets.kField)
-                .withSize(7, 4);
-    }
+    // static {
+    //     ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Pose Estimator");
+    //     shuffleboardTab
+    //             .add("Field", field)
+    //             .withWidget(BuiltInWidgets.kField)
+    //             .withSize(7, 4);
+    // }
     
     public SwerveSubsystem() {
         gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
@@ -81,30 +81,30 @@ public class SwerveSubsystem extends SubsystemBase {
         Pose2d blueStation = new Pose2d(0.53, 7.11, new Rotation2d(0));
         swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(Constants.SwerveConstants.swerveKinematics, getGyroYaw(), getModulePositions(), blueStation);
 
-        AutoBuilder.configureHolonomic(
-            this::getPose, // Robot pose supplier
-            this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
-            this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    translationConstants, // Translation PID constants
-                    rotationConstants, // Rotation PID constants
-                    AutoConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
-                    Math.sqrt((Units.inchesToMeters(SwerveConstants.wheelBase) / 2)*(Units.inchesToMeters(SwerveConstants.wheelBase) / 2)*2), // Drive base radius in meters. Distance from robot center to furthest module.
-                    new ReplanningConfig() // Default path replanning config. See the API for the options here
-            ),
-            () -> {
-              // Boolean supplier that controls when the path will be mirrored for the red alliance
-              // This will flip the path being followed to the red side of the field.
-              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
-              return false;
-            },
-            this // Reference to this subsystem to set requirements
-    );
+    //     AutoBuilder.configureHolonomic(
+    //         this::getPose, // Robot pose supplier
+    //         this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
+    //         this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+    //         this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+    //         new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+    //                 translationConstants, // Translation PID constants
+    //                 rotationConstants, // Rotation PID constants
+    //                 AutoConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
+    //                 Math.sqrt((Units.inchesToMeters(SwerveConstants.wheelBase) / 2)*(Units.inchesToMeters(SwerveConstants.wheelBase) / 2)*2), // Drive base radius in meters. Distance from robot center to furthest module.
+    //                 new ReplanningConfig() // Default path replanning config. See the API for the options here
+    //         ),
+    //         () -> {
+    //           // Boolean supplier that controls when the path will be mirrored for the red alliance
+    //           // This will flip the path being followed to the red side of the field.
+    //           // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+    //           var alliance = DriverStation.getAlliance();
+    //           if (alliance.isPresent()) {
+    //             return alliance.get() == DriverStation.Alliance.Red;
+    //           }
+    //           return false;
+    //         },
+    //         this // Reference to this subsystem to set requirements
+    // );
     }
 
     /**
@@ -242,8 +242,8 @@ public class SwerveSubsystem extends SubsystemBase {
         }
     }
 
-    StructArrayPublisher<SwerveModuleState> swerveStatePublisher = NetworkTableInstance.getDefault().getStructArrayTopic("Swerve/Current States", SwerveModuleState.struct).publish();
-    StructArrayPublisher<SwerveModuleState> swerveSetpointPublisher = NetworkTableInstance.getDefault().getStructArrayTopic("Swerve/Set States", SwerveModuleState.struct).publish();
+    // StructArrayPublisher<SwerveModuleState> swerveStatePublisher = NetworkTableInstance.getDefault().getStructArrayTopic("Swerve/Current States", SwerveModuleState.struct).publish();
+    // StructArrayPublisher<SwerveModuleState> swerveSetpointPublisher = NetworkTableInstance.getDefault().getStructArrayTopic("Swerve/Set States", SwerveModuleState.struct).publish();
 
     public Command stop() {
         return Commands.run(() -> driveRobotRelative(new ChassisSpeeds(0, 0, 0)), this);
@@ -266,13 +266,13 @@ public class SwerveSubsystem extends SubsystemBase {
             mod.logValues();
         }
 
-        swerveStatePublisher.set(getModuleStates());
-        swerveSetpointPublisher.set(getModuleSetpoints());
+        // swerveStatePublisher.set(getModuleStates());
+        // swerveSetpointPublisher.set(getModuleSetpoints());
 
         // posePublisher.set(swerveDrivePoseEstimator.getEstimatedPosition());
-        SmartDashboard.putNumber("Robot X", getPose().getTranslation().getX());
-        SmartDashboard.putNumber("Robot Y", getPose().getTranslation().getY());
-        SmartDashboard.putNumber("Robot Angular Velocity", gyro.getAngularVelocityZWorld().getValueAsDouble());
+        // SmartDashboard.putNumber("Robot X", getPose().getTranslation().getX());
+        // SmartDashboard.putNumber("Robot Y", getPose().getTranslation().getY());
+        // SmartDashboard.putNumber("Robot Angular Velocity", gyro.getAngularVelocityZWorld().getValueAsDouble());
 
         field.setRobotPose(getPose());
         // System.out.println("EEEEEEEEEEEEEEEE");

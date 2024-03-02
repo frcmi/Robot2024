@@ -49,8 +49,8 @@ public class AmpArmSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Arm Degrees", Math.toDegrees(getAngle()));
-        SmartDashboard.putNumber("Arm Radians", getAngle());
+        // SmartDashboard.putNumber("Arm Degrees", Math.toDegrees(getAngle()));
+        // SmartDashboard.putNumber("Arm Radians", getAngle());
     }
 
     public double getAngle() {
@@ -61,8 +61,8 @@ public class AmpArmSubsystem extends SubsystemBase{
         double angle = getAngle();
         double kg = feedforward.calculate(angle, 0);
         
-        SmartDashboard.putNumber("Goal Angle", goalAngle);
-        SmartDashboard.putBoolean("Arm Bounds", !(angle > AmpArmConstants.kMaxAngle || angle < AmpArmConstants.kMinAngle));
+        // SmartDashboard.putNumber("Goal Angle", goalAngle);
+        // SmartDashboard.putBoolean("Arm Bounds", !(angle > AmpArmConstants.kMaxAngle || angle < AmpArmConstants.kMinAngle));
 
         double pidOutput = pidController.calculate(angle, goalAngle);
        // double ffOutput = feedforward.calculate(pidController.getSetpoint().position, pidController.getSetpoint().velocity);

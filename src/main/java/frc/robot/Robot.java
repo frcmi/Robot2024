@@ -30,6 +30,7 @@ import java.util.OptionalInt;
 public class Robot extends TimedRobot {
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
 
+  /*
   private static final PowerDistribution pdh = new PowerDistribution();
   private static final ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Status");
 
@@ -60,7 +61,7 @@ public class Robot extends TimedRobot {
             .withSize(3,3)
             .withProperties(Map.of("Glyph", "POWER_OFF"));
   }
-
+ */
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
@@ -84,19 +85,15 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {
-    
-    Pose2d currentPose = m_robotContainer.swerveSubsystem.getPose();
-    e.setRobotPose(m_robotContainer.gotoAutoThing2);
-    SmartDashboard.putData("I want to be at", e);
-    SmartDashboard.putNumber("Dist from want", Math.sqrt(Math.pow(m_robotContainer.gotoAutoThing2.getX() - currentPose.getX(), 2) + Math.pow(m_robotContainer.gotoAutoThing2.getY() - currentPose.getY(), 2)));
+  public void robotPeriodic() {    
+    // SmartDashboard.putNumber("Dist from want", Math.sqrt(Math.pow(m_robotContainer.gotoAutoThing2.getX() - currentPose.getX(), 2) + Math.pow(m_robotContainer.gotoAutoThing2.getY() - currentPose.getY(), 2)));
   
     // TODO: measure if this has a perf impact?
-    Optional<Alliance> alliance = DriverStation.getAlliance();
-    alliance.ifPresent(value -> allianceShuffleboardEntry.setBoolean(value == Alliance.Red));
+    // Optional<Alliance> alliance = DriverStation.getAlliance();
+    // alliance.ifPresent(value -> allianceShuffleboardEntry.setBoolean(value == Alliance.Red));
 
-    OptionalInt station = DriverStation.getLocation();
-    station.ifPresent(stationShuffleboardEntry::setInteger);
+    // OptionalInt station = DriverStation.getLocation();
+    // station.ifPresent(stationShuffleboardEntry::setInteger);
 
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
@@ -112,7 +109,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    SmartDashboard.putBoolean("Enabled", false);
+    // SmartDashboard.putBoolean("Enabled", false);
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -126,12 +123,13 @@ public class Robot extends TimedRobot {
     }
   }
 
-  public Field2d e = new Field2d();
+  // public Field2d e = new Field2d();
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    SmartDashboard.putBoolean("Enabled", true);}
+  }
+    // SmartDashboard.putBoolean("Enabled", true);}
 
   @Override
   public void teleopInit() {

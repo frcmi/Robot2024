@@ -59,7 +59,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_DriverButton = new CommandXboxController(OperatorConstants.kDriverButtonPort);
 
-  private final AutoChooser autoChooser = new AutoChooser();
+  // private final AutoChooser autoChooser = new AutoChooser();
 
   public final Pose2d gotoAutoThing = new Pose2d(2.843,5.819, new Rotation2d(Math.PI));
   public final Pose2d gotoAutoThing2 = new Pose2d(8.244,2.471, new Rotation2d(Math.PI));
@@ -90,8 +90,8 @@ public class RobotContainer {
    */
 
   private void configureBindings() {
-    SmartDashboard.setDefaultNumber("Auto Wait Time", 0);
-    SmartDashboard.setPersistent("Auto Wait Time");
+    // SmartDashboard.setDefaultNumber("Auto Wait Time", 0);
+    // SmartDashboard.setPersistent("Auto Wait Time");
     // Ben Control Scheme *****************************
 
     // Intake
@@ -180,7 +180,8 @@ public class RobotContainer {
     // return (new WaitCommand(1)).andThen(new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing).getCommand()).andThen(new WaitCommand(0.3)).andThen(intakeSubsystem.shoot()).andThen(new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing2).getCommand()); //Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
     
     // travel
-    return (new WaitCommand(0)).andThen(new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing2).getCommand());
+    // return (new WaitCommand(0)).andThen(new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing2).getCommand());
+    return new WaitCommand(0);
   }
 
   

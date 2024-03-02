@@ -36,9 +36,9 @@ public class SpeakerShooterSubsystem extends SubsystemBase {
     public void periodic() {
         var currentCommand = this.getCurrentCommand();
         if (currentCommand != null) {
-            SmartDashboard.putString("Speakershoot Command", currentCommand.getName());
+            // SmartDashboard.putString("Speakershoot Command", currentCommand.getName());
         } else {
-            SmartDashboard.putString("Speakershoot Command", "");
+            // SmartDashboard.putString("Speakershoot Command", "");
         }
 
         // if (!intakeSubsystem.beambreak.get() || this.overrideBeamBreak.getAsBoolean()) {

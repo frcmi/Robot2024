@@ -38,12 +38,12 @@ public class IntakeSubsystem extends SubsystemBase {
     public void periodic() {
         var currentCommand = this.getCurrentCommand();
         if (currentCommand != null){
-            SmartDashboard.putString("Intake Command", currentCommand.getName());
+            // SmartDashboard.putString("Intake Command", currentCommand.getName());
         } else {
-            SmartDashboard.putString("Intake Command", "");
+            // SmartDashboard.putString("Intake Command", "");
         }
 
-        SmartDashboard.putBoolean("Beam Break", beambreak.get());
+        // SmartDashboard.putBoolean("Beam Break", beambreak.get());
     }
 
     public Command intakeAmp() { //Subject to change due to motor shenanigans
@@ -69,7 +69,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command intakeSpeakerNoBeamBreak(double speed )  { //Subject to change due to motor shenanigans
-            System.out.println("Intaking Speaker");
+            // System.out.println("Intaking Speaker");
             Command intake = run(
                 () -> {
                     intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed * speed);
@@ -78,7 +78,7 @@ public class IntakeSubsystem extends SubsystemBase {
                 }
         ).withName("intakeSpeaker");
 
-        System.out.println("Finished intaking speaker");
+        // System.out.println("Finished intaking speaker");
 
         return intake;
     }

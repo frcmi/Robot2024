@@ -36,9 +36,9 @@ public class AmpShooterSubsystem extends SubsystemBase{
     public void periodic() {
         var currentCommand = this.getCurrentCommand();
         if (currentCommand != null){
-            SmartDashboard.putString("AmpShooter Command", currentCommand.getName());
+            // SmartDashboard.putString("AmpShooter Command", currentCommand.getName());
         } else {
-            SmartDashboard.putString("AmpShooter Command", "");
+            // SmartDashboard.putString("AmpShooter Command", "");
         }
     }
 
