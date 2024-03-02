@@ -2,10 +2,13 @@ package frc.robot.subsystems;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,8 +22,10 @@ import frc.robot.Constants.SpeakerShooterConstants;
 public class SpeakerShooterSubsystem extends SubsystemBase {
     public TalonFX speakerShooterMotor = new TalonFX(SpeakerShooterConstants.kSpeakerShooterMotorId);
     public IntakeSubsystem intakeSubsystem;
-    public SpeakerShooterSubsystem(IntakeSubsystem intake) {
+    public BooleanSupplier overrideBeamBreak;
+    public SpeakerShooterSubsystem(IntakeSubsystem intake, BooleanSupplier overrideBeambreak) {
         this.intakeSubsystem = intake;
+        this.overrideBeamBreak = overrideBeambreak;
         speakerShooterMotor.setNeutralMode(NeutralModeValue.Brake);
 
         SmartDashboard.setDefaultNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed);
@@ -35,7 +40,7 @@ public class SpeakerShooterSubsystem extends SubsystemBase {
             SmartDashboard.putString("Speakershoot Command", "");
         }
 
-        if (!intakeSubsystem.beambreak.get()) {
+        if (!intakeSubsystem.beambreak.get() || this.overrideBeamBreak.getAsBoolean()) {
             speakerShooterMotor.set(SmartDashboard.getNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed));
         } else {
             speakerShooterMotor.set(0);

@@ -69,8 +69,10 @@ public class SwerveModule {
         mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
         mDriveMotor.getConfigurator().apply(Robot.ctreConfigs.swerveDriveFXConfig);
         mDriveMotor.getConfigurator().setPosition(0.0);
+    
         mDriveMotor.setInverted(isInverted);
-
+        
+        
         String modName;
         switch (moduleNumber) {
             case 0: {

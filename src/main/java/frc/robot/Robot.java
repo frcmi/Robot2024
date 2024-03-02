@@ -92,11 +92,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Dist from want", Math.sqrt(Math.pow(m_robotContainer.gotoAutoThing2.getX() - currentPose.getX(), 2) + Math.pow(m_robotContainer.gotoAutoThing2.getY() - currentPose.getY(), 2)));
   
     // TODO: measure if this has a perf impact?
-    // Optional<Alliance> alliance = DriverStation.getAlliance();
-    // alliance.ifPresent(value -> allianceShuffleboardEntry.setBoolean(value == Alliance.Red));
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    alliance.ifPresent(value -> allianceShuffleboardEntry.setBoolean(value == Alliance.Red));
 
-    // OptionalInt station = DriverStation.getLocation();
-    // station.ifPresent(stationShuffleboardEntry::setInteger);
+    OptionalInt station = DriverStation.getLocation();
+    station.ifPresent(stationShuffleboardEntry::setInteger);
 
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,

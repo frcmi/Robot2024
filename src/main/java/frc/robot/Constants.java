@@ -34,10 +34,9 @@ public final class Constants {
 
     public static class LEDConstants {
       public static final int kStreakLength = 3; //TODO: Change Streak Length
-      public static final int kLedCount = 11;
+      public static final int kLedCount = 21;
     
       public static final int kLedPort = 1;
-      public static final int kLedPort2 = 0;
     }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
@@ -80,7 +79,7 @@ public final class Constants {
     /* Angle Encoder Invert */
     public static final SensorDirectionValue cancoderInvert = chosenModule.cancoderInvert;
 
-    public static final float currentLimitModifier = 0.5f;
+    public static final float currentLimitModifier = 0.25f;
 
     /* Swerve Current Limiting */
     public static final int angleCurrentLimit = (int)(25 * currentLimitModifier);
@@ -121,7 +120,7 @@ public final class Constants {
 
     /* Swerve Profiling Values */
     /** Volts (out of 12) */
-    public static final double maxSpeed = 12; // TODO: This must be tuned to specific robot
+    public static final double maxSpeed = 10; // TODO: This must be tuned to specific robot
     /** Volts (out of 12) */
     public static final double maxAngularVelocity = 8; // TODO: This must be tuned to specific robot
 
@@ -194,7 +193,7 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
         
-    public static final double kRotationP = 50;
+    public static final double kRotationP = 10;
     public static final double kRotationI = 0;
     public static final double kRotationD = 0.05;
     // For PathPlanner

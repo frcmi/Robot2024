@@ -44,18 +44,19 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
-  private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
+  private final CommandXboxController driverController =
+      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+  // private final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
+  // private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem(intakeSubsystem);
+  private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem(intakeSubsystem, driverController.leftTrigger());
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem(swerveSubsystem);
   public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_DriverButton = new CommandXboxController(OperatorConstants.kDriverButtonPort);
 
   private final AutoChooser autoChooser = new AutoChooser();
@@ -105,10 +106,10 @@ public class RobotContainer {
     // LB Intake amp
 
     // LT Shoot amp
-    driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
+    // driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
 
     // A Raise amp arm
-    driverController.a().whileTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
+    // driverController.a().whileTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
 
     // Y Reset Field Orientation
     driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
@@ -141,17 +142,17 @@ public class RobotContainer {
     // m_driverController.rightBumper().onTrue(m_driveStationSubsystem.ledOff());
     //you have to press right bumper then left bumper to turn off the lights, I don't why, ask the lights
     
-    // // m_DriverButton.button(5).onTrue(m_driveStationSubsystem.dropDisk());
+    m_DriverButton.button(5).onTrue(m_driveStationSubsystem.dropDisk());
     
-    // // m_DriverButton.button(7).onTrue(m_driveStationSubsystem.coop());
+    m_DriverButton.button(7).onTrue(m_driveStationSubsystem.coop());
 
-    // // m_DriverButton.button(1).onTrue(m_driveStationSubsystem.ampSpeaker());
+    m_DriverButton.button(1).onTrue(m_driveStationSubsystem.ampSpeaker());
 
     // // m_DriverButton.button(9).onTrue(m_driveStationSubsystem.readyToAmp());
 
     // // m_DriverButton.button(3).onTrue(m_driveStationSubsystem.readyToSpeaker());
 
-    // m_DriverButton.button(2).whileTrue(new SetTrailLights(m_driveStationSubsystem, true));
+    m_DriverButton.button(2).whileTrue(new SetTrailLights(m_driveStationSubsystem, false));
     // m_DriverButton.button(2).whileTrue(new SetTrailLights(m_driveStationSubsystem, true));
     
     //  m_DriverButton.button(3).and(m_DriverButton.button(4).and(m_DriverButton.button(5))).whileTrue(m_driveStationSubsystem.runRainbow());
@@ -173,9 +174,13 @@ public class RobotContainer {
     // return Autos.testAuto(swerveSubsystem, intakeSubsystem,  () -> swerveSubsystem.getPose()); // Just for testing, will implement autoChooser later
     // return new AutoChooserCommand(autoChooser);
 //    return Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
-    return (new WaitCommand(1)).andThen(new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing).getCommand()).andThen(new WaitCommand(0.3)).andThen(intakeSubsystem.shoot()).andThen(new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing2).getCommand()); //Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
     // return autoChooser.getCommand();
-    // return new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing2).getCommand();
+
+    // Shoot and travel
+    // return (new WaitCommand(1)).andThen(new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing).getCommand()).andThen(new WaitCommand(0.3)).andThen(intakeSubsystem.shoot()).andThen(new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing2).getCommand()); //Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
+    
+    // travel
+    return (new WaitCommand(0)).andThen(new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing2).getCommand());
   }
 
   
