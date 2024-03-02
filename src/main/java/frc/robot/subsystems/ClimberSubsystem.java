@@ -50,7 +50,7 @@ public class ClimberSubsystem extends SubsystemBase {
                 () -> {leftClimberMotor.set(ClimberConstants.kClimberUp);
                     rightClimberMotor.set(ClimberConstants.kClimberUp);
                 }
-        ).until(() -> leftClimberMotor.getOutputCurrent() > 100 || leftClimberMotor.getOutputCurrent() > 100).withName("up");
+        ).until(() -> Math.max(leftClimberMotor.getOutputCurrent(), rightClimberMotor.getOutputCurrent()) > 100).withName("up");
     }
 
     public Command down() { //Subject to change due to motor shenanigans
