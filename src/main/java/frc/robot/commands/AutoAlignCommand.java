@@ -29,9 +29,10 @@ public class AutoAlignCommand {
         Transform3d speakerToRobot = robot.minus(speaker);
 
         // restrict the angle to a -180 to 180 degree range
-        double targetAngle = speakerToRobot.getRotation().getZ();
-        while (Math.abs(targetAngle) > Math.PI)
-        {
+        Translation3d speakerToRobotTranslation = speakerToRobot.getTranslation();
+        double targetAngle = Math.atan2(speakerToRobotTranslation.getY(), speakerToRobotTranslation.getX());
+
+        while (Math.abs(targetAngle) > Math.PI) {
             targetAngle -= Math.PI * 2 * Math.signum(targetAngle);
         }
 
@@ -39,14 +40,14 @@ public class AutoAlignCommand {
         targetAngle = MathUtil.clamp(targetAngle, -maximumFiringAngle, maximumFiringAngle);
 
         // get pitch of shooter
-        var shooterDirection = new Translation3d(1, shooter.getRotation());
-        var shooterDirectionHorizontal = Transformations.normalize(shooterDirection.toTranslation2d());
+        Translation3d shooterDirection = new Translation3d(1, shooter.getRotation());
+        Translation2d shooterDirectionHorizontal = Transformations.normalize(shooterDirection.toTranslation2d());
         double cosPitch = Transformations.dot(shooterDirection.toTranslation2d(), shooterDirectionHorizontal);
         double pitch = Math.acos(cosPitch);
         double cotPitch = cosPitch / Math.sin(pitch);
 
         // calculate robot (center) distance to speaker
-        var speakerToShooter = speakerToRobot.plus(robotToShooter);
+        Transform3d speakerToShooter = speakerToRobot.plus(robotToShooter);
         double height = Math.abs(speakerToShooter.getZ());
         double shooterFiringDistance = height * cotPitch;
 
