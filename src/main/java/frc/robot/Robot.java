@@ -87,9 +87,9 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     
     Pose2d currentPose = m_robotContainer.swerveSubsystem.getPose();
-    e.setRobotPose(m_robotContainer.gotoAutoThing);
+    e.setRobotPose(m_robotContainer.gotoAutoThing2);
     SmartDashboard.putData("I want to be at", e);
-    SmartDashboard.putNumber("Dist from want", Math.sqrt(Math.pow(m_robotContainer.gotoAutoThing.getX() - currentPose.getX(), 2) + Math.pow(m_robotContainer.gotoAutoThing.getY() - currentPose.getY(), 2)));
+    SmartDashboard.putNumber("Dist from want", Math.sqrt(Math.pow(m_robotContainer.gotoAutoThing2.getX() - currentPose.getX(), 2) + Math.pow(m_robotContainer.gotoAutoThing2.getY() - currentPose.getY(), 2)));
   
     // TODO: measure if this has a perf impact?
     // Optional<Alliance> alliance = DriverStation.getAlliance();

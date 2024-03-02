@@ -21,7 +21,7 @@ public class SpeakerShooterSubsystem extends SubsystemBase {
     public IntakeSubsystem intakeSubsystem;
     public SpeakerShooterSubsystem(IntakeSubsystem intake) {
         this.intakeSubsystem = intake;
-        speakerShooterMotor.setNeutralMode(NeutralModeValue.Coast);
+        speakerShooterMotor.setNeutralMode(NeutralModeValue.Brake);
 
         SmartDashboard.setDefaultNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed);
     }

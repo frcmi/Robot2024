@@ -1,3 +1,10 @@
 [
-
+  {
+    "name": "/SmartDashboard/Auto Wait Time",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  }
 ]

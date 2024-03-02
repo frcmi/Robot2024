@@ -70,6 +70,7 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic()
     {
+        // estimator.setLastPose(swerve.getPose());
         if (estimator != null)
         {
             if (lastPose.isPresent())

@@ -43,7 +43,7 @@ public class IntakeSubsystem extends SubsystemBase {
             SmartDashboard.putString("Intake Command", "");
         }
 
-        // SmartDashboard.putBoolean("Beam Break", beambreak.get());
+        SmartDashboard.putBoolean("Beam Break", beambreak.get());
     }
 
     public Command intakeAmp() { //Subject to change due to motor shenanigans
@@ -57,7 +57,11 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command intakeSpeaker()  { //Subject to change due to motor shenanigans
-                return intakeSpeakerNoBeamBreak().until(() -> beambreak.get()).andThen(stop()).withName("intakeSpeaker with beambreak");
+                return intakeSpeakerNoBeamBreak().until(() -> !beambreak.get()).andThen(stop()).withName("intakeSpeaker with beambreak");
+    }
+
+    public Command shoot()  { //Subject to change due to motor shenanigans
+                return intakeSpeakerNoBeamBreak(2).until(beambreak::get).andThen(stop()).withName("shoot with beambreak");
     }
 
     public Command intakeSpeakerNoBeamBreak()  { //Subject to change due to motor shenanigans

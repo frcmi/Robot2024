@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AmpArmConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -18,6 +19,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveToPositionPathPlanner;
@@ -58,7 +60,8 @@ public class RobotContainer {
 
   private final AutoChooser autoChooser = new AutoChooser();
 
-  public final Pose2d gotoAutoThing = new Pose2d(2.916,5.898, new Rotation2d(Math.PI));
+  public final Pose2d gotoAutoThing = new Pose2d(2.843,5.819, new Rotation2d(Math.PI));
+  public final Pose2d gotoAutoThing2 = new Pose2d(8.244,2.471, new Rotation2d(Math.PI));
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -86,6 +89,8 @@ public class RobotContainer {
    */
 
   private void configureBindings() {
+    SmartDashboard.setDefaultNumber("Auto Wait Time", 0);
+    SmartDashboard.setPersistent("Auto Wait Time");
     // Ben Control Scheme *****************************
 
     // Intake
@@ -168,8 +173,9 @@ public class RobotContainer {
     // return Autos.testAuto(swerveSubsystem, intakeSubsystem,  () -> swerveSubsystem.getPose()); // Just for testing, will implement autoChooser later
     // return new AutoChooserCommand(autoChooser);
 //    return Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
-    return new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing).getCommand(); //Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
+    return (new WaitCommand(1)).andThen(new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing).getCommand()).andThen(new WaitCommand(0.3)).andThen(intakeSubsystem.shoot()).andThen(new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing2).getCommand()); //Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
     // return autoChooser.getCommand();
+    // return new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing2).getCommand();
   }
 
   

@@ -29,7 +29,7 @@ public class DriveToPositionPathPlanner {
     public Command getCommand() { 
         System.out.println("Moving to " + bezierPoints.get(bezierPoints.size()-1));
         PathConstraints constraints = new PathConstraints(
-            3.0, 4.0,
+            1.5, 2.0,
             Units.degreesToRadians(540), Units.degreesToRadians(720)
         );
 
