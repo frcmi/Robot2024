@@ -52,8 +52,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private static final Field2d field = new Field2d();
 
-    private PIDConstants translationConstants = new PIDConstants(AutoConstants.kAccelerationP, AutoConstants.kAccelerationI, AutoConstants.kAccelerationD);
-    private PIDConstants rotationConstants = new PIDConstants(AutoConstants.kRotationP, AutoConstants.kRotationI, AutoConstants.kRotationD);
+    // private PIDConstants translationConstants = new PIDConstants(AutoConstants.kAccelerationP, AutoConstants.kAccelerationI, AutoConstants.kAccelerationD);
+    // private PIDConstants rotationConstants = new PIDConstants(AutoConstants.kRotationP, AutoConstants.kRotationI, AutoConstants.kRotationD);
 
     // static {
     //     ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Pose Estimator");

@@ -34,6 +34,9 @@ public class AmpShooterSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
+        // SmartDashboard.setPersistent("Amp Shooter Speed");
+        // SmartDashboard.setDefaultNumber("Amp Shooter Speed", -AmpShooterConstants.kAmpMotorSpeed);
+
         var currentCommand = this.getCurrentCommand();
         if (currentCommand != null){
             // SmartDashboard.putString("AmpShooter Command", currentCommand.getName());
@@ -45,6 +48,13 @@ public class AmpShooterSubsystem extends SubsystemBase{
     public Command shootAmp() { //TODO: can change
         return run (
                 () -> {shootMotor.set(-AmpShooterConstants.kAmpMotorSpeed); // Keep this motor negative
+                }
+        ).withName("shootAmp");
+    }
+
+    public Command intakeAmp() {
+        return run (
+                () -> {shootMotor.set(AmpShooterConstants.kAmpMotorSpeed); // Keep this motor negative
                 }
         ).withName("shootAmp");
     }

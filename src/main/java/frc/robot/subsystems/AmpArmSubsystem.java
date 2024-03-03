@@ -49,7 +49,7 @@ public class AmpArmSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        // SmartDashboard.putNumber("Arm Degrees", Math.toDegrees(getAngle()));
+        SmartDashboard.putNumber("Arm Degrees", Math.toDegrees(getAngle()));
         // SmartDashboard.putNumber("Arm Radians", getAngle());
     }
 

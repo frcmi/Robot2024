@@ -3,11 +3,14 @@ package frc.robot.commands;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
 
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -36,6 +39,12 @@ public class TeleopSwerve extends Command {
         double translationVal = MathUtil.applyDeadband(Math.pow(translationSup.getAsDouble(), 3), Constants.OperatorConstants.stickDeadband);
         double strafeVal = MathUtil.applyDeadband(Math.pow(strafeSup.getAsDouble(), 3), Constants.OperatorConstants.stickDeadband);
         double rotationVal = MathUtil.applyDeadband(Math.pow(rotationSup.getAsDouble(), 3), Constants.OperatorConstants.stickDeadband);
+        
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+        if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
+            translationVal *= -1;
+            strafeVal *= -1;
+        }
 
         /* Drive */
         s_Swerve.drive(

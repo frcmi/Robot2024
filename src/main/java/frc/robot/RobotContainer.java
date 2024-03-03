@@ -33,6 +33,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -47,10 +48,10 @@ public class RobotContainer {
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  // private final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
-  // private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
+  private final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
+  private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem(intakeSubsystem, driverController.leftTrigger());
+  private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem(intakeSubsystem, driverController.povDownRight());
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem(swerveSubsystem);
   public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
@@ -90,12 +91,13 @@ public class RobotContainer {
    */
 
   private void configureBindings() {
-    // SmartDashboard.setDefaultNumber("Auto Wait Time", 0);
-    // SmartDashboard.setPersistent("Auto Wait Time");
+      // SmartDashboard.setDefaultNumber("Auto Wait Time", 0);
+      // SmartDashboard.setPersistent("Auto Wait Time");
+
+      SmartDashboard.setPersistent("Amp Shooter Speed");
     // Ben Control Scheme *****************************
 
     // Intake
-    driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp());
     driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
     // RB Intake speaker
     // driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
@@ -104,12 +106,14 @@ public class RobotContainer {
     driverController.rightTrigger().whileTrue(intakeSubsystem.intakeSpeakerNoBeamBreak(2));
 
     // LB Intake amp
+    driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp().alongWith(ampShooterSubsystem.intakeAmp()));
 
     // LT Shoot amp
-    driverController.leftTrigger().whileTrue(speakerShooterSubsystem.shoot());
+    driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
+    driverController.leftTrigger().onFalse(ampArmSubsystem.moveTo(AmpArmConstants.kMinAngle));
 
     // A Raise amp arm
-    // driverController.a().whileTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
+    driverController.a().onTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
 
     // Y Reset Field Orientation
     driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
@@ -155,7 +159,7 @@ public class RobotContainer {
     m_DriverButton.button(2).whileTrue(new SetTrailLights(m_driveStationSubsystem, false));
     // m_DriverButton.button(2).whileTrue(new SetTrailLights(m_driveStationSubsystem, true));
     
-    //  m_DriverButton.button(3).and(m_DriverButton.button(4).and(m_DriverButton.button(5))).whileTrue(m_driveStationSubsystem.runRainbow());
+     m_DriverButton.button(3).and(m_DriverButton.button(4).and(m_DriverButton.button(5))).whileTrue(m_driveStationSubsystem.runRainbow());
     //made a rainbow command because its funny, probably won't use at comps though
     //made a rainbow command because its funny, probably won't use at comps though
     // m_driveStationSubsystem.coop();
@@ -181,8 +185,12 @@ public class RobotContainer {
     
     // travel
     // return (new WaitCommand(0)).andThen(new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing2).getCommand());
-    return new WaitCommand(0);
+    // return new WaitCommand(0);
+    return new RepeatCommand((new InstantCommand(() -> {swerveSubsystem.drive(
+      new Translation2d(2, 0), 
+      0, 
+      false, 
+      false
+  );}, swerveSubsystem))).withTimeout(7);
   }
-
-  
 }

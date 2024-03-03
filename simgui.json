@@ -44,6 +44,11 @@
     }
   },
   "NetworkTables": {
+    "persistent": {
+      "SmartDashboard": {
+        "open": true
+      }
+    },
     "transitory": {
       "Swerve": {
         "SwerveModuleState[]##v_Swerve/Current States": {

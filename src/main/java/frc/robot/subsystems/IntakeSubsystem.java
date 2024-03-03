@@ -43,7 +43,7 @@ public class IntakeSubsystem extends SubsystemBase {
             // SmartDashboard.putString("Intake Command", "");
         }
 
-        // SmartDashboard.putBoolean("Beam Break", beambreak.get());
+        SmartDashboard.putBoolean("Beam Break", beambreak.get());
     }
 
     public Command intakeAmp() { //Subject to change due to motor shenanigans
