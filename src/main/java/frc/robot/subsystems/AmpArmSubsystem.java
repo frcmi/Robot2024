@@ -60,6 +60,8 @@ public class AmpArmSubsystem extends SubsystemBase{
     public void setGoal(double goalAngle) {
         double angle = getAngle();
         double kg = feedforward.calculate(angle, 0);
+
+        goalAngle = Math.toRadians(goalAngle);
         
         // SmartDashboard.putNumber("Goal Angle", goalAngle);
         // SmartDashboard.putBoolean("Arm Bounds", !(angle > AmpArmConstants.kMaxAngle || angle < AmpArmConstants.kMinAngle));
@@ -77,7 +79,7 @@ public class AmpArmSubsystem extends SubsystemBase{
 
         outputVolts = Math.max(-AmpArmConstants.kMaxArmVolts, Math.min(AmpArmConstants.kMaxArmVolts, outputVolts));
 
-        armMotor.setVoltage(outputVolts);  
+        armMotor.setVoltage(outputVolts);
     }
 
     

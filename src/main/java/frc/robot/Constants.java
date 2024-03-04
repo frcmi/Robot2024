@@ -218,7 +218,7 @@ public final class Constants {
   }
 
   public static class AmpShooterConstants {
-    public static final double kAmpMotorSpeed = 1.0;
+    public static final double kAmpMotorSpeed = 0.78;
     public static int kShootMotor = 31;
 
   }

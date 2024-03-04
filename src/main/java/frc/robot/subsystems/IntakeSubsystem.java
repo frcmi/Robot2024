@@ -21,7 +21,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private final TalonFX intakeMotor2 = new TalonFX(IntakeConstants.kIntakeMotor2Id);
     private final TalonFX indexerMotor = new TalonFX(IntakeConstants.kIndexerMotorId);
 
-    public DigitalInput beambreak = new DigitalInput(1);
+    public DigitalInput beambreak = new DigitalInput(IntakeConstants.kBeamBreakPort);
 
 
 

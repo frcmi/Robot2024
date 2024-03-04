@@ -110,7 +110,7 @@ public class RobotContainer {
 
     // LT Shoot amp
     driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
-    driverController.leftTrigger().onFalse(ampArmSubsystem.moveTo(AmpArmConstants.kMinAngle));
+    // driverController.leftTrigger().onFalse(ampArmSubsystem.moveTo(AmpArmConstants.kMinAngle));
 
     // A Raise amp arm
     driverController.a().onTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
