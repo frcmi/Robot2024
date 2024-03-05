@@ -72,9 +72,30 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
+    var scheduler = CommandScheduler.getInstance();
+    SmartDashboard.putData(scheduler);
+    
+    scheduler.onCommandInitialize(this::commandInitialized);
+    scheduler.onCommandInterrupt(this::commandInterrupted);
+    scheduler.onCommandFinish(this::commandFinished);
+
     m_robotContainer = new RobotContainer();
+  }
+
+  private void commandInitialized(Command command) {
+    System.out.println("Command initialized: " + command.getName());
+
+    // todo: add to dict?
+  }
+
+  private void commandInterrupted(Command command) {
+    System.out.println("Command interrupted: " + command.getName());
+  }
+
+  private void commandFinished(Command command) {
+    System.out.println("Command exited: " + command.getName());
+
+    // todo: remove from dict?
   }
 
   /**
