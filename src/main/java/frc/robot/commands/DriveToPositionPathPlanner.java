@@ -17,29 +17,24 @@ public class DriveToPositionPathPlanner {
     private List<Translation2d> bezierPoints;
 
     public DriveToPositionPathPlanner(Pose2d currentPose, Pose2d targetPosition) {
-        // addRequirements(drive);
-        // this.targetPose = targetPosition;
-        // bezierPoints = PathPlannerPath.bezierFromPoses(
-        //     currentPose,
-        //     targetPosition
-        // );
-
-        // System.out.println("Constructing Path");
+        this.targetPose = targetPosition;
+        bezierPoints = PathPlannerPath.bezierFromPoses(
+                currentPose,
+                targetPosition);
     }
 
-    public Command getCommand() { 
-        // System.out.println("Moving to " + bezierPoints.get(bezierPoints.size()-1));
-        // PathConstraints constraints = new PathConstraints(
-        //     1.5, 2.0,
-        //     Units.degreesToRadians(540), Units.degreesToRadians(720)
-        // );
+    public Command getCommand() {
+        System.out.println("Moving to " + bezierPoints.get(bezierPoints.size() - 1));
+        PathConstraints constraints = new PathConstraints(
+                1.5, 2.0,
+                Units.degreesToRadians(540), Units.degreesToRadians(720));
 
-        // return AutoBuilder.pathfindToPose(
-        //         targetPose,
-        //         constraints,
-        //         0.0, // Goal end velocity in meters/sec
-        //         0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
-        // );
-        return new WaitCommand(0);
+        return AutoBuilder.pathfindToPose(
+                targetPose,
+                constraints,
+                0.0, // Goal end velocity in meters/sec
+                0.0 // Rotation delay distance in meters. This is how far the robot should travel
+                    // before attempting to rotate.
+        );
     }
 }
