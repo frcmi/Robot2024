@@ -207,6 +207,9 @@ public final class Constants {
     public static final int kIntakeMotor2Id = 25;
     public static final int kIndexerMotorId = 26;
 
+    public static final int kBeamBreakPort = 2;
+  
+
     public static final double kIntakeMotorSpeed = 0.2085;
     public static final double kIndexerSpeed = 0.2085;
   }
@@ -220,6 +223,7 @@ public final class Constants {
   public static class AmpShooterConstants {
     public static final double kAmpMotorSpeed = 0.78;
     public static int kShootMotor = 31;
+    public static double kIntakeCurrentLimitAmps = 100000000;
 
   }
 
