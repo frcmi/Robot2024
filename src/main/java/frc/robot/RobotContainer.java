@@ -31,6 +31,7 @@ import frc.robot.subsystems.DriveStationSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
@@ -129,6 +130,11 @@ public class RobotContainer {
 
     // povLeft Auto Shoot amp
     // povRight Auto Shoot speaker
+    
+    driverController.povRight().onTrue(Commands.runOnce(() -> {
+      var command = new AutoAlignCommand(swerveSubsystem);
+      command.getCommand().schedule();
+    }, swerveSubsystem));
 
     // X Toggle Sensitivity (translation and rotation)
     driverController.x().onTrue(new InstantCommand(swerveSubsystem::switchSensitivity, swerveSubsystem));
