@@ -37,12 +37,12 @@ public class ClimberSubsystem extends SubsystemBase {
     public void periodic() {
         var currentCommand = this.getCurrentCommand();
         if (currentCommand != null){
-            SmartDashboard.putString("Intake Command", currentCommand.getName());
+            // SmartDashboard.putString("Intake Command", currentCommand.getName());
         } else {
-            SmartDashboard.putString("Intake Command", "");
+            // SmartDashboard.putString("Intake Command", "");
         }
 
-        SmartDashboard.putNumber("Climber Current", leftClimberMotor.getOutputCurrent());
+        // SmartDashboard.putNumber("Climber Current", leftClimberMotor.getOutputCurrent());
     }
 
     public Command up() { //Subject to change due to motor shenanigans
@@ -50,7 +50,7 @@ public class ClimberSubsystem extends SubsystemBase {
                 () -> {leftClimberMotor.set(ClimberConstants.kClimberUp);
                     rightClimberMotor.set(ClimberConstants.kClimberUp);
                 }
-        ).until(() -> leftClimberMotor.getOutputCurrent() > 100 || leftClimberMotor.getOutputCurrent() > 100).withName("up");
+        ).until(() -> leftClimberMotor.getOutputCurrent() > 35 || leftClimberMotor.getOutputCurrent() > 35).withName("up");
     }
 
     public Command down() { //Subject to change due to motor shenanigans

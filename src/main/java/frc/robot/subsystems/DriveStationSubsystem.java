@@ -34,7 +34,7 @@ public class DriveStationSubsystem extends SubsystemBase {
 
   public DriveStationSubsystem( SwerveSubsystem swerveSubsystem) {
     m_led = new AddressableLED(LEDConstants.kLedPort);
-    m_ledBuffer = new AddressableLEDBuffer(73);
+    m_ledBuffer = new AddressableLEDBuffer(LEDConstants.kLedCount);
     m_led.setLength(m_ledBuffer.getLength());
     m_led.setData(m_ledBuffer);
     m_led.start();

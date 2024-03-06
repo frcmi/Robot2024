@@ -33,20 +33,20 @@ public class VisionSubsystem extends SubsystemBase {
     private final SwerveSubsystem swerve;
 
     /* shuffleboard entries */
-    private static final ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Vision");
-    private static final GenericEntry xShuffleBoardItem = shuffleboardTab.add("X", 0).getEntry();
-    private static final GenericEntry yShuffleBoardItem = shuffleboardTab.add("Y", 0).getEntry();
-    private static final GenericEntry zShuffleBoardItem = shuffleboardTab.add("Z", 0).getEntry();
-    private static final GenericEntry pitchShuffleBoardItem = shuffleboardTab.add("Pitch", 0).getEntry();
-    private static final GenericEntry rollShuffleBoardItem = shuffleboardTab.add("Roll", 0).getEntry();
-    private static final GenericEntry yawShuffleBoardItem = shuffleboardTab.add("Yaw", 0).getEntry();
+    // private static final ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Vision");
+    // private static final GenericEntry xShuffleBoardItem = shuffleboardTab.add("X", 0).getEntry();
+    // private static final GenericEntry yShuffleBoardItem = shuffleboardTab.add("Y", 0).getEntry();
+    // private static final GenericEntry zShuffleBoardItem = shuffleboardTab.add("Z", 0).getEntry();
+    // private static final GenericEntry pitchShuffleBoardItem = shuffleboardTab.add("Pitch", 0).getEntry();
+    // private static final GenericEntry rollShuffleBoardItem = shuffleboardTab.add("Roll", 0).getEntry();
+    // private static final GenericEntry yawShuffleBoardItem = shuffleboardTab.add("Yaw", 0).getEntry();
 
-    static {
-        shuffleboardTab
-                .add("Field", field)
-                .withWidget(BuiltInWidgets.kField)
-                .withSize(6,3);
-    }
+    // static {
+    //     shuffleboardTab
+    //             .add("Field", field)
+    //             .withWidget(BuiltInWidgets.kField)
+    //             .withSize(6,3);
+    // }
 
     public VisionSubsystem(SwerveSubsystem swerveSubsystem) {
         //21.85 up
@@ -70,6 +70,7 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic()
     {
+        // estimator.setLastPose(swerve.getPose());
         if (estimator != null)
         {
             if (lastPose.isPresent())
@@ -87,13 +88,13 @@ public class VisionSubsystem extends SubsystemBase {
             Translation3d translation = pose.getTranslation();
             Rotation3d rotation = pose.getRotation();
 
-            xShuffleBoardItem.setDouble(translation.getX());
-            yShuffleBoardItem.setDouble(translation.getY());
-            zShuffleBoardItem.setDouble(translation.getZ());
+            // xShuffleBoardItem.setDouble(translation.getX());
+            // yShuffleBoardItem.setDouble(translation.getY());
+            // zShuffleBoardItem.setDouble(translation.getZ());
 
-            pitchShuffleBoardItem.setDouble(rotation.getX());
-            rollShuffleBoardItem.setDouble(rotation.getY());
-            yawShuffleBoardItem.setDouble(rotation.getZ());
+            // pitchShuffleBoardItem.setDouble(rotation.getX());
+            // rollShuffleBoardItem.setDouble(rotation.getY());
+            // yawShuffleBoardItem.setDouble(rotation.getZ());
 
             Pose2d pose2d = pose.toPose2d();
             

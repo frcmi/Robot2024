@@ -34,10 +34,9 @@ public final class Constants {
 
     public static class LEDConstants {
       public static final int kStreakLength = 3; //TODO: Change Streak Length
-      public static final int kLedCount = 11;
+      public static final int kLedCount = 21;
     
       public static final int kLedPort = 1;
-      public static final int kLedPort2 = 0;
     }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
@@ -80,7 +79,7 @@ public final class Constants {
     /* Angle Encoder Invert */
     public static final SensorDirectionValue cancoderInvert = chosenModule.cancoderInvert;
 
-    public static final float currentLimitModifier = 0.5f;
+    public static final float currentLimitModifier = 0.4f;
 
     /* Swerve Current Limiting */
     public static final int angleCurrentLimit = (int)(25 * currentLimitModifier);
@@ -123,7 +122,7 @@ public final class Constants {
     /** Volts (out of 12) */
     public static final double maxSpeed = 12; // TODO: This must be tuned to specific robot
     /** Volts (out of 12) */
-    public static final double maxAngularVelocity = 8; // TODO: This must be tuned to specific robot
+    public static final double maxAngularVelocity = 12; // TODO: This must be tuned to specific robot
 
     /* Sensitivity Values */
     public static final double translationSensitivity = 0.75;
@@ -194,11 +193,11 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
         
-    public static final double kRotationP = 25;
+    public static final double kRotationP = 10;
     public static final double kRotationI = 0;
-    public static final double kRotationD = 0.6;
+    public static final double kRotationD = 0.05;
     // For PathPlanner
-    public static final double kAccelerationP = 55;
+    public static final double kAccelerationP = 25;
     public static final double kAccelerationI = 0;
     public static final double kAccelerationD = 0.01;
     // need to be tuned, a lot
@@ -208,8 +207,11 @@ public final class Constants {
     public static final int kIntakeMotor2Id = 25;
     public static final int kIndexerMotorId = 26;
 
-    public static final double kIntakeMotorSpeed = 0.25;
-    public static final double kIndexerSpeed = 0.5;
+    public static final int kBeamBreakPort = 2;
+  
+
+    public static final double kIntakeMotorSpeed = 0.2085;
+    public static final double kIndexerSpeed = 0.2085;
   }
 
   public static class SpeakerShooterConstants {
@@ -219,16 +221,17 @@ public final class Constants {
   }
 
   public static class AmpShooterConstants {
-    public static final double kAmpMotorSpeed = 0.4;
-    public static int kShootMotor;
+    public static final double kAmpMotorSpeed = 0.78;
+    public static int kShootMotor = 31;
+    public static double kIntakeCurrentLimitAmps = 100000000;
 
   }
 
   public static class AmpArmConstants {
-    public static final double kMaxArmVolts = 3;
+    public static final double kMaxArmVolts = 6;
     public static final int kAmpArmMotorId = 32;
     public static final int kArmEncoderId = 0; // TODO: Change ID based on DIO port
-    public static final double kTorqueArmConstant = 0.5;
+    public static final double kTorqueArmConstant = 0.6;
     public static final double kGravityLimit = 0.3;
     // Gareths law of constants
     // TODO: Tune all of these values
@@ -248,9 +251,9 @@ public final class Constants {
     public static final double kMaxArmAccel = 3;
 
     // Angles
-    public static final double kMaxAngle = 90; // TODO: Maximum angle of arm
+    public static final double kMaxAngle = 180; // TODO: Maximum angle of arm
     public static final double kMinAngle = 0; // TODO: Change to resting position
-    public static final double kShootAngle = 100; // TODO: Change to shooting position
+    public static final double kShootAngle = 92;
 
 
     public static final double kAmpEncoderOffset = 179 + 140 + 4.2 - 124 + 1.5; // Needs to be measured

@@ -44,10 +44,10 @@ public class SwerveModule {
     private final PositionVoltage anglePosition = new PositionVoltage(0);
 
     /* shuffleboard entries */
-    private final ShuffleboardTab shuffleboardTab;
-    private final GenericEntry CANCoderShuffleBoardItem;
-    private final GenericEntry angleShuffleBoardItem;
-    private final GenericEntry velocityShuffleBoardItem;
+    // private final ShuffleboardTab shuffleboardTab;
+    // private final GenericEntry CANCoderShuffleBoardItem;
+    // private final GenericEntry angleShuffleBoardItem;
+    // private final GenericEntry velocityShuffleBoardItem;
 
 
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants, boolean isInverted){
@@ -69,8 +69,10 @@ public class SwerveModule {
         mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
         mDriveMotor.getConfigurator().apply(Robot.ctreConfigs.swerveDriveFXConfig);
         mDriveMotor.getConfigurator().setPosition(0.0);
+    
         mDriveMotor.setInverted(isInverted);
-
+        
+        /*
         String modName;
         switch (moduleNumber) {
             case 0: {
@@ -99,6 +101,7 @@ public class SwerveModule {
         CANCoderShuffleBoardItem = shuffleboardTab.add("CANCoder", 0).withSize(2,2).withWidget(BuiltInWidgets.kGyro).withPosition(2,0).getEntry();
         angleShuffleBoardItem = shuffleboardTab.add("Angle", 0).withSize(2,2).withWidget(BuiltInWidgets.kGyro).withPosition(0,0).getEntry();
         velocityShuffleBoardItem = shuffleboardTab.add("Velocity", 0).withSize(4,1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min", -SwerveConstants.maxSpeed, "Max", SwerveConstants.maxSpeed)).withPosition(0, 2).getEntry();
+     */
     }
 
     /**
@@ -173,8 +176,8 @@ public class SwerveModule {
      * Logs all relevant values to shuffleboard. Should be called periodically.
      */
     public void logValues() {
-        CANCoderShuffleBoardItem.setDouble(getCANcoderReading().getDegrees());
-        angleShuffleBoardItem.setDouble(getPosition().angle.getDegrees());
-        velocityShuffleBoardItem.setDouble(getState().speedMetersPerSecond);
+        // CANCoderShuffleBoardItem.setDouble(getCANcoderReading().getDegrees());
+        // angleShuffleBoardItem.setDouble(getPosition().angle.getDegrees());
+        // velocityShuffleBoardItem.setDouble(getState().speedMetersPerSecond);
     }
 }
