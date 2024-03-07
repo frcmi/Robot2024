@@ -50,6 +50,7 @@ public class AmpArmSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Arm Degrees", Math.toDegrees(getAngle()));
+        SmartDashboard.putNumber("Arm Current", armMotor.getOutputCurrent());
         // SmartDashboard.putNumber("Arm Radians", getAngle());
     }
 
@@ -86,12 +87,26 @@ public class AmpArmSubsystem extends SubsystemBase{
     public Command moveTo(double goalAngle) {
         return run(() -> setGoal(goalAngle));
     }
+
+    public Command raiseToAmp() {
+        double raiseVolts = AmpArmConstants.kRaiseArmVolts + Math.cos(getAngle()) * AmpArmConstants.kTorqueArmConstant;
+        raiseVolts = Math.max(-AmpArmConstants.kMaxArmVolts, Math.min(AmpArmConstants.kMaxArmVolts, raiseVolts));
+        final double outputVolts = raiseVolts;
+
+        return run(() -> armMotor.setVoltage(outputVolts))
+        .until(() -> getAngle() > AmpArmConstants.kShootAngle)
+        .andThen(run(() -> armMotor.setVoltage(0.2)));
+    }
+
+    public Command lowerArm() {
+        return run(() -> armMotor.setVoltage(AmpArmConstants.kLowerArmVolts)).until(() -> armMotor.getOutputCurrent() > AmpArmConstants.kAmpCurrentLimit);
+    }
       
     public Command stop() { //TODO: can change
         return run (
-                () -> { 
-                    armMotor.set(0);
-                }
+            () -> { 
+                armMotor.set(0);
+            }
         ).withName("stop");
     }
 }
