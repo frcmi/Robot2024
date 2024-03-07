@@ -221,6 +221,8 @@ public final class Constants {
     public static int kShootMotor = 31;
     public static double kIntakeCurrentLimitAmps = 100000000;
 
+    public static final int kAmpBeamBrakeId = 4;
+
   }
 
   public static class AmpArmConstants {
@@ -251,8 +253,12 @@ public final class Constants {
     public static final double kMinAngle = 0; // TODO: Change to resting position
     public static final double kShootAngle = 92;
 
-
     public static final double kAmpEncoderOffset = 179 + 140 + 4.2 - 124 + 1.5; // Needs to be measured
+
+    // Raise/Lower Constants
+    public static final double kRaiseArmVolts = 2;
+    public static final double kLowerArmVolts = -1;
+    public static final double kAmpCurrentLimit = 39;
   }
 
   public class ClimberConstants {

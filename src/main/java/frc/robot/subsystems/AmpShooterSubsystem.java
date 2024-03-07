@@ -7,6 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -25,6 +26,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 public class AmpShooterSubsystem extends SubsystemBase{
     private final CANSparkMax shootMotor = new CANSparkMax(AmpShooterConstants.kShootMotor, MotorType.kBrushless);
     private final AmpArmSubsystem ampArmSubsystem;
+
+    private final DigitalInput beambreak = new DigitalInput(AmpShooterConstants.kAmpBeamBrakeId);
  
     public AmpShooterSubsystem(AmpArmSubsystem ampArm) {
         ampArmSubsystem = ampArm;
@@ -36,6 +39,8 @@ public class AmpShooterSubsystem extends SubsystemBase{
     public void periodic() {
         SmartDashboard.setPersistent("Amp Shooter Speed");
         SmartDashboard.setDefaultNumber("Amp Shooter Speed", AmpShooterConstants.kAmpMotorSpeed);
+        SmartDashboard.putBoolean("Amp Beam Break", beambreak.get());
+        SmartDashboard.putNumber("Amp Motor Current", shootMotor.getOutputCurrent());
 
         var currentCommand = this.getCurrentCommand();
         if (currentCommand != null){
@@ -55,9 +60,9 @@ public class AmpShooterSubsystem extends SubsystemBase{
 
     public Command intakeAmp() {
         return run (
-                () -> {shootMotor.set(SmartDashboard.getNumber("Amp Shooter Speed", AmpShooterConstants.kAmpMotorSpeed)); // Keep this motor negative
+                () -> {shootMotor.set(0); // Keep this motor negative
                 }
-        ).withName("shootAmp");
+        ).until(() -> !beambreak.get()).andThen(stop()).withName("intakeAmp");
     }
 
     public Command stop() { //TODO: can change
