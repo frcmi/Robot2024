@@ -18,6 +18,8 @@ public class UltraBooleanLog implements UltraLogEntry<Boolean> {
     private boolean lastItem;
 
     public UltraBooleanLog(String name) {
+        if (TelemetryConstants.killswitch) {return;}
+
         this.logName = TelemetryConstants.tabPrefix + name;
 
         try {
@@ -55,7 +57,7 @@ public class UltraBooleanLog implements UltraLogEntry<Boolean> {
     }
 
     public void update(Boolean item) {
-        if (errored) {return;}
+        if (TelemetryConstants.killswitch || errored) {return;}
         try {
             if (item == null || item == lastItem) {
                 return;

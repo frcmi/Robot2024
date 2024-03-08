@@ -31,6 +31,9 @@ import java.util.concurrent.TimeUnit;
  */
 public final class Constants {
     public static class TelemetryConstants {
+        // DON'T ENABLE UNLESS ABSOLUTELY NEEDED
+        // this will fully disable logging even when FMS is connected.
+        public static final boolean killswitch = false;
         // If true data won't be sent over network even when not connected to FMS
         public static final boolean disableNetworkLogging = false;
         // ONLY ENABLE IN DEV (this *should* be overwritten when connected to FMS, but that's untested)

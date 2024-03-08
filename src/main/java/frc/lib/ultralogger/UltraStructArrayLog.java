@@ -18,6 +18,12 @@ public class UltraStructArrayLog<T> implements UltraLogEntry<T[]> {
     private boolean errored = false;
 
     public UltraStructArrayLog(String name, Struct<T> struct) {
+        if (TelemetryConstants.killswitch) {
+            // SAFETY: if killswitch is true `struct` will never be read.
+            this.struct = null;
+            return;
+        }
+
         this.logName = TelemetryConstants.tabPrefix + name;
         this.struct = struct;
 
@@ -60,7 +66,7 @@ public class UltraStructArrayLog<T> implements UltraLogEntry<T[]> {
     }
 
     public void update(T[] items) {
-        if (errored) {return;}
+        if (TelemetryConstants.killswitch || errored) {return;}
         try {
             if (items == null) {
                 return;

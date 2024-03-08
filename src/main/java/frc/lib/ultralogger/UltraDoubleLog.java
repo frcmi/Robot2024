@@ -18,6 +18,8 @@ public class UltraDoubleLog implements UltraLogEntry<Double> {
     private double lastItem;
 
     public UltraDoubleLog(String name) {
+        if (TelemetryConstants.killswitch) {return;}
+
         this.logName = TelemetryConstants.tabPrefix + name;
 
         try {
@@ -55,7 +57,7 @@ public class UltraDoubleLog implements UltraLogEntry<Double> {
     }
 
     public void update(Double item) {
-        if (errored) {return;}
+        if (TelemetryConstants.killswitch || errored) {return;}
         try {
             if (item == null || item == lastItem) {
                 return;

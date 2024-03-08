@@ -18,6 +18,8 @@ public class UltraStringLog implements UltraLogEntry<String> {
     private String lastItem;
 
     public UltraStringLog(String name) {
+        if (TelemetryConstants.killswitch) {return;}
+
         this.logName = TelemetryConstants.tabPrefix + name;
 
         try {
@@ -55,7 +57,7 @@ public class UltraStringLog implements UltraLogEntry<String> {
     }
 
     public void update(String item) {
-        if (errored) {return;}
+        if (TelemetryConstants.killswitch || errored) {return;}
         try {
             if (item == null || lastItem.equals(item)) {
                 return;
