@@ -11,23 +11,32 @@ import java.util.Optional;
 public class UltraDoubleLog implements UltraLogEntry<Double> {
     public String logName;
     private Optional<DoublePublisher> ntPublisher = Optional.empty();
-    private final DoubleLogEntry datalogPublisher;
+    private Optional<DoubleLogEntry> datalogPublisher = Optional.empty();
     private double lastCheckedTimestamp = System.currentTimeMillis();
 
     public UltraDoubleLog(String name) {
         this.logName = TelemetryConstants.tabPrefix + name;
-        checkFMS(false);
-        this.datalogPublisher = new DoubleLogEntry(DataLogManager.getLog(), logName);
+
+        checkNTFMS(false);
+        checkDLFMS();
     }
 
-    private void checkFMS(boolean doTimestamp) {
+    private void checkDLFMS() {
+        if (UltraLogEntry.disableDatalog()) {
+            return;
+        }
+
+        this.datalogPublisher = Optional.of(new DoubleLogEntry(DataLogManager.getLog(), logName));
+    }
+
+    private void checkNTFMS(boolean doTimestamp) {
         if (doTimestamp && System.currentTimeMillis() - lastCheckedTimestamp < TelemetryConstants.fmsCheckDelay) {
             return;
         }
 
         this.lastCheckedTimestamp = System.currentTimeMillis();
 
-        if (UltraLogEntry.dontNetwork()) {
+        if (UltraLogEntry.disableNetworkTableLogs()) {
             this.ntPublisher = Optional.empty();
             return;
         }
@@ -38,10 +47,17 @@ public class UltraDoubleLog implements UltraLogEntry<Double> {
     }
 
     public void update(Double item) {
-        this.datalogPublisher.append(item);
+        if (item == null) {return;}
+
+        if (this.datalogPublisher.isPresent()) {
+            this.datalogPublisher.get().append(item);
+        } else {
+            checkDLFMS();
+        }
+
         if (this.ntPublisher.isPresent()) {
             ntPublisher.get().set(item);
-            checkFMS(true);
+            checkNTFMS(true);
         }
     }
 }

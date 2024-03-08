@@ -11,23 +11,32 @@ import java.util.Optional;
 public class UltraStringLog implements UltraLogEntry<String> {
     public String logName;
     private Optional<StringPublisher> ntPublisher = Optional.empty();
-    private final StringLogEntry datalogPublisher;
+    private Optional<StringLogEntry> datalogPublisher = Optional.empty();
     private double lastCheckedTimestamp = System.currentTimeMillis();
 
     public UltraStringLog(String name) {
         this.logName = TelemetryConstants.tabPrefix + name;
-        checkFMS(false);
-        this.datalogPublisher = new StringLogEntry(DataLogManager.getLog(), logName);
+
+        checkNTFMS(false);
+        checkDLFMS();
     }
 
-    private void checkFMS(boolean doTimestamp) {
+    private void checkDLFMS() {
+        if (UltraLogEntry.disableDatalog()) {
+            return;
+        }
+
+        this.datalogPublisher = Optional.of(new StringLogEntry(DataLogManager.getLog(), logName));
+    }
+
+    private void checkNTFMS(boolean doTimestamp) {
         if (doTimestamp && System.currentTimeMillis() - lastCheckedTimestamp < TelemetryConstants.fmsCheckDelay) {
             return;
         }
 
         this.lastCheckedTimestamp = System.currentTimeMillis();
 
-        if (UltraLogEntry.dontNetwork()) {
+        if (UltraLogEntry.disableNetworkTableLogs()) {
             this.ntPublisher = Optional.empty();
             return;
         }
@@ -39,10 +48,16 @@ public class UltraStringLog implements UltraLogEntry<String> {
 
     public void update(String item) {
         if (item == null) {return;}
-        this.datalogPublisher.append(item);
+
+        if (this.datalogPublisher.isPresent()) {
+            this.datalogPublisher.get().append(item);
+        } else {
+            checkDLFMS();
+        }
+
         if (this.ntPublisher.isPresent()) {
             ntPublisher.get().set(item);
-            checkFMS(true);
+            checkNTFMS(true);
         }
     }
 }
