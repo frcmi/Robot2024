@@ -54,6 +54,9 @@ public class AmpArmSubsystem extends SubsystemBase{
         // SmartDashboard.putNumber("Arm Radians", getAngle());
     }
 
+    /**
+     * Return the current angle in RADIANS
+     */
     public double getAngle() {
         return -((armEncoder.getAbsolutePosition()) * 2 * Math.PI) + Math.toRadians(AmpArmConstants.kAmpEncoderOffset); // Angle is in radians
     }     
@@ -93,9 +96,11 @@ public class AmpArmSubsystem extends SubsystemBase{
         raiseVolts = Math.max(-AmpArmConstants.kMaxArmVolts, Math.min(AmpArmConstants.kMaxArmVolts, raiseVolts));
         final double outputVolts = raiseVolts;
 
-        return run(() -> armMotor.setVoltage(outputVolts))
-        .until(() -> getAngle() > AmpArmConstants.kShootAngle)
-        .andThen(run(() -> armMotor.setVoltage(0.2)));
+        return runOnce(() -> System.out.println("Raising Arm"))
+        .andThen(run(() -> armMotor.setVoltage(AmpArmConstants.kRaiseArmVolts + Math.cos(getAngle()) * AmpArmConstants.kTorqueArmConstant)))
+        .until(() -> (Math.toDegrees(getAngle()) > 92))
+        .andThen(runOnce(() -> System.out.println("At " + Math.toDegrees(getAngle()) +", stopping now")))
+        .andThen(stop());
     }
 
     public Command lowerArm() {

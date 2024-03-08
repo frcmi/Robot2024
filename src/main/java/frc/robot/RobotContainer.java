@@ -172,9 +172,7 @@ public class RobotContainer {
     // m_driveStationSubsystem.coop();
     // m_driveStationSubsystem.setLights().schedule();
     // m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.test());
-    
-    driverController.leftTrigger().onTrue(new AutoAlignCommand(swerveSubsystem).getCommand());
-  }
+    }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

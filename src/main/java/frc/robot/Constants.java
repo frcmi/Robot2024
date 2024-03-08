@@ -256,7 +256,7 @@ public final class Constants {
     public static final double kAmpEncoderOffset = 179 + 140 + 4.2 - 124 + 1.5; // Needs to be measured
 
     // Raise/Lower Constants
-    public static final double kRaiseArmVolts = 2;
+    public static final double kRaiseArmVolts = 1;
     public static final double kLowerArmVolts = -1;
     public static final double kAmpCurrentLimit = 39;
   }
