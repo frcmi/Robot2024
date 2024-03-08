@@ -14,11 +14,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.math.Transformations;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class AutoAlignCommand {
+public class AutoAlignCommand extends Command {
     private final SwerveSubsystem swerve;
+    private Command driveToPosition;
 
     public AutoAlignCommand(SwerveSubsystem swerveSubsystem) {
         swerve = swerveSubsystem;
+        driveToPosition = null;
     }
 
     private static final Transform3d robotToShooter = new Transform3d(0, 0, 0.5207, new Rotation3d(0, 37.5 * Math.PI / 180, Math.PI));
@@ -68,8 +70,22 @@ public class AutoAlignCommand {
         return new Pose2d(desiredPosition, desiredRotation);
     }
 
-    public Command getCommand() {
-        Pose2d destination = calculateDestination();
-        return new DriveToPositionPathPlanner(swerve.getPose(), destination).getCommand();
+    @Override
+    public void execute() {
+        if (driveToPosition == null) {
+            var destination = calculateDestination();
+            driveToPosition = Autos.driveToPosition(destination);
+        }
+
+        driveToPosition.execute();
+    }
+
+    @Override
+    public boolean isFinished() {
+        if (driveToPosition != null && driveToPosition.isFinished()) {
+            driveToPosition = null;
+        }
+
+        return driveToPosition == null;
     }
 }
