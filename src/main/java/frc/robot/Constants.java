@@ -187,7 +187,7 @@ public final class Constants {
 
   public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be tuned
                                             // to specific robot
-    public static final double kMaxSpeedMetersPerSecond = 0;
+    public static final double kMaxSpeedMetersPerSecond = 2;
     public static final double kMaxAccelerationMetersPerSecondSquared = 0.25;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
@@ -228,7 +228,7 @@ public final class Constants {
   }
 
   public static class AmpShooterConstants {
-    public static final double kAmpMotorSpeed = 0.78;
+    public static final double kAmpMotorSpeed = 0.83;
     public static int kShootMotor = 31;
     public static double kIntakeCurrentLimitAmps = 100000000;
 

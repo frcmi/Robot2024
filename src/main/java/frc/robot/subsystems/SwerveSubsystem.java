@@ -267,10 +267,10 @@ public class SwerveSubsystem extends SubsystemBase {
         rotationSensitivity = sensitivitySwitch ? SwerveConstants.rotationSensitivity : 1;
     }
 
-    UltraStructArrayLog<SwerveModuleState> swerveStatePublisher = new UltraStructArrayLog<>("Swerve/Current States", SwerveModuleState.struct);
-    UltraStructArrayLog<SwerveModuleState> swerveSetpointPublisher = new UltraStructArrayLog<>("Swerve/Set States", SwerveModuleState.struct);
-    UltraStructLog<Pose2d> posePublisher = new UltraStructLog<>("Swerve/Pose Estimator", Pose2d.struct);
-    UltraDoubleLog angularVelocityPublisher = new UltraDoubleLog("Swerve/Angular Velocity");
+    // UltraStructArrayLog<SwerveModuleState> swerveStatePublisher = new UltraStructArrayLog<>("Swerve/Current States", SwerveModuleState.struct);
+    // UltraStructArrayLog<SwerveModuleState> swerveSetpointPublisher = new UltraStructArrayLog<>("Swerve/Set States", SwerveModuleState.struct);
+    // UltraStructLog<Pose2d> posePublisher = new UltraStructLog<>("Swerve/Pose Estimator", Pose2d.struct);
+    // UltraDoubleLog angularVelocityPublisher = new UltraDoubleLog("Swerve/Angular Velocity");
 
     @Override
     public void periodic() {
@@ -283,9 +283,9 @@ public class SwerveSubsystem extends SubsystemBase {
             mod.logValues();
         }
 
-        posePublisher.update(getPose());
-        swerveStatePublisher.update(getModuleStates());
-        swerveSetpointPublisher.update(getModuleSetpoints());
-        angularVelocityPublisher.update(gyro.getAngularVelocityZWorld().getValueAsDouble());
+        // posePublisher.update(getPose());
+        // swerveStatePublisher.update(getModuleStates());
+        // swerveSetpointPublisher.update(getModuleSetpoints());
+        // angularVelocityPublisher.update(gyro.getAngularVelocityZWorld().getValueAsDouble());
     }
 }

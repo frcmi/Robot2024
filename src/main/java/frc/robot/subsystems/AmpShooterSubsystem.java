@@ -60,9 +60,9 @@ public class AmpShooterSubsystem extends SubsystemBase{
 
     public Command intakeAmp() {
         return run (
-                () -> {shootMotor.set(1); // Keep this motor negative
+                () -> {shootMotor.set(0.7); // Keep this motor negative
                 }
-        ).until(() -> !beambreak.get()).andThen(Commands.waitSeconds(0.05)).andThen(stop()).withName("intakeAmp");
+        ).until(() -> !beambreak.get()).andThen(Commands.waitSeconds(0.125)).andThen(stop()).withName("intakeAmp");
     }
 
     public Command stop() { //TODO: can change
