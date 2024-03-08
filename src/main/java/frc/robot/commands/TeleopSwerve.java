@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -48,9 +49,9 @@ public class TeleopSwerve extends Command {
 
         /* Drive */
         s_Swerve.drive(
-            new Translation2d(translationVal, strafeVal).times(Constants.SwerveConstants.maxSpeed), 
-            rotationVal * Constants.SwerveConstants.maxAngularVelocity, 
-            !robotCentricSup.getAsBoolean(), 
+            new Translation2d(translationVal, strafeVal).times(RobotBase.isReal() ? Constants.SwerveConstants.maxSpeed : Constants.SimulationConstants.kSimulationMaxSpeed),
+            rotationVal * (RobotBase.isReal() ? Constants.SwerveConstants.maxAngularVelocity : Constants.SimulationConstants.kSimulationMaxRotationSpeed),
+            !robotCentricSup.getAsBoolean(),
             false
         );
     }

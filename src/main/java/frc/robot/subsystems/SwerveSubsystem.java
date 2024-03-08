@@ -1,9 +1,11 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 import frc.lib.ultralogger.UltraDoubleLog;
 import frc.lib.ultralogger.UltraStructArrayLog;
 import frc.lib.ultralogger.UltraStructLog;
@@ -58,8 +60,12 @@ public class SwerveSubsystem extends SubsystemBase {
     private PIDConstants rotationConstants = new PIDConstants(AutoConstants.kRotationP, AutoConstants.kRotationI,
             AutoConstants.kRotationD);
 
+    public AnalogGyroSim simGyro = new AnalogGyroSim(0);
+    double simHeadingOffset = 0;
+
 
     public SwerveSubsystem() {
+        if (RobotBase.isSimulation()) simGyro.setAngle(0);
         gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
@@ -122,6 +128,7 @@ public class SwerveSubsystem extends SubsystemBase {
      *                      control
      */
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+        if (RobotBase.isSimulation()) simGyro.setAngle(simGyro.getAngle() + rotation * Constants.SimulationConstants.kSimulationMaxRotationSpeed * 0.002);
         SwerveModuleState[] swerveModuleStates = Constants.SwerveConstants.swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                         translation.getX(),
@@ -133,7 +140,7 @@ public class SwerveSubsystem extends SubsystemBase {
                                 translation.getY(),
                                 rotation));
 
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, RobotBase.isReal() ? Constants.SwerveConstants.maxSpeed : Constants.SimulationConstants.kSimulationMaxSpeed);
 
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
@@ -229,6 +236,7 @@ public class SwerveSubsystem extends SubsystemBase {
      * gradians, 0 rogreedians)
      */
     public void zeroHeading() {
+        if (RobotBase.isSimulation()) simHeadingOffset = simGyro.getAngle();
         setHeading(new Rotation2d());
     }
 
@@ -238,7 +246,11 @@ public class SwerveSubsystem extends SubsystemBase {
      * @return the raw reading of the gyro
      */
     private Rotation2d getGyroYaw() {
-        return Rotation2d.fromDegrees(gyro.getYaw().getValue());
+        if (RobotBase.isReal()) {
+            return Rotation2d.fromDegrees(gyro.getYaw().getValue());
+        } else {
+            return Rotation2d.fromRotations(simGyro.getAngle() + simHeadingOffset);
+        }
     }
 
     public ChassisSpeeds getChassisSpeeds() {

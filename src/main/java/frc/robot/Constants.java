@@ -187,6 +187,11 @@ public final class Constants {
     }
   }
 
+  public static class SimulationConstants {
+    public static final double kSimulationMaxSpeed = 2;
+    public static final double kSimulationMaxRotationSpeed = 3;
+  }
+
   public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be tuned
                                             // to specific robot
     public static final double kMaxSpeedMetersPerSecond = 0;
