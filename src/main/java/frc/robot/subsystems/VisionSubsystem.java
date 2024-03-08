@@ -13,14 +13,12 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
     private static final String cameraName = "Arducam_OV9281_USB_Camera";
 
     private Optional<EstimatedRobotPose> lastPose;
-    private static Field2d field = new Field2d();
 
     private PhotonPoseEstimator estimator;
     private PhotonCamera camera;
@@ -73,8 +71,6 @@ public class VisionSubsystem extends SubsystemBase {
             pose2dPublisher.update(pose2d);
 
             swerve.swerveDrivePoseEstimator.addVisionMeasurement(pose2d, estimatedPoseObject.timestampSeconds);
-
-            field.setRobotPose(pose2d);
         }
     }
 

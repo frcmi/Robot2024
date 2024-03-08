@@ -8,22 +8,15 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-public class DriveStationSubsystem extends SubsystemBase {
+
+public class LEDSubsystem extends SubsystemBase {
   public Color8Bit setColor = new Color8Bit(128,0,0);
 
 
   public AddressableLEDBuffer m_ledBuffer;
-  public AddressableLEDBuffer m_ledBuffer2;
-  private SwerveSubsystem swerve;
-
-  // public DigitalInput beambreak = new DigitalInput(1);
 
   public void setLight(int ID, Color8Bit color){
     m_ledBuffer.setLED(ID, color);
@@ -32,15 +25,12 @@ public class DriveStationSubsystem extends SubsystemBase {
 
   public AddressableLED m_led;
 
-  public DriveStationSubsystem( SwerveSubsystem swerveSubsystem) {
+  public LEDSubsystem() {
     m_led = new AddressableLED(LEDConstants.kLedPort);
     m_ledBuffer = new AddressableLEDBuffer(LEDConstants.kLedCount);
     m_led.setLength(m_ledBuffer.getLength());
     m_led.setData(m_ledBuffer);
     m_led.start();
-    this.swerve = swerveSubsystem;
-
-
   }
  
   // TODO: See if still needed, or remove if isn't.
@@ -109,11 +99,6 @@ public class DriveStationSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_led.setData(m_ledBuffer);
-    Pose2d pose = swerve.getPose();
-    // if (beambreak.get()) {
-    //   readyToSpeaker().schedule();
-    // }
-    
   }
 
   @Override

@@ -221,7 +221,7 @@ public final class Constants {
     public static final int kIntakeMotor2Id = 25;
     public static final int kIndexerMotorId = 26;
 
-    public static final int kBeamBreakPort = 2;
+    public static final int kSpeakerBeamBreakPort = 2;
     public static final double kSpeakerShootSpeed = 2;
 
     public static final double kIntakeMotorSpeed = 0.2085;
