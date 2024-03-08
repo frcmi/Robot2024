@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.lib.ultralogger.UltraDoubleLog;
+import frc.lib.ultralogger.UltraStructArrayLog;
+import frc.lib.ultralogger.UltraStructLog;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -50,20 +53,11 @@ public class SwerveSubsystem extends SubsystemBase {
     public double translationSensitivity = 1;
     public double rotationSensitivity = 1;
 
-    private static final Field2d field = new Field2d();
-
     private PIDConstants translationConstants = new PIDConstants(AutoConstants.kAccelerationP,
             AutoConstants.kAccelerationI, AutoConstants.kAccelerationD);
     private PIDConstants rotationConstants = new PIDConstants(AutoConstants.kRotationP, AutoConstants.kRotationI,
             AutoConstants.kRotationD);
 
-    // static {
-    // ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Pose Estimator");
-    // shuffleboardTab
-    // .add("Field", field)
-    // .withWidget(BuiltInWidgets.kField)
-    // .withSize(7, 4);
-    // }
 
     public SwerveSubsystem() {
         gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
@@ -260,13 +254,6 @@ public class SwerveSubsystem extends SubsystemBase {
         }
     }
 
-    // StructArrayPublisher<SwerveModuleState> swerveStatePublisher =
-    // NetworkTableInstance.getDefault().getStructArrayTopic("Swerve/Current
-    // States", SwerveModuleState.struct).publish();
-    // StructArrayPublisher<SwerveModuleState> swerveSetpointPublisher =
-    // NetworkTableInstance.getDefault().getStructArrayTopic("Swerve/Set States",
-    // SwerveModuleState.struct).publish();
-
     public Command stop() {
         return Commands.run(() -> driveRobotRelative(new ChassisSpeeds(0, 0, 0)), this);
     }
@@ -280,6 +267,11 @@ public class SwerveSubsystem extends SubsystemBase {
         rotationSensitivity = sensitivitySwitch ? SwerveConstants.rotationSensitivity : 1;
     }
 
+    UltraStructArrayLog<SwerveModuleState> swerveStatePublisher = new UltraStructArrayLog<>("Swerve/Current States", SwerveModuleState.struct);
+    UltraStructArrayLog<SwerveModuleState> swerveSetpointPublisher = new UltraStructArrayLog<>("Swerve/Set States", SwerveModuleState.struct);
+    UltraStructLog<Pose2d> posePublisher = new UltraStructLog<>("Swerve/Pose Estimator", Pose2d.struct);
+    UltraDoubleLog angularVelocityPublisher = new UltraDoubleLog("Swerve/Angular Velocity");
+
     @Override
     public void periodic() {
         swerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
@@ -291,16 +283,9 @@ public class SwerveSubsystem extends SubsystemBase {
             mod.logValues();
         }
 
-        // swerveStatePublisher.set(getModuleStates());
-        // swerveSetpointPublisher.set(getModuleSetpoints());
-
-        // posePublisher.set(swerveDrivePoseEstimator.getEstimatedPosition());
-        // SmartDashboard.putNumber("Robot X", getPose().getTranslation().getX());
-        // SmartDashboard.putNumber("Robot Y", getPose().getTranslation().getY());
-        // SmartDashboard.putNumber("Robot Angular Velocity",
-        // gyro.getAngularVelocityZWorld().getValueAsDouble());
-
-        field.setRobotPose(getPose());
-        // System.out.println("EEEEEEEEEEEEEEEE");
+        posePublisher.update(getPose());
+        swerveStatePublisher.update(getModuleStates());
+        swerveSetpointPublisher.update(getModuleSetpoints());
+        angularVelocityPublisher.update(gyro.getAngularVelocityZWorld().getValueAsDouble());
     }
 }

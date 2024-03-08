@@ -18,6 +18,8 @@ import frc.lib.util.COTSTalonFXSwerveConstants;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.SwerveModuleConstants;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -27,6 +29,14 @@ import frc.lib.util.SwerveModuleConstants;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static class TelemetryConstants {
+        // If true data won't be sent over network even when not connected to FMS
+        public static final boolean disableNetworkLogging = false;
+        // Prefix in NetworkTables, must end with a '/'
+        public static final String tabPrefix = "UltraLog/";
+        // How often to re-check if the FMS is connected (and disable network logging if so)
+        public static final double fmsCheckDelay = TimeUnit.SECONDS.toMillis(1);
+    }
 
     public static class LEDConstants {
       public static final int kStreakLength = 3; //TODO: Change Streak Length
