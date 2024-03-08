@@ -60,14 +60,14 @@ public class AutoChooser {
 
         for (Strategy strategy : Strategy.values()) {
             String name = strategy.toString();
-            if (strategy == Strategy.SCORE) {
+            if (strategy == Strategy.TRAVEL) {
                 strategyChooser.setDefaultOption(name, strategy);
             } else {
                 strategyChooser.addOption(name, strategy);
             }
         }
     }
-    
+
     /**
      * Gets the currently selected strategy.
      */
