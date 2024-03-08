@@ -14,6 +14,8 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SpeakerShooterSubsystem;
 import frc.robot.commands.TeleopSwerve;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 //import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -163,12 +165,8 @@ public class RobotContainer {
     m_DriverButton.button(2).whileTrue(new SetTrailLights(m_driveStationSubsystem, false));
     // m_DriverButton.button(2).whileTrue(new SetTrailLights(m_driveStationSubsystem, true));
     
-     m_DriverButton.button(3).and(m_DriverButton.button(4).and(m_DriverButton.button(5))).whileTrue(m_driveStationSubsystem.runRainbow());
-    //made a rainbow command because its funny, probably won't use at comps though
-    //made a rainbow command because its funny, probably won't use at comps though
-    // m_driveStationSubsystem.coop();
-    // m_driveStationSubsystem.setLights().schedule();
-    // m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.test());
+    NamedCommands.registerCommand("Flash rainbow", m_driveStationSubsystem.runRainbow());
+    m_DriverButton.button(3).and(m_DriverButton.button(4).and(m_DriverButton.button(5))).whileTrue(m_driveStationSubsystem.runRainbow());
   }
 
   /**
