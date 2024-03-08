@@ -29,7 +29,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    if (!Constants.TelemetryConstants.disableDatalog || Constants.TelemetryConstants.killswitch) {
+    if (!Constants.TelemetryConstants.disableDatalog && !Constants.TelemetryConstants.killswitch) {
       DataLogManager.start();
 
       // Record both DS control and joystick data
