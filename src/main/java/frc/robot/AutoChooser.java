@@ -8,17 +8,16 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.Autos;
+import frc.robot.autos.ScoreAuto;
 
 public class AutoChooser {
     public static final int TARGET_COUNT = 3;
     public static final String[] NOTES = new String[8];
 
-    
-
     private final ShuffleboardTab shuffleboard;
     private final SendableChooser<Strategy> strategyChooser;
     private final ArrayList<SendableChooser<Optional<String>>> targetChoosers;
+    private final RobotContainer robotContainer;
 
     static {
         NOTES[0] = "Note 1";
@@ -32,15 +31,17 @@ public class AutoChooser {
     }
 
     public enum Strategy {
-//        BACKUP,
-        // INTERFERE,
+        TRAVEL,
         SCORE,
+        SCORE_THEN_TRAVEL,
+        SCORE_AND_RELOAD,
         NONE,
     }
 
-    public AutoChooser() {
+    public AutoChooser(RobotContainer robot) {
         shuffleboard = Shuffleboard.getTab("Autos");
         targetChoosers = new ArrayList<>(TARGET_COUNT);
+        robotContainer = robot;
 
         for (int i = 0; i < TARGET_COUNT; i++) {
             var chooser = new SendableChooser<Optional<String>>();
@@ -59,13 +60,14 @@ public class AutoChooser {
 
         for (Strategy strategy : Strategy.values()) {
             String name = strategy.toString();
-            if (strategy == Strategy.SCORE) {
+            if (strategy == Strategy.TRAVEL) {
                 strategyChooser.setDefaultOption(name, strategy);
             } else {
                 strategyChooser.addOption(name, strategy);
             }
         }
     }
+
     /**
      * Gets the currently selected strategy.
      */
@@ -95,33 +97,38 @@ public class AutoChooser {
     public Command getCommand() {
         Strategy strategy = getStrategy();
         switch (strategy) {
-            case SCORE -> {
-                String[] autoPaths = getNotes();
-                if (autoPaths.length == 0) {
-                    return Commands.runOnce(() -> {
-                    });
-                }
-
-                Command auto = Autos.autoShoot();
-
-                for (String autoPath : autoPaths) {
-                    auto.andThen(Autos.pathplannerPath(autoPath)).andThen(Autos.autoShoot());
-                }
-
-                return auto;
+            case TRAVEL -> {
+                // todo: use basic pathplanner auto
+                return null;
             }
-//            case BACKUP -> {
-//                // TODO: impl
-//                break;
-//            }
+            case SCORE -> {
+                return new ScoreAuto(null, robotContainer);
+            }
+            case SCORE_THEN_TRAVEL -> {
+                Command score = new ScoreAuto(null, robotContainer);
+                Command travel = null; // todo: see travel
+                
+                return score.andThen(travel);
+            }
+            case SCORE_AND_RELOAD -> {
+                var notes = getNotes();
+                if (notes.length == 0) {
+                    break;
+                }
+
+                return new ScoreAuto(notes, robotContainer);
+            }
             case NONE -> {
-                return Commands.run(() -> {
-                });
+                System.out.println("Auto is disabled");
+                break;
+            }
+            default -> {
+                System.out.println("Unhandled strategy - disabling auto");
+                break;
             }
         }
 
-        System.err.println("Unhandled state " + strategy + " defaulting to nothing...");
-        return Commands.run(() -> {});
+        return Commands.waitSeconds(0);
     };
 
 }

@@ -1,7 +1,5 @@
 package frc.robot;
 
-import java.util.Map;
-
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -12,14 +10,9 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.math.Conversions;
+import frc.lib.ultralogger.UltraDoubleLog;
 import frc.lib.util.SwerveModuleConstants;
-import frc.robot.Constants.SwerveConstants;
 
 public class SwerveModule {
     public int moduleNumber;
@@ -44,10 +37,9 @@ public class SwerveModule {
     private final PositionVoltage anglePosition = new PositionVoltage(0);
 
     /* shuffleboard entries */
-    // private final ShuffleboardTab shuffleboardTab;
-    // private final GenericEntry CANCoderShuffleBoardItem;
-    // private final GenericEntry angleShuffleBoardItem;
-    // private final GenericEntry velocityShuffleBoardItem;
+     private final UltraDoubleLog CANCoderPublisher;
+     private final UltraDoubleLog anglePublisher;
+     private final UltraDoubleLog velocityPublisher;
 
 
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants, boolean isInverted){
@@ -71,37 +63,34 @@ public class SwerveModule {
         mDriveMotor.getConfigurator().setPosition(0.0);
     
         mDriveMotor.setInverted(isInverted);
-        
-        /*
+
         String modName;
         switch (moduleNumber) {
             case 0: {
-                modName = "Front Left Swerve";
+                modName = "Front Left";
                 break;
             }
             case 1: {
-                modName = "Front Right Swerve";
+                modName = "Front Right";
                 break;
             }
             case 2: {
-                modName = "Back Left Swerve";
+                modName = "Back Left";
                 break;
             }
             case 3: {
-                modName = "Back Right Swerve";
+                modName = "Back Right";
                 break;
             }
             default: {
-                modName = "Unknown Swerve Mod " + moduleNumber;
+                modName = "Mod " + moduleNumber;
                 System.err.println("UNKNOWN SWERVE MODULES " + moduleNumber + ", module should be between 0 and 3");
             }
         }
 
-        shuffleboardTab = Shuffleboard.getTab(modName);
-        CANCoderShuffleBoardItem = shuffleboardTab.add("CANCoder", 0).withSize(2,2).withWidget(BuiltInWidgets.kGyro).withPosition(2,0).getEntry();
-        angleShuffleBoardItem = shuffleboardTab.add("Angle", 0).withSize(2,2).withWidget(BuiltInWidgets.kGyro).withPosition(0,0).getEntry();
-        velocityShuffleBoardItem = shuffleboardTab.add("Velocity", 0).withSize(4,1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min", -SwerveConstants.maxSpeed, "Max", SwerveConstants.maxSpeed)).withPosition(0, 2).getEntry();
-     */
+        CANCoderPublisher = new UltraDoubleLog("Swerve/" + modName + "/CANCoder");
+        anglePublisher = new UltraDoubleLog("Swerve/" + modName + "/Angle");
+        velocityPublisher = new UltraDoubleLog("Swerve/" + modName + "/Velocity");
     }
 
     /**
@@ -121,7 +110,7 @@ public class SwerveModule {
     }
 
     /**
-     * Sets the drive motor of the module to a speed, preferable to use {@link frc.robot.SwerveModule.SetDesiredState}
+     * Sets the drive motor of the module to a speed, preferable to use {@link frc.robot.SwerveModule.setDesiredState}
      * @param desiredState
      * @param isOpenLoop
      */
@@ -176,8 +165,8 @@ public class SwerveModule {
      * Logs all relevant values to shuffleboard. Should be called periodically.
      */
     public void logValues() {
-        // CANCoderShuffleBoardItem.setDouble(getCANcoderReading().getDegrees());
-        // angleShuffleBoardItem.setDouble(getPosition().angle.getDegrees());
-        // velocityShuffleBoardItem.setDouble(getState().speedMetersPerSecond);
+         CANCoderPublisher.update(getCANcoderReading().getDegrees());
+         anglePublisher.update(getPosition().angle.getDegrees());
+         velocityPublisher.update(getState().speedMetersPerSecond);
     }
 }

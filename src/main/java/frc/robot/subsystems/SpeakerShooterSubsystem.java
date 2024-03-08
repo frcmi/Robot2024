@@ -42,7 +42,7 @@ public class SpeakerShooterSubsystem extends SubsystemBase {
         }
 
         if (!intakeSubsystem.beambreak.get() || this.overrideBeamBreak.getAsBoolean()) {
-          // speakerShooterMotor.set(SpeakerShooterConstants.kSpeakerMotorSpeed);
+            speakerShooterMotor.set(SpeakerShooterConstants.kSpeakerMotorSpeed);
         } else {
             speakerShooterMotor.set(0);
         }

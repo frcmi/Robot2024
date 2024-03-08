@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AmpArmConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -22,7 +23,6 @@ import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.Autos;
-import frc.robot.commands.DriveToPositionPathPlanner;
 import frc.robot.commands.SetTrailLights;
 import frc.robot.subsystems.AmpArmSubsystem;
 import frc.robot.subsystems.AmpShooterSubsystem;
@@ -49,19 +49,19 @@ public class RobotContainer {
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  private final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
-  private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem(intakeSubsystem, driverController.povDownRight());
+  public final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
+  public final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
+  public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  public final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem(intakeSubsystem, driverController.povLeft());
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem(swerveSubsystem);
+  public final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem(swerveSubsystem);
   public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_DriverButton = new CommandXboxController(OperatorConstants.kDriverButtonPort);
 
-  // private final AutoChooser autoChooser = new AutoChooser();
+  private final AutoChooser autoChooser = new AutoChooser(this);
 
   public final Pose2d gotoAutoThing = new Pose2d(2.843,5.819, new Rotation2d(Math.PI));
   public final Pose2d gotoAutoThing2 = new Pose2d(8.244,2.471, new Rotation2d(Math.PI));
@@ -104,7 +104,7 @@ public class RobotContainer {
     // driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
 
     // RT Shoot speaker
-    driverController.rightTrigger().whileTrue(intakeSubsystem.intakeSpeakerNoBeamBreak(2));
+    driverController.rightTrigger().whileTrue(intakeSubsystem.intakeSpeakerNoBeamBreak(IntakeConstants.kSpeakerShootSpeed));
 
     // LB Intake amp
     driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp().alongWith(ampShooterSubsystem.intakeAmp()));
@@ -131,11 +131,8 @@ public class RobotContainer {
 
     // povLeft Auto Shoot amp
     // povRight Auto Shoot speaker
-    
-    driverController.povRight().onTrue(Commands.runOnce(() -> {
-      var command = new AutoAlignCommand(swerveSubsystem);
-      command.getCommand().schedule();
-    }, swerveSubsystem));
+
+    driverController.povRight().onTrue(new AutoAlignCommand(swerveSubsystem));
 
     // X Toggle Sensitivity (translation and rotation)
     driverController.x().onTrue(new InstantCommand(swerveSubsystem::switchSensitivity, swerveSubsystem));
@@ -172,7 +169,7 @@ public class RobotContainer {
     // m_driveStationSubsystem.coop();
     // m_driveStationSubsystem.setLights().schedule();
     // m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.test());
-    }
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -181,22 +178,6 @@ public class RobotContainer {
    */
 
   public Command getAutonomousCommand() {
-    // return Autos.testAuto(swerveSubsystem, intakeSubsystem,  () -> swerveSubsystem.getPose()); // Just for testing, will implement autoChooser later
-    // return new AutoChooserCommand(autoChooser);
-//    return Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
-    // return autoChooser.getCommand();
-
-    // Shoot and travel
-    // return (new WaitCommand(1)).andThen(new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing).getCommand()).andThen(new WaitCommand(0.3)).andThen(intakeSubsystem.shoot()).andThen(new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing2).getCommand()); //Autos.ppAuto(swerveSubsystem, intakeSubsystem, speakerShooterSubsystem);
-    
-    // travel
-    // return (new WaitCommand(0)).andThen(new DriveToPositionPathPlanner(swerveSubsystem.getPose(), gotoAutoThing2).getCommand());
-    // return new WaitCommand(0);
-    return new RepeatCommand((new InstantCommand(() -> {swerveSubsystem.drive(
-      new Translation2d(2, 0), 
-      0, 
-      false, 
-      false
-  );}, swerveSubsystem))).withTimeout(7);
+    return autoChooser.getCommand();
   }
 }
