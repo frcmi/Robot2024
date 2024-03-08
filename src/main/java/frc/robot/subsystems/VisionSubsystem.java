@@ -3,12 +3,7 @@ package frc.robot.subsystems;
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.lib.ultralogger.UltraStructLog;
 import frc.robot.Constants.VisionConstants;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -18,7 +13,6 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -32,21 +26,9 @@ public class VisionSubsystem extends SubsystemBase {
     private PhotonCamera camera;
     private final SwerveSubsystem swerve;
 
-    /* shuffleboard entries */
-    // private static final ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Vision");
-    // private static final GenericEntry xShuffleBoardItem = shuffleboardTab.add("X", 0).getEntry();
-    // private static final GenericEntry yShuffleBoardItem = shuffleboardTab.add("Y", 0).getEntry();
-    // private static final GenericEntry zShuffleBoardItem = shuffleboardTab.add("Z", 0).getEntry();
-    // private static final GenericEntry pitchShuffleBoardItem = shuffleboardTab.add("Pitch", 0).getEntry();
-    // private static final GenericEntry rollShuffleBoardItem = shuffleboardTab.add("Roll", 0).getEntry();
-    // private static final GenericEntry yawShuffleBoardItem = shuffleboardTab.add("Yaw", 0).getEntry();
-
-    // static {
-    //     shuffleboardTab
-    //             .add("Field", field)
-    //             .withWidget(BuiltInWidgets.kField)
-    //             .withSize(6,3);
-    // }
+    private final UltraStructLog<Pose3d> posePublisher = new UltraStructLog<>("Vision/pose3d", Pose3d.struct);
+    // Needed until https://github.com/Mechanical-Advantage/AdvantageScope/issues/149 is closed.
+    private final UltraStructLog<Pose2d> pose2dPublisher = new UltraStructLog<>("Vision/pose2d", Pose2d.struct);
 
     public VisionSubsystem(SwerveSubsystem swerveSubsystem) {
         //21.85 up
@@ -85,19 +67,11 @@ public class VisionSubsystem extends SubsystemBase {
         {
             EstimatedRobotPose estimatedPoseObject = lastPose.get();
             Pose3d pose = estimatedPoseObject.estimatedPose;
-            Translation3d translation = pose.getTranslation();
-            Rotation3d rotation = pose.getRotation();
-
-            // xShuffleBoardItem.setDouble(translation.getX());
-            // yShuffleBoardItem.setDouble(translation.getY());
-            // zShuffleBoardItem.setDouble(translation.getZ());
-
-            // pitchShuffleBoardItem.setDouble(rotation.getX());
-            // rollShuffleBoardItem.setDouble(rotation.getY());
-            // yawShuffleBoardItem.setDouble(rotation.getZ());
 
             Pose2d pose2d = pose.toPose2d();
-            
+            posePublisher.update(pose);
+            pose2dPublisher.update(pose2d);
+
             swerve.swerveDrivePoseEstimator.addVisionMeasurement(pose2d, estimatedPoseObject.timestampSeconds);
 
             field.setRobotPose(pose2d);
