@@ -8,12 +8,14 @@ public class ScoreAuto extends SequentialCommandGroup {
     public ScoreAuto(String[] notes, RobotContainer robot) {
         addCommands(Autos.shoot(robot.swerveSubsystem, robot.intakeSubsystem));
 
-        for (var path : notes) {
-            var pathAuto = Autos.pathplannerPath(path);
-            var intake = robot.intakeSubsystem.intakeSpeaker();
-            var shoot = Autos.shoot(robot.swerveSubsystem, robot.intakeSubsystem);
-
-            addCommands(pathAuto, intake, shoot);
+        if (notes != null) {
+            for (var path : notes) {
+                var pathAuto = Autos.pathplannerPath(path);
+                var intake = robot.intakeSubsystem.intakeSpeaker();
+                var shoot = Autos.shoot(robot.swerveSubsystem, robot.intakeSubsystem);
+    
+                addCommands(pathAuto, intake, shoot);
+            }    
         }
     }
 }

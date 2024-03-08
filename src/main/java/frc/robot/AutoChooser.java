@@ -31,9 +31,10 @@ public class AutoChooser {
     }
 
     public enum Strategy {
-//        BACKUP,
-        // INTERFERE,
+        TRAVEL,
         SCORE,
+        SCORE_THEN_TRAVEL,
+        SCORE_AND_RELOAD,
         NONE,
     }
 
@@ -66,6 +67,7 @@ public class AutoChooser {
             }
         }
     }
+    
     /**
      * Gets the currently selected strategy.
      */
@@ -95,26 +97,38 @@ public class AutoChooser {
     public Command getCommand() {
         Strategy strategy = getStrategy();
         switch (strategy) {
+            case TRAVEL -> {
+                // todo: use basic pathplanner auto
+                return null;
+            }
             case SCORE -> {
-                String[] notes = getNotes();
+                return new ScoreAuto(null, robotContainer);
+            }
+            case SCORE_THEN_TRAVEL -> {
+                Command score = new ScoreAuto(null, robotContainer);
+                Command travel = null; // todo: see travel
+                
+                return score.andThen(travel);
+            }
+            case SCORE_AND_RELOAD -> {
+                var notes = getNotes();
                 if (notes.length == 0) {
-                    return Commands.runOnce(() -> {});
+                    break;
                 }
 
                 return new ScoreAuto(notes, robotContainer);
             }
-//            case BACKUP -> {
-//                // TODO: impl
-//                break;
-//            }
             case NONE -> {
-                return Commands.run(() -> {
-                });
+                System.out.println("Auto is disabled");
+                break;
+            }
+            default -> {
+                System.out.println("Unhandled strategy - disabling auto");
+                break;
             }
         }
 
-        System.err.println("Unhandled state " + strategy + " defaulting to nothing...");
-        return Commands.run(() -> {});
+        return Commands.waitSeconds(0);
     };
 
 }
