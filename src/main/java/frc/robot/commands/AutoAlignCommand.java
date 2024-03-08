@@ -4,7 +4,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -12,6 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.math.Transformations;
+import frc.robot.Constants.AutoAlignConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutoAlignCommand extends Command {
@@ -23,18 +23,13 @@ public class AutoAlignCommand extends Command {
         driveToPosition = null;
     }
 
-    private static final Transform3d robotToShooter = new Transform3d(0, 0, 0.5207, new Rotation3d(0, 37.5 * Math.PI / 180, Math.PI));
-    private static final Pose3d redSpeaker = new Pose3d(16.427, 5.548, 2.032, new Rotation3d(0, 0, Math.PI));
-    private static final Pose3d blueSpeaker = new Pose3d(0.073, 5.548, 2.032, new Rotation3d(0, 0, 0));
-    private static final double maximumFiringAngle = 75 * Math.PI / 180;
-
     private Pose2d calculateDestination() {
         var alliance = DriverStation.getAlliance();
         boolean isBlue = alliance.isPresent() && alliance.get() == Alliance.Red;
-        var speaker = isBlue ? redSpeaker : blueSpeaker;
+        var speaker = isBlue ? AutoAlignConstants.kRedSpeaker : AutoAlignConstants.kBlueSpeaker;
 
         Pose3d robot = new Pose3d(swerve.getPose());
-        Pose3d shooter = robot.plus(robotToShooter);
+        Pose3d shooter = robot.plus(AutoAlignConstants.kRobotToShooter);
         Transform3d speakerToRobot = robot.minus(speaker);
 
         // restrict the angle to a -180 to 180 degree range
@@ -46,7 +41,7 @@ public class AutoAlignCommand extends Command {
         }
 
         // make sure were moving to a valid firing position
-        targetAngle = MathUtil.clamp(targetAngle, -maximumFiringAngle, maximumFiringAngle);
+        targetAngle = MathUtil.clamp(targetAngle, -AutoAlignConstants.kMaximumFiringAngle, AutoAlignConstants.kMaximumFiringAngle);
 
         // get pitch of shooter
         Translation3d shooterDirection = new Translation3d(1, shooter.getRotation());
@@ -56,7 +51,7 @@ public class AutoAlignCommand extends Command {
         double cotPitch = cosPitch / Math.sin(pitch);
 
         // calculate robot (center) distance to speaker
-        Transform3d speakerToShooter = speakerToRobot.plus(robotToShooter);
+        Transform3d speakerToShooter = speakerToRobot.plus(AutoAlignConstants.kRobotToShooter);
         double height = Math.abs(speakerToShooter.getZ());
         double shooterFiringDistance = height * cotPitch;
 
@@ -65,7 +60,7 @@ public class AutoAlignCommand extends Command {
         Translation2d desiredRelativeTranslation = new Translation2d(shooterFiringDistance, directionRotation);
 
         Translation2d desiredPosition = speaker.getTranslation().toTranslation2d().plus(desiredRelativeTranslation);
-        Rotation2d desiredRotation = robotToShooter.getRotation().toRotation2d().minus(directionRotation);
+        Rotation2d desiredRotation = AutoAlignConstants.kRobotToShooter.getRotation().toRotation2d().minus(directionRotation);
 
         return new Pose2d(desiredPosition, desiredRotation);
     }

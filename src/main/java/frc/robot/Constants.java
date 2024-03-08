@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -214,7 +215,7 @@ public final class Constants {
     public static final int kIndexerMotorId = 26;
 
     public static final int kBeamBreakPort = 2;
-  
+    public static final double kSpeakerShootSpeed = 2;
 
     public static final double kIntakeMotorSpeed = 0.2085;
     public static final double kIndexerSpeed = 0.2085;
@@ -281,5 +282,12 @@ public final class Constants {
 
   public static class VisionConstants {
       public static final Transform3d robotToCamera = new Transform3d(Units.inchesToMeters(5), Units.inchesToMeters(9), Units.inchesToMeters(21.85), new Rotation3d(0, Math.toRadians(8.5),Math.PI));
+  }
+
+  public static class AutoAlignConstants {
+    public static final Transform3d kRobotToShooter = new Transform3d(0, 0, 0.5207, new Rotation3d(0, 37.5 * Math.PI / 180, Math.PI));
+    public static final Pose3d kRedSpeaker = new Pose3d(16.427, 5.548, 2.032, new Rotation3d(0, 0, Math.PI));
+    public static final Pose3d kBlueSpeaker = new Pose3d(0.073, 5.548, 2.032, new Rotation3d(0, 0, 0));
+    public static final double kMaximumFiringAngle = 75 * Math.PI / 180;
   }
 }

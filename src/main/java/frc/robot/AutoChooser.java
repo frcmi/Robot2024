@@ -8,17 +8,16 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.Autos;
+import frc.robot.autos.ScoreAuto;
 
 public class AutoChooser {
     public static final int TARGET_COUNT = 3;
     public static final String[] NOTES = new String[8];
 
-    
-
     private final ShuffleboardTab shuffleboard;
     private final SendableChooser<Strategy> strategyChooser;
     private final ArrayList<SendableChooser<Optional<String>>> targetChoosers;
+    private final RobotContainer robotContainer;
 
     static {
         NOTES[0] = "Note 1";
@@ -38,9 +37,10 @@ public class AutoChooser {
         NONE,
     }
 
-    public AutoChooser() {
+    public AutoChooser(RobotContainer robot) {
         shuffleboard = Shuffleboard.getTab("Autos");
         targetChoosers = new ArrayList<>(TARGET_COUNT);
+        robotContainer = robot;
 
         for (int i = 0; i < TARGET_COUNT; i++) {
             var chooser = new SendableChooser<Optional<String>>();
@@ -96,19 +96,12 @@ public class AutoChooser {
         Strategy strategy = getStrategy();
         switch (strategy) {
             case SCORE -> {
-                String[] autoPaths = getNotes();
-                if (autoPaths.length == 0) {
-                    return Commands.runOnce(() -> {
-                    });
+                String[] notes = getNotes();
+                if (notes.length == 0) {
+                    return Commands.runOnce(() -> {});
                 }
 
-                Command auto = Autos.autoShoot();
-
-                for (String autoPath : autoPaths) {
-                    auto.andThen(Autos.pathplannerPath(autoPath)).andThen(Autos.autoShoot());
-                }
-
-                return auto;
+                return new ScoreAuto(notes, robotContainer);
             }
 //            case BACKUP -> {
 //                // TODO: impl

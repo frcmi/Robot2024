@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SpeakerShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -70,7 +71,10 @@ public final class Autos {
     );
   }
 
-  public static Command autoShoot() {
-    return null;
+  public static Command shoot(SwerveSubsystem swerve, IntakeSubsystem intake) {
+    var autoAlign = new AutoAlignCommand(swerve);
+    var shoot = intake.intakeSpeakerNoBeamBreak(IntakeConstants.kSpeakerShootSpeed);
+
+    return autoAlign.andThen(shoot);
   }
 }
