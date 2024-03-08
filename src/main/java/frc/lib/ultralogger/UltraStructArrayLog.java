@@ -83,7 +83,7 @@ public class UltraStructArrayLog<T> implements UltraLogEntry<T[]> {
                 checkNTFMS(true);
             }
         } catch (Throwable error) {
-            DataLogManager.log("Error in UltraStructLog, aborting logger:\n" + error);
+            System.err.println("Error in UltraStructLog, aborting logger:\n" + error);
             errored = true;
         }
     }

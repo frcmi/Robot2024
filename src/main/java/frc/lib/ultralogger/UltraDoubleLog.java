@@ -74,7 +74,7 @@ public class UltraDoubleLog implements UltraLogEntry<Double> {
                 checkNTFMS(true);
             }
         } catch (Throwable error) {
-            DataLogManager.log("Error in UltraDoubleLog, aborting logger:\n" + error);
+            System.err.println("Error in UltraDoubleLog, aborting logger:\n" + error);
             errored = true;
         }
     }

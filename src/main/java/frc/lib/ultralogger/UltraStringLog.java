@@ -74,7 +74,7 @@ public class UltraStringLog implements UltraLogEntry<String> {
                 checkNTFMS(true);
             }
         } catch (Throwable error) {
-            DataLogManager.log("Error in UltraStringLog, aborting logger:\n" + error);
+            System.err.println("Error in UltraStringLog, aborting logger:\n" + error);
             errored = true;
         }
     }

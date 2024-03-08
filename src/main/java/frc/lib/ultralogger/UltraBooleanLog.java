@@ -74,7 +74,7 @@ public class UltraBooleanLog implements UltraLogEntry<Boolean> {
                 checkNTFMS(true);
             }
         } catch (Throwable error) {
-            DataLogManager.log("Error in UltraBooleanLog, aborting logger:\n" + error);
+            System.err.println("Error in UltraBooleanLog, aborting logger:\n" + error);
             errored = true;
         }
     }
