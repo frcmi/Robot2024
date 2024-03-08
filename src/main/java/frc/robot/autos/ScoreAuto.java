@@ -10,9 +10,10 @@ public class ScoreAuto extends SequentialCommandGroup {
 
         for (var path : notes) {
             var pathAuto = Autos.pathplannerPath(path);
+            var intake = robot.intakeSubsystem.intakeSpeaker();
             var shoot = Autos.shoot(robot.swerveSubsystem, robot.intakeSubsystem);
 
-            addCommands(pathAuto, shoot);
+            addCommands(pathAuto, intake, shoot);
         }
     }
 }

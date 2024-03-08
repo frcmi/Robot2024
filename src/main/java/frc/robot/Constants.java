@@ -285,7 +285,7 @@ public final class Constants {
   }
 
   public static class AutoAlignConstants {
-    public static final Transform3d kRobotToShooter = new Transform3d(0, 0, 0.5207, new Rotation3d(0, 37.5 * Math.PI / 180, Math.PI));
+    public static final Transform3d kRobotToShooter = new Transform3d(0, 0, 0.5207, new Rotation3d(0, 77.5 * Math.PI / 180, Math.PI));
     public static final Pose3d kRedSpeaker = new Pose3d(16.427, 5.548, 2.032, new Rotation3d(0, 0, Math.PI));
     public static final Pose3d kBlueSpeaker = new Pose3d(0.073, 5.548, 2.032, new Rotation3d(0, 0, 0));
     public static final double kMaximumFiringAngle = 75 * Math.PI / 180;
