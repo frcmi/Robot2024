@@ -283,6 +283,9 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         swerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
+        SmartDashboard.putNumber("/robotPose/1", rotationSensitivity);
+        SmartDashboard.putNumber("/robotPose/2", rotationSensitivity);
+        SmartDashboard.putNumber("/robotPose/3", rotationSensitivity);
 
         for (SwerveModule mod : mSwerveMods) {
             mod.logValues();

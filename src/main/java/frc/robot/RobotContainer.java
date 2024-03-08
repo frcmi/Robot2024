@@ -52,7 +52,7 @@ public class RobotContainer {
   private final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
   private final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem(intakeSubsystem, driverController.povDownRight());
+  private final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem(intakeSubsystem, driverController.povLeft());
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   private final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem(swerveSubsystem);
   public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
@@ -172,8 +172,6 @@ public class RobotContainer {
     // m_driveStationSubsystem.coop();
     // m_driveStationSubsystem.setLights().schedule();
     // m_swerveSubsystem.setDefaultCommand(m_swerveSubsystem.test());
-    
-    driverController.leftTrigger().onTrue(new AutoAlignCommand(swerveSubsystem).getCommand());
   }
 
   /**

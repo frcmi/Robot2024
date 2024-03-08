@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.math.Transformations;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -19,11 +21,16 @@ public class AutoAlignCommand {
         swerve = swerveSubsystem;
     }
 
-    private static final Transform3d robotToShooter = new Transform3d(0, 0, 0, new Rotation3d(0, Math.PI / 6, Math.PI));
-    private static final Pose3d speaker = new Pose3d(16.427, 5.548, 2.032, new Rotation3d(0, 0, Math.PI));
+    private static final Transform3d robotToShooter = new Transform3d(0, 0, 0.5207, new Rotation3d(0, 37.5 * Math.PI / 180, Math.PI));
+    private static final Pose3d redSpeaker = new Pose3d(16.427, 5.548, 2.032, new Rotation3d(0, 0, Math.PI));
+    private static final Pose3d blueSpeaker = new Pose3d(0.073, 5.548, 2.032, new Rotation3d(0, 0, 0));
     private static final double maximumFiringAngle = 75 * Math.PI / 180;
 
     private Pose2d calculateDestination() {
+        var alliance = DriverStation.getAlliance();
+        boolean isBlue = alliance.isPresent() && alliance.get() == Alliance.Red;
+        var speaker = isBlue ? redSpeaker : blueSpeaker;
+
         Pose3d robot = new Pose3d(swerve.getPose());
         Pose3d shooter = robot.plus(robotToShooter);
         Transform3d speakerToRobot = robot.minus(speaker);
