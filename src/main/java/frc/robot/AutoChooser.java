@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.autos.ScoreAuto;
+import frc.robot.commands.Autos;
 
 public class AutoChooser {
     public static final int TARGET_COUNT = 3;
@@ -98,15 +99,14 @@ public class AutoChooser {
         Strategy strategy = getStrategy();
         switch (strategy) {
             case TRAVEL -> {
-                // todo: use basic pathplanner auto
-                return null;
+                return Autos.pathplannerPath("Travel");
             }
             case SCORE -> {
                 return new ScoreAuto(null, robotContainer);
             }
             case SCORE_THEN_TRAVEL -> {
                 Command score = new ScoreAuto(null, robotContainer);
-                Command travel = null; // todo: see travel
+                Command travel = Autos.pathplannerPath("Travel");
                 
                 return score.andThen(travel);
             }

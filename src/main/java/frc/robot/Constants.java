@@ -31,8 +31,13 @@ import java.util.concurrent.TimeUnit;
  */
 public final class Constants {
     public static class TelemetryConstants {
+        // DON'T ENABLE UNLESS ABSOLUTELY NEEDED
+        // this will fully disable logging even when FMS is connected.
+        public static final boolean killswitch = false;
         // If true data won't be sent over network even when not connected to FMS
         public static final boolean disableNetworkLogging = false;
+        // ONLY ENABLE IN DEV (this *should* be overwritten when connected to FMS, but that's untested)
+        public static final boolean disableDatalog = true;
         // Prefix in NetworkTables, must end with a '/'
         public static final String tabPrefix = "UltraLog/";
         // How often to re-check if the FMS is connected (and disable network logging if so)
@@ -185,6 +190,11 @@ public final class Constants {
     }
   }
 
+  public static class SimulationConstants {
+    public static final double kSimulationMaxSpeed = 2;
+    public static final double kSimulationMaxRotationSpeed = 3;
+  }
+
   public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be tuned
                                             // to specific robot
     public static final double kMaxSpeedMetersPerSecond = 2;
@@ -214,7 +224,7 @@ public final class Constants {
     public static final int kIntakeMotor2Id = 25;
     public static final int kIndexerMotorId = 26;
 
-    public static final int kBeamBreakPort = 2;
+    public static final int kSpeakerBeamBreakPort = 2;
     public static final double kSpeakerShootSpeed = 2;
 
     public static final double kIntakeMotorSpeed = 0.2085;

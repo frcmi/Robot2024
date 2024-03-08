@@ -1,9 +1,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 import frc.lib.ultralogger.UltraDoubleLog;
 import frc.lib.ultralogger.UltraStructArrayLog;
 import frc.lib.ultralogger.UltraStructLog;
@@ -28,15 +27,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructArrayPublisher;
-import edu.wpi.first.networktables.StructPublisher;
-import edu.wpi.first.units.Unit;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -58,8 +49,12 @@ public class SwerveSubsystem extends SubsystemBase {
     private PIDConstants rotationConstants = new PIDConstants(AutoConstants.kRotationP, AutoConstants.kRotationI,
             AutoConstants.kRotationD);
 
+    public AnalogGyroSim simGyro = new AnalogGyroSim(0);
+    double simHeadingOffset = 0;
+
 
     public SwerveSubsystem() {
+        if (RobotBase.isSimulation()) simGyro.setAngle(0);
         gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
@@ -122,6 +117,7 @@ public class SwerveSubsystem extends SubsystemBase {
      *                      control
      */
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+        if (RobotBase.isSimulation()) simGyro.setAngle(simGyro.getAngle() + rotation * Constants.SimulationConstants.kSimulationMaxRotationSpeed * 0.002);
         SwerveModuleState[] swerveModuleStates = Constants.SwerveConstants.swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                         translation.getX(),
@@ -133,7 +129,7 @@ public class SwerveSubsystem extends SubsystemBase {
                                 translation.getY(),
                                 rotation));
 
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, RobotBase.isReal() ? Constants.SwerveConstants.maxSpeed : Constants.SimulationConstants.kSimulationMaxSpeed);
 
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
@@ -229,6 +225,7 @@ public class SwerveSubsystem extends SubsystemBase {
      * gradians, 0 rogreedians)
      */
     public void zeroHeading() {
+        if (RobotBase.isSimulation()) simHeadingOffset = simGyro.getAngle();
         setHeading(new Rotation2d());
     }
 
@@ -238,7 +235,11 @@ public class SwerveSubsystem extends SubsystemBase {
      * @return the raw reading of the gyro
      */
     private Rotation2d getGyroYaw() {
-        return Rotation2d.fromDegrees(gyro.getYaw().getValue());
+        if (RobotBase.isReal()) {
+            return Rotation2d.fromDegrees(gyro.getYaw().getValue());
+        } else {
+            return Rotation2d.fromRotations(simGyro.getAngle() + simHeadingOffset);
+        }
     }
 
     public ChassisSpeeds getChassisSpeeds() {
@@ -275,17 +276,9 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         swerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
-        SmartDashboard.putNumber("/robotPose/1", rotationSensitivity);
-        SmartDashboard.putNumber("/robotPose/2", rotationSensitivity);
-        SmartDashboard.putNumber("/robotPose/3", rotationSensitivity);
-
-        for (SwerveModule mod : mSwerveMods) {
-            mod.logValues();
-        }
-
-        // posePublisher.update(getPose());
-        // swerveStatePublisher.update(getModuleStates());
-        // swerveSetpointPublisher.update(getModuleSetpoints());
-        // angularVelocityPublisher.update(gyro.getAngularVelocityZWorld().getValueAsDouble());
+        posePublisher.update(getPose());
+        swerveStatePublisher.update(getModuleStates());
+        swerveSetpointPublisher.update(getModuleSetpoints());
+        angularVelocityPublisher.update(gyro.getAngularVelocityZWorld().getValueAsDouble());
     }
 }

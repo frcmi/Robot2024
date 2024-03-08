@@ -8,7 +8,11 @@ public interface UltraLogEntry<T> {
 
     void update(T item);
 
-    static boolean dontNetwork() {
+    static boolean disableNetworkTableLogs() {
         return TelemetryConstants.disableNetworkLogging || DriverStation.isFMSAttached();
+    }
+
+    static boolean disableDatalog() {
+        return TelemetryConstants.disableDatalog && !DriverStation.isFMSAttached();
     }
 }
