@@ -73,10 +73,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    DataLogManager.start();
+    if (!Constants.TelemetryConstants.disableDatalog) {
+      DataLogManager.start();
 
-    // Record both DS control and joystick data
-    DriverStation.startDataLog(DataLogManager.getLog());
+      // Record both DS control and joystick data
+      DriverStation.startDataLog(DataLogManager.getLog());
+    }
 
     var scheduler = CommandScheduler.getInstance();
     SmartDashboard.putData(scheduler);

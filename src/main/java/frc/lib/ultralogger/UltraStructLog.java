@@ -15,13 +15,23 @@ public class UltraStructLog<T> implements UltraLogEntry<T> {
     private Optional<StructLogEntry<T>> datalogPublisher = Optional.empty();
     private double lastCheckedTimestamp = System.currentTimeMillis();
     private final Struct<T> struct;
+    private boolean errored = false;
 
     public UltraStructLog(String name, Struct<T> struct) {
         this.logName = TelemetryConstants.tabPrefix + name;
         this.struct = struct;
 
-        checkNTFMS(false);
-        checkDLFMS();
+        try {
+            if (struct == null) {
+                throw new Exception("struct cannot be null");
+            }
+
+            checkNTFMS(false);
+            checkDLFMS();
+        } catch (Throwable error) {
+            System.err.println("Error in UltraStructLog constructor, aborting logger:\n" + error);
+            errored = true;
+        }
     }
 
     private void checkDLFMS() {
@@ -50,17 +60,25 @@ public class UltraStructLog<T> implements UltraLogEntry<T> {
     }
 
     public void update(T item) {
-        if (item == null) {return;}
+        if (errored) {return;}
+        try {
+            if (item == null) {
+                return;
+            }
 
-        if (this.datalogPublisher.isPresent()) {
-            this.datalogPublisher.get().append(item);
-        } else {
-            checkDLFMS();
-        }
+            if (this.datalogPublisher.isPresent()) {
+                this.datalogPublisher.get().append(item);
+            } else {
+                checkDLFMS();
+            }
 
-        if (this.ntPublisher.isPresent()) {
-            ntPublisher.get().set(item);
-            checkNTFMS(true);
+            if (this.ntPublisher.isPresent()) {
+                ntPublisher.get().set(item);
+                checkNTFMS(true);
+            }
+        } catch (Throwable error) {
+            DataLogManager.log("Error in UltraStructLog, aborting logger:\n" + error);
+            errored = true;
         }
     }
 }

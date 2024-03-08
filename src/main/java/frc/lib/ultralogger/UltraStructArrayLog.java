@@ -15,13 +15,23 @@ public class UltraStructArrayLog<T> implements UltraLogEntry<T[]> {
     private Optional<StructArrayLogEntry<T>> datalogPublisher = Optional.empty();
     private double lastCheckedTimestamp = System.currentTimeMillis();
     private final Struct<T> struct;
+    private boolean errored = false;
 
     public UltraStructArrayLog(String name, Struct<T> struct) {
         this.logName = TelemetryConstants.tabPrefix + name;
         this.struct = struct;
 
-        checkNTFMS(false);
-        checkDLFMS();
+        try {
+            if (struct == null) {
+                throw new Exception("struct cannot be null");
+            }
+
+            checkNTFMS(false);
+            checkDLFMS();
+        } catch (Throwable error) {
+            System.err.println("Error in UltraStructArrayLog constructor, aborting logger:\n" + error);
+            errored = true;
+        }
     }
 
     private void checkDLFMS() {
@@ -50,22 +60,31 @@ public class UltraStructArrayLog<T> implements UltraLogEntry<T[]> {
     }
 
     public void update(T[] items) {
-        if (items == null) {return;}
-        for (T item : items) {
-            if (item == null) {
+        if (errored) {return;}
+        try {
+            if (items == null) {
                 return;
             }
-        }
 
-        if (this.datalogPublisher.isPresent()) {
-            this.datalogPublisher.get().append(items);
-        } else {
-            checkDLFMS();
-        }
+            for (T item : items) {
+                if (item == null) {
+                    return;
+                }
+            }
 
-        if (this.ntPublisher.isPresent()) {
-            ntPublisher.get().set(items);
-            checkNTFMS(true);
+            if (this.datalogPublisher.isPresent()) {
+                this.datalogPublisher.get().append(items);
+            } else {
+                checkDLFMS();
+            }
+
+            if (this.ntPublisher.isPresent()) {
+                ntPublisher.get().set(items);
+                checkNTFMS(true);
+            }
+        } catch (Throwable error) {
+            DataLogManager.log("Error in UltraStructLog, aborting logger:\n" + error);
+            errored = true;
         }
     }
 }

@@ -13,12 +13,20 @@ public class UltraBooleanLog implements UltraLogEntry<Boolean> {
     private Optional<BooleanPublisher> ntPublisher = Optional.empty();
     private Optional<BooleanLogEntry> datalogPublisher = Optional.empty();
     private double lastCheckedTimestamp = System.currentTimeMillis();
+    private boolean errored = false;
+
+    private boolean lastItem;
 
     public UltraBooleanLog(String name) {
         this.logName = TelemetryConstants.tabPrefix + name;
 
-        checkNTFMS(false);
-        checkDLFMS();
+        try {
+            checkNTFMS(false);
+            checkDLFMS();
+        } catch (Throwable error) {
+            System.err.println("Error in UltraBooleanLog constructor, aborting logger:\n" + error);
+            errored = true;
+        }
     }
 
     private void checkDLFMS() {
@@ -47,17 +55,27 @@ public class UltraBooleanLog implements UltraLogEntry<Boolean> {
     }
 
     public void update(Boolean item) {
-        if (item == null) {return;}
+        if (errored) {return;}
+        try {
+            if (item == null || item == lastItem) {
+                return;
+            }
 
-        if (this.datalogPublisher.isPresent()) {
-            this.datalogPublisher.get().append(item);
-        } else {
-            checkDLFMS();
-        }
+            lastItem = item;
 
-        if (this.ntPublisher.isPresent()) {
-            ntPublisher.get().set(item);
-            checkNTFMS(true);
+            if (this.datalogPublisher.isPresent()) {
+                this.datalogPublisher.get().append(item);
+            } else {
+                checkDLFMS();
+            }
+
+            if (this.ntPublisher.isPresent()) {
+                ntPublisher.get().set(item);
+                checkNTFMS(true);
+            }
+        } catch (Throwable error) {
+            DataLogManager.log("Error in UltraBooleanLog, aborting logger:\n" + error);
+            errored = true;
         }
     }
 }
