@@ -21,38 +21,21 @@ import frc.robot.Constants.SpeakerShooterConstants;
 
 public class SpeakerShooterSubsystem extends SubsystemBase {
     public TalonFX speakerShooterMotor = new TalonFX(SpeakerShooterConstants.kSpeakerShooterMotorId);
-    public IntakeSubsystem intakeSubsystem;
-    public BooleanSupplier overrideBeamBreak;
-    public SpeakerShooterSubsystem(IntakeSubsystem intake, BooleanSupplier overrideBeambreak) {
-        this.intakeSubsystem = intake;
-        this.overrideBeamBreak = overrideBeambreak;
+    public SpeakerShooterSubsystem() {
         speakerShooterMotor.setNeutralMode(NeutralModeValue.Brake);
 
-        SmartDashboard.setDefaultNumber("Shooter Speed", SpeakerShooterConstants.kSpeakerMotorSpeed);
-        // setDefaultCommand(stop());
+        setDefaultCommand(stop());
     }
 
-    @Override
-    public void periodic() {
-        var currentCommand = this.getCurrentCommand();
-        if (currentCommand != null) {
-            // SmartDashboard.putString("Speakershoot Command", currentCommand.getName());
-        } else {
-            // SmartDashboard.putString("Speakershoot Command", "");
-        }
+      public Command shoot() {
+         return run(() -> {
+             speakerShooterMotor.set(SpeakerShooterConstants.kSpeakerMotorSpeed);
+         }).withName("shoot");
+     }
 
-        if (!intakeSubsystem.beambreak.get() || this.overrideBeamBreak.getAsBoolean()) {
-            speakerShooterMotor.set(SpeakerShooterConstants.kSpeakerMotorSpeed);
-        } else {
-            speakerShooterMotor.set(0);
-        }
-    }
-
-    //  public Command shoot() {
-    //     return run(() -> {speakerShooterMotor.set(SpeakerShooterConstants.kSpeakerMotorSpeed);}).withName("stop");
-    // }
-
-    // public Command stop() {
-    //     return run(() -> {speakerShooterMotor.set(0);}).withName("stop");
-    // }
+     public Command stop() {
+         return run(() -> {
+             speakerShooterMotor.set(0);
+         }).withName("stop");
+     }
 }

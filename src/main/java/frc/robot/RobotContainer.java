@@ -40,6 +40,8 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import java.util.function.BooleanSupplier;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -54,7 +56,7 @@ public class RobotContainer {
   public final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
   public final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
   public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  public final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem(intakeSubsystem, driverController.povLeft());
+  public final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   public final DriveStationSubsystem m_driveStationSubsystem = new DriveStationSubsystem(swerveSubsystem);
   public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
@@ -94,8 +96,9 @@ public class RobotContainer {
    */
 
   private void configureBindings() {
-      // SmartDashboard.setDefaultNumber("Auto Wait Time", 0);
-      // SmartDashboard.setPersistent("Auto Wait Time");
+    driverController.povLeft()
+            .or(intakeSubsystem.beambreak::get)
+            .whileTrue(speakerShooterSubsystem.shoot());
 
       SmartDashboard.setPersistent("Amp Shooter Speed");
     // Ben Control Scheme *****************************

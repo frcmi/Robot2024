@@ -112,16 +112,7 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {    
-    // SmartDashboard.putNumber("Dist from want", Math.sqrt(Math.pow(m_robotContainer.gotoAutoThing2.getX() - currentPose.getX(), 2) + Math.pow(m_robotContainer.gotoAutoThing2.getY() - currentPose.getY(), 2)));
-  
-    // TODO: measure if this has a perf impact?
-    // Optional<Alliance> alliance = DriverStation.getAlliance();
-    // alliance.ifPresent(value -> allianceShuffleboardEntry.setBoolean(value == Alliance.Red));
-
-    // OptionalInt station = DriverStation.getLocation();
-    // station.ifPresent(stationShuffleboardEntry::setInteger);
-
+  public void robotPeriodic() {
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -135,7 +126,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    // SmartDashboard.putBoolean("Enabled", false);
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -149,13 +139,11 @@ public class Robot extends TimedRobot {
     }
   }
 
-  // public Field2d e = new Field2d();
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
   }
-    // SmartDashboard.putBoolean("Enabled", true);}
 
   @Override
   public void teleopInit() {
