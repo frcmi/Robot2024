@@ -283,13 +283,11 @@ public class SwerveSubsystem extends SubsystemBase {
     UltraStructLog<Pose2d> ultraPosePublisher = new UltraStructLog<>("Swerve/Pose Estimator", Pose2d.struct);
     UltraDoubleLog angularVelocityPublisher = new UltraDoubleLog("Swerve/Angular Velocity");
 
-    StructPublisher<Pose2d> posePublisher = NetworkTableInstance.getDefault().getStructTopic("Current Robot Position", Pose2d.struct).publish();
-
     @Override
     public void periodic() {
         swerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
+        
         ultraPosePublisher.update(getPose());
-        posePublisher.set(getPose());
         swerveStatePublisher.update(getModuleStates());
         swerveSetpointPublisher.update(getModuleSetpoints());
         angularVelocityPublisher.update(gyro.getAngularVelocityZWorld().getValueAsDouble());

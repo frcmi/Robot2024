@@ -78,8 +78,8 @@ public class RobotContainer {
    */
 
   private void configureBindings() {
-    driverController.povLeft()
-            .or(speakerShooterSubsystem.beambreak::get)
+    new Trigger(speakerShooterSubsystem.beambreak::get)
+            .or(driverController.povLeft())
             .whileTrue(speakerShooterSubsystem.shoot());
 
     // Ben Control Scheme *****************************
