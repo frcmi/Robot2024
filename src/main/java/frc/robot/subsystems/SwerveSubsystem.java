@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
@@ -7,14 +8,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.ultralogger.UltraDoubleLog;
 import frc.lib.ultralogger.UltraStructArrayLog;
 import frc.lib.ultralogger.UltraStructLog;
+import frc.robot.Robot;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants;
-
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -27,7 +25,6 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
@@ -54,10 +51,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public AnalogGyroSim simGyro = new AnalogGyroSim(0);
     double simHeadingOffset = 0;
-
+    public VisionSubsystem visionSubsystemForSim = null;
+    public SwerveDriveOdometry swerveDriveOdometrySim;
+    public UltraStructLog<Pose2d> odometrySimPosePublisher;
 
     public SwerveSubsystem() {
-        if (RobotBase.isSimulation()) simGyro.setAngle(0);
         gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
@@ -78,6 +76,12 @@ public class SwerveSubsystem extends SubsystemBase {
         Pose2d blueStation = new Pose2d(0.53, 7.11, new Rotation2d(0));
         swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(Constants.SwerveConstants.swerveKinematics,
                 getGyroYaw(), getModulePositions(), blueStation);
+
+        if (RobotBase.isSimulation()) {
+            simGyro.setAngle(0);
+            swerveDriveOdometrySim = new SwerveDriveOdometry(SwerveConstants.swerveKinematics, getGyroYaw(), getModulePositions(), blueStation);
+            odometrySimPosePublisher = new UltraStructLog<>("Swerve/Odometry Sim Pose", Pose2d.struct);
+        }
 
         AutoBuilder.configureHolonomic(
                 this::getPose, // Robot pose supplier
@@ -204,6 +208,9 @@ public class SwerveSubsystem extends SubsystemBase {
      */
     public void setPose(Pose2d pose) {
         swerveDrivePoseEstimator.resetPosition(getGyroYaw(), getModulePositions(), pose);
+        if (Robot.isSimulation()) {
+            visionSubsystemForSim.resetSimPose(pose);
+        }
     }
 
     /**
@@ -286,5 +293,11 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveStatePublisher.update(getModuleStates());
         swerveSetpointPublisher.update(getModuleSetpoints());
         angularVelocityPublisher.update(gyro.getAngularVelocityZWorld().getValueAsDouble());
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        swerveDriveOdometrySim.update(getGyroYaw(), getModulePositions());
+        odometrySimPosePublisher.update(swerveDriveOdometrySim.getPoseMeters());
     }
 }

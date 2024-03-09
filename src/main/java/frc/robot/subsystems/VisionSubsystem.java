@@ -3,12 +3,17 @@ package frc.robot.subsystems;
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.ultralogger.UltraStructLog;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Robot;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.simulation.PhotonCameraSim;
+import org.photonvision.simulation.SimCameraProperties;
+import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -28,6 +33,10 @@ public class VisionSubsystem extends SubsystemBase {
     // Needed until https://github.com/Mechanical-Advantage/AdvantageScope/issues/149 is closed.
     private final UltraStructLog<Pose2d> pose2dPublisher = new UltraStructLog<>("Vision/pose2d", Pose2d.struct);
 
+    // Simulation
+    private PhotonCameraSim cameraSim;
+    private VisionSystemSim visionSim;
+
     public VisionSubsystem(SwerveSubsystem swerveSubsystem) {
         //21.85 up
 
@@ -37,6 +46,28 @@ public class VisionSubsystem extends SubsystemBase {
 
             camera = new PhotonCamera(cameraName);
             estimator = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, VisionConstants.robotToCamera);
+
+            if (Robot.isSimulation()) {
+                // Create the vision system simulation which handles cameras and targets on the field.
+                visionSim = new VisionSystemSim("Arducam_OV9281_USB_Camera");
+                // Add all the AprilTags inside the tag layout as visible targets to this simulated field.
+                visionSim.addAprilTags(fieldLayout);
+                // Create simulated camera properties. These can be set to mimic your actual camera.
+                // TODO: Make sure these are the actual values
+                var cameraProp = new SimCameraProperties();
+                cameraProp.setCalibration(1280, 800, Rotation2d.fromDegrees(90));
+                cameraProp.setCalibError(0.44, 0.05);
+                cameraProp.setFPS(30);
+                cameraProp.setAvgLatencyMs(30);
+                cameraProp.setLatencyStdDevMs(10);
+                // Create a PhotonCameraSim which will update the linked PhotonCamera's values with visible
+                // targets.
+                cameraSim = new PhotonCameraSim(camera, cameraProp);
+                // Add the simulated camera to view the targets on this simulated field.
+                visionSim.addCamera(cameraSim, VisionConstants.robotToCamera);
+
+                cameraSim.enableDrawWireframe(true);
+            }
         }
         catch (Exception exc)
         {
@@ -83,5 +114,16 @@ public class VisionSubsystem extends SubsystemBase {
         }
 
         return null;
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        visionSim.update(swerve.swerveDriveOdometrySim.getPoseMeters());
+        SmartDashboard.putData("Vision Sim", visionSim.getDebugField());
+    }
+
+    /** Reset pose history of the robot in the vision system simulation. */
+    public void resetSimPose(Pose2d pose) {
+        if (Robot.isSimulation()) visionSim.resetRobotPose(pose);
     }
 }
