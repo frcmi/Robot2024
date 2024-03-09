@@ -15,27 +15,38 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 public class AmpShooterSubsystem extends SubsystemBase{
     private final CANSparkMax shootMotor = new CANSparkMax(AmpShooterConstants.kShootMotor, MotorType.kBrushless);
     private final AmpArmSubsystem ampArmSubsystem;
+    private final LEDSubsystem ledSubsystem;
 
     private final DigitalInput beambreak = new DigitalInput(AmpShooterConstants.kAmpBeamBrakeId);
 
     private final UltraDoubleLog currentPublisher = new UltraDoubleLog("Arm Shooter/Motor Current");
     private final UltraBooleanLog beambreakPublisher = new UltraBooleanLog("Arm Shooter/Beambreak");
 
-    public AmpShooterSubsystem(AmpArmSubsystem ampArm) {
+    public AmpShooterSubsystem(AmpArmSubsystem ampArm, LEDSubsystem leds) {
         ampArmSubsystem = ampArm;
+        ledSubsystem = leds;
         shootMotor.setInverted(true);
         setDefaultCommand(stop());
     }
 
+    boolean beamClearPrevious = true;
     @Override
     public void periodic() {
-        boolean beamBroken = beambreak.get();
+        boolean beamClear = beambreak.get();
 
         currentPublisher.update(shootMotor.getOutputCurrent());
-        beambreakPublisher.update(beamBroken);
+        beambreakPublisher.update(beamClear);
         // TODO: remove this once UltraLog supports always networked values
         // This is needed to driver can see if note is actually in the amp shooter
-        SmartDashboard.putBoolean("Amp Beam Break", beamBroken);
+        SmartDashboard.putBoolean("Amp Beam Break", beamClear);
+
+        if (!beambreak.get()) {
+            ledSubsystem.readyToAmp().schedule();
+        }
+        if (!beamClearPrevious && beamClear) {
+            ledSubsystem.ledOff().schedule();
+        }
+        beamClearPrevious = beamClear;
     }
 
     public Command shootAmp() { //TODO: can change
@@ -49,7 +60,7 @@ public class AmpShooterSubsystem extends SubsystemBase{
     public Command intakeAmp() {
         return run (
             () -> {
-                shootMotor.set(1); // Keep this motor negative
+                shootMotor.set(0.6); // Keep this motor negative
             }
         )
                 .until(() -> !beambreak.get())

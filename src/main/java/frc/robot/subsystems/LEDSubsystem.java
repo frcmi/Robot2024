@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public class LEDSubsystem extends SubsystemBase {
@@ -75,11 +76,7 @@ public class LEDSubsystem extends SubsystemBase {
   
   }
   public Command ledOff() {  
-    return runOnce(
-      () -> {
-        setColor(new Color8Bit(0,0,0));
-      }
-    );
+    return setColor(new Color8Bit(0,0,0));
   }
   public Command setLights(){
     return runOnce(() -> {
@@ -99,6 +96,10 @@ public class LEDSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_led.setData(m_ledBuffer);
+
+    if(this.getCurrentCommand() != null) {
+      SmartDashboard.putData("Current LED Command", this.getCurrentCommand());
+    }
   }
 
   @Override
@@ -120,7 +121,7 @@ public class LEDSubsystem extends SubsystemBase {
     
   }
   public Command readyToAmp(){
-     return setColor(new Color8Bit(255, 192, 203));
+     return setColor(new Color8Bit(255, 20, 50));
      //change color later bc alliance problems
   }
   public Command readyToSpeaker(){

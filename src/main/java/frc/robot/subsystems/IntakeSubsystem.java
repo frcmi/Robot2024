@@ -17,14 +17,30 @@ public class IntakeSubsystem extends SubsystemBase {
     private final TalonFX indexerMotor = new TalonFX(IntakeConstants.kIndexerMotorId);
 
     private final BooleanSupplier speakerBeambreak;
+    private final LEDSubsystem ledSubsystem;
 
-    public IntakeSubsystem(BooleanSupplier speakerBeambreak) {
+    public IntakeSubsystem(BooleanSupplier speakerBeambreak, LEDSubsystem ledSubsystem) {
         this.speakerBeambreak = speakerBeambreak;
+        this.ledSubsystem = ledSubsystem;
         intakeMotor1.setNeutralMode(NeutralModeValue.Brake);
         intakeMotor2.setNeutralMode(NeutralModeValue.Brake);
         indexerMotor.setNeutralMode(NeutralModeValue.Brake);
         
         setDefaultCommand(stop());
+    }
+
+    boolean beamClearPrevious = true;
+    @Override
+    public void periodic() {
+        boolean beamClear = speakerBeambreak.getAsBoolean();
+
+        if (!speakerBeambreak.getAsBoolean()) {
+            ledSubsystem.readyToSpeaker().schedule();
+        }
+        if (!beamClearPrevious && beamClear) {
+            ledSubsystem.ledOff().schedule();
+        }
+        beamClearPrevious = beamClear;
     }
 
     public Command intakeAmp() { //Subject to change due to motor shenanigans

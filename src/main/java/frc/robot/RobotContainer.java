@@ -34,11 +34,11 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   public final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
-  public final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem);
+    public final LEDSubsystem m_LEDSubsystem = new LEDSubsystem();
+  public final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem, m_LEDSubsystem);
   public final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
-  public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(speakerShooterSubsystem.beambreak::get);
+  public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(speakerShooterSubsystem.beambreak::get, m_LEDSubsystem);
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  public final LEDSubsystem m_LEDSubsystem = new LEDSubsystem();
   public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
@@ -140,7 +140,7 @@ public class RobotContainer {
 
     m_DriverButton.button(1).onTrue(m_LEDSubsystem.ampSpeaker());
 
-    // // m_DriverButton.button(9).onTrue(m_LEDSubsystem.readyToAmp());
+    m_DriverButton.button(9).onTrue(m_LEDSubsystem.ledOff());
 
     // // m_DriverButton.button(3).onTrue(m_LEDSubsystem.readyToSpeaker());
 

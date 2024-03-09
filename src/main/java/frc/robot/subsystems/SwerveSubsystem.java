@@ -276,9 +276,9 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         swerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
-        posePublisher.update(getPose());
-        swerveStatePublisher.update(getModuleStates());
-        swerveSetpointPublisher.update(getModuleSetpoints());
-        angularVelocityPublisher.update(gyro.getAngularVelocityZWorld().getValueAsDouble());
+        // posePublisher.update(getPose());
+        // swerveStatePublisher.update(getModuleStates());
+        // swerveSetpointPublisher.update(getModuleSetpoints());
+        // angularVelocityPublisher.update(gyro.getAngularVelocityZWorld().getValueAsDouble());
     }
 }
