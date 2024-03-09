@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.ultralogger.UltraDoubleLog;
 import frc.lib.ultralogger.UltraStructArrayLog;
 import frc.lib.ultralogger.UltraStructLog;
@@ -28,6 +29,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -268,17 +271,20 @@ public class SwerveSubsystem extends SubsystemBase {
         rotationSensitivity = sensitivitySwitch ? SwerveConstants.rotationSensitivity : 1;
     }
 
-    // UltraStructArrayLog<SwerveModuleState> swerveStatePublisher = new UltraStructArrayLog<>("Swerve/Current States", SwerveModuleState.struct);
-    // UltraStructArrayLog<SwerveModuleState> swerveSetpointPublisher = new UltraStructArrayLog<>("Swerve/Set States", SwerveModuleState.struct);
-    // UltraStructLog<Pose2d> posePublisher = new UltraStructLog<>("Swerve/Pose Estimator", Pose2d.struct);
-    // UltraDoubleLog angularVelocityPublisher = new UltraDoubleLog("Swerve/Angular Velocity");
+    UltraStructArrayLog<SwerveModuleState> swerveStatePublisher = new UltraStructArrayLog<>("Swerve/Current States", SwerveModuleState.struct);
+    UltraStructArrayLog<SwerveModuleState> swerveSetpointPublisher = new UltraStructArrayLog<>("Swerve/Set States", SwerveModuleState.struct);
+    UltraStructLog<Pose2d> ultraPosePublisher = new UltraStructLog<>("Swerve/Pose Estimator", Pose2d.struct);
+    UltraDoubleLog angularVelocityPublisher = new UltraDoubleLog("Swerve/Angular Velocity");
+
+    StructPublisher<Pose2d> posePublisher = NetworkTableInstance.getDefault().getStructTopic("Current Robot Position", Pose2d.struct).publish();
 
     @Override
     public void periodic() {
         swerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
-        // posePublisher.update(getPose());
-        // swerveStatePublisher.update(getModuleStates());
-        // swerveSetpointPublisher.update(getModuleSetpoints());
-        // angularVelocityPublisher.update(gyro.getAngularVelocityZWorld().getValueAsDouble());
+        ultraPosePublisher.update(getPose());
+        posePublisher.set(getPose());
+        swerveStatePublisher.update(getModuleStates());
+        swerveSetpointPublisher.update(getModuleSetpoints());
+        angularVelocityPublisher.update(gyro.getAngularVelocityZWorld().getValueAsDouble());
     }
 }
