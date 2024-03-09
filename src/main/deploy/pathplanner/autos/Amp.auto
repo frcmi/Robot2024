@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 2.0,
-      "y": 7.0
+      "x": 0.4357068913852507,
+      "y": 7.260718658384535
     },
-    "rotation": -90.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Travel"
+            "pathName": "Amp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Amp"
           }
         }
       ]

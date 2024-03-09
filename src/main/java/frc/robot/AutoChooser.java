@@ -3,6 +3,8 @@ package frc.robot;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -33,6 +35,7 @@ public class AutoChooser {
 
     public enum Strategy {
         TRAVEL,
+        AMP,
         SCORE,
         SCORE_THEN_TRAVEL,
         SCORE_AND_RELOAD,
@@ -100,6 +103,9 @@ public class AutoChooser {
         switch (strategy) {
             case TRAVEL -> {
                 return Autos.pathplannerPath("Travel");
+            }
+            case AMP -> {
+                return Autos.pathplannerPath("Amp").andThen(robotContainer.ampArmSubsystem.raiseToAmp().withTimeout(1)).andThen(robotContainer.ampShooterSubsystem.shootAmp().withTimeout(1)).andThen(robotContainer.ampArmSubsystem.lowerArm());
             }
             case SCORE -> {
                 return new ScoreAuto(null, robotContainer);

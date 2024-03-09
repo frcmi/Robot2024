@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.SetTrailLights;
 import frc.robot.subsystems.LEDSubsystem;
@@ -98,6 +99,10 @@ public class RobotContainer {
     driverController.leftTrigger().onFalse(ampArmSubsystem.moveTo(AmpArmConstants.kMinAngle));
 
     // A Raise amp arm
+    Command raiseAmp = ampArmSubsystem.raiseToAmp().withTimeout(1);
+    NamedCommands.registerCommand("Shoot Amp", raiseAmp
+    .andThen(ampShooterSubsystem.shootAmp()).withTimeout(0.75)
+    .andThen(ampArmSubsystem.moveTo(AmpArmConstants.kMinAngle)).withTimeout(0.5));
     driverController.a().onTrue(ampArmSubsystem.raiseToAmp());
     // driverController.a().onTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
 
@@ -158,6 +163,10 @@ public class RobotContainer {
    */
 
   public Command getAutonomousCommand() {
+    SmartDashboard.putString("command name swerve", "test");
+    if (swerveSubsystem.getCurrentCommand() != null) {
+      SmartDashboard.putString("command name swerve", swerveSubsystem.getCurrentCommand().getName());
+    }
     return autoChooser.getCommand();
   }
 }
