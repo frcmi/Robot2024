@@ -105,7 +105,10 @@ public class AutoChooser {
                 return Autos.pathplannerPath("Travel");
             }
             case AMP -> {
-                return Autos.pathplannerPath("Amp").andThen(robotContainer.ampArmSubsystem.raiseToAmp().withTimeout(1)).andThen(robotContainer.ampShooterSubsystem.shootAmp().withTimeout(1)).andThen(robotContainer.ampArmSubsystem.lowerArm());
+                return Autos.pathplannerPath("Amp")
+                .andThen(robotContainer.ampArmSubsystem.raiseToAmp().withTimeout(1))
+                .andThen(robotContainer.ampShooterSubsystem.shootAmp().withTimeout(1))
+                .andThen(robotContainer.ampArmSubsystem.lowerArm());
             }
             case SCORE -> {
                 return new ScoreAuto(null, robotContainer);

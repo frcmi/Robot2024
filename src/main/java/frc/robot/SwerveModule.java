@@ -138,12 +138,12 @@ public class SwerveModule {
         }
     }
 
-    /**
-     * Logs all relevant values to shuffleboard. Should be called periodically.
-     */
-    public void logValues() {
-        CANCoderShuffleBoardItem.setDouble(getCANcoderReading().getDegrees());
-        angleShuffleBoardItem.setDouble(getPosition().angle.getDegrees());
-        velocityShuffleBoardItem.setDouble(getState().speedMetersPerSecond);
-    }
+    // /**
+    //  * Logs all relevant values to shuffleboard. Should be called periodically.
+    //  */
+    // public void logValues() {
+    //     CANCoderShuffleBoardItem.setDouble(getCANcoderReading().getDegrees());
+    //     angleShuffleBoardItem.setDouble(getPosition().angle.getDegrees());
+    //     velocityShuffleBoardItem.setDouble(getState().speedMetersPerSecond);
+    // }
 }
