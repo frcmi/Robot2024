@@ -26,12 +26,18 @@ public class SpeakerShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        boolean beamBroken = beambreak.get();
+        boolean beamNotBroken = beambreak.get();
 
-        beambreakPublisher.update(beamBroken);
+        beambreakPublisher.update(beamNotBroken);
         // TODO: remove this once UltraLog supports always networked values
         // This is needed to driver can see if note is actually in the speaker shooter
-        SmartDashboard.putBoolean("Speaker Beam Break", beamBroken);
+        SmartDashboard.putBoolean("Speaker Beam Break", beamNotBroken);
+
+        if (beamNotBroken) {
+            stop().schedule();
+        } else {
+            shoot().schedule();
+        }
     }
 
     public Command shoot() {

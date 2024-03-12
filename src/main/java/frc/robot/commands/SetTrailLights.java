@@ -48,7 +48,7 @@ public class SetTrailLights extends Command {
         
         for (int i = 0; i < m_LEDSubsystem.m_ledBuffer.getLength(); i++) {
             if (i >= min && i <= max) {
-            m_LEDSubsystem.setLight(i, m_LEDSubsystem.setColor);
+            m_LEDSubsystem.setLight(i, m_LEDSubsystem.m_ledBufferCopy.getLED8Bit(i));
 
             } else {
             m_LEDSubsystem.setLight(i, new Color8Bit());

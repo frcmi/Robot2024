@@ -9,6 +9,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -24,7 +25,12 @@ public class TeleopSwerve extends Command {
     private DoubleSupplier rotationSup;
     private BooleanSupplier robotCentricSup;
 
-    public TeleopSwerve(SwerveSubsystem s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
+    private SlewRateLimiter translationLimit = null;
+    private SlewRateLimiter strafeLimit = null;
+    private final BooleanSupplier slewEnableSupplier;
+
+    public TeleopSwerve(SwerveSubsystem s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup, BooleanSupplier slewEnableSupplier) {
+        this.slewEnableSupplier = slewEnableSupplier;
         this.s_Swerve = s_Swerve;
         addRequirements(s_Swerve);
 
@@ -36,11 +42,28 @@ public class TeleopSwerve extends Command {
 
     @Override
     public void execute() {
+        boolean slewEnabled = slewEnableSupplier.getAsBoolean();
+        int pow = slewEnabled ? 1 : 3;
         /* Get Values, Deadband*/
-        double translationVal = MathUtil.applyDeadband(Math.pow(translationSup.getAsDouble(), 3), Constants.OperatorConstants.stickDeadband);
-        double strafeVal = MathUtil.applyDeadband(Math.pow(strafeSup.getAsDouble(), 3), Constants.OperatorConstants.stickDeadband);
-        double rotationVal = MathUtil.applyDeadband(Math.pow(rotationSup.getAsDouble(), 3), Constants.OperatorConstants.stickDeadband);
+        double translationVal = MathUtil.applyDeadband(Math.pow(translationSup.getAsDouble(), pow), Constants.OperatorConstants.stickDeadband);
+        double strafeVal = MathUtil.applyDeadband(Math.pow(strafeSup.getAsDouble(), pow), Constants.OperatorConstants.stickDeadband);
+        double rotationVal = MathUtil.applyDeadband(Math.pow(rotationSup.getAsDouble(), pow), Constants.OperatorConstants.stickDeadband);
         
+        if (slewEnabled) {
+            if (strafeLimit == null) {
+                strafeLimit = new SlewRateLimiter(0.8);
+                translationLimit = new SlewRateLimiter(0.8);
+            }
+
+            translationVal = translationVal == 0 ? 0 : 1 * translationLimit.calculate(translationVal);
+            strafeVal = strafeVal == 0 ? 0 : 1 * strafeLimit.calculate(strafeVal);
+        } else {
+            if (strafeLimit != null) {
+                strafeLimit = null;
+                translationLimit = null;
+            }
+        }
+
         Optional<Alliance> alliance = DriverStation.getAlliance();
         if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
             translationVal *= -1;

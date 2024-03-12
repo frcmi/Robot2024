@@ -18,6 +18,7 @@ public class LEDSubsystem extends SubsystemBase {
 
 
   public AddressableLEDBuffer m_ledBuffer;
+  public AddressableLEDBuffer m_ledBufferCopy;
 
   public void setLight(int ID, Color8Bit color){
     m_ledBuffer.setLED(ID, color);
@@ -29,6 +30,7 @@ public class LEDSubsystem extends SubsystemBase {
   public LEDSubsystem() {
     m_led = new AddressableLED(LEDConstants.kLedPort);
     m_ledBuffer = new AddressableLEDBuffer(LEDConstants.kLedCount);
+    m_ledBufferCopy = new AddressableLEDBuffer(LEDConstants.kLedCount);
     m_led.setLength(m_ledBuffer.getLength());
     m_led.setData(m_ledBuffer);
     m_led.start();
@@ -51,6 +53,7 @@ public class LEDSubsystem extends SubsystemBase {
       // Set the value
 
       m_ledBuffer.setHSV(i, hue, 255, 128);
+      m_ledBufferCopy.setHSV(i, hue, 255, 128);
       
 
     }
@@ -82,6 +85,7 @@ public class LEDSubsystem extends SubsystemBase {
     return runOnce(() -> {
       for (int i = 0; i < m_ledBuffer.getLength(); i++) {
         m_ledBuffer.setLED(i, setColor);
+      m_ledBufferCopy.setLED(i, setColor);
       }
     });
   }
@@ -96,10 +100,6 @@ public class LEDSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_led.setData(m_ledBuffer);
-
-    if(this.getCurrentCommand() != null) {
-      SmartDashboard.putData("Current LED Command", this.getCurrentCommand());
-    }
   }
 
   @Override

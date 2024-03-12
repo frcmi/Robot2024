@@ -51,6 +51,8 @@ public class RobotContainer {
   public final Pose2d gotoAutoThing = new Pose2d(2.843,5.819, new Rotation2d(Math.PI));
   public final Pose2d gotoAutoThing2 = new Pose2d(8.244,2.471, new Rotation2d(Math.PI));
 
+  private boolean slewLimited = false;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     if (Robot.isSimulation()) swerveSubsystem.visionSubsystemForSim = visionSubsystem;
@@ -60,7 +62,8 @@ public class RobotContainer {
             () -> driverController.getLeftY() * swerveSubsystem.translationSensitivity, 
             () -> driverController.getLeftX() * swerveSubsystem.translationSensitivity, 
             () -> driverController.getRightX() * swerveSubsystem.rotationSensitivity, 
-            () -> false //robotCentric.getAsBoolean()
+            () -> false, //robotCentric.getAsBoolean()
+            () -> slewLimited
         )
     );
     // Configure the trigger bindings
@@ -78,9 +81,18 @@ public class RobotContainer {
    */
 
   private void configureBindings() {
-    new Trigger(speakerShooterSubsystem.beambreak::get)
-            .or(driverController.povLeft())
-            .whileTrue(speakerShooterSubsystem.shoot());
+    driverController.start().onTrue(new InstantCommand(() -> {
+      this.slewLimited = !this.slewLimited;
+      SmartDashboard.putBoolean("Slew Limited", this.slewLimited);
+    }));
+    // driverController.povLeft()
+    //   .whileTrue(speakerShooterSubsystem.shoot());
+
+    // new Trigger(() -> !speakerShooterSubsystem.beambreak.get())
+    //   .whileTrue(speakerShooterSubsystem.shoot());
+    // new Trigger()
+    //         .or(
+    //         .whileTrue(speakerShooterSubsystem.shoot());
 
     // Ben Control Scheme *****************************
 
