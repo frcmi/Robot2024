@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -17,6 +18,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.SwerveModuleConstants;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -27,13 +30,25 @@ import frc.lib.util.SwerveModuleConstants;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static class TelemetryConstants {
+        // DON'T ENABLE UNLESS ABSOLUTELY NEEDED
+        // this will fully disable logging even when FMS is connected.
+        public static final boolean killswitch = false;
+        // If true data won't be sent over network even when not connected to FMS
+        public static final boolean disableNetworkLogging = true;
+        // ONLY ENABLE IN DEV (this *should* be overwritten when connected to FMS, but that's untested)
+        public static final boolean disableDatalog = false;
+        // Prefix in NetworkTables, must end with a '/'
+        public static final String tabPrefix = "UltraLog/";
+        // How often to re-check if the FMS is connected (and disable network logging if so)
+        public static final double fmsCheckDelay = TimeUnit.SECONDS.toMillis(1);
+    }
 
     public static class LEDConstants {
       public static final int kStreakLength = 3; //TODO: Change Streak Length
-      public static final int kLedCount = 11;
+      public static final int kLedCount = 21;
     
       public static final int kLedPort = 1;
-      public static final int kLedPort2 = 0;
     }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
@@ -76,7 +91,7 @@ public final class Constants {
     /* Angle Encoder Invert */
     public static final SensorDirectionValue cancoderInvert = chosenModule.cancoderInvert;
 
-    public static final float currentLimitModifier = 0.5f;
+    public static final float currentLimitModifier = 0.4f;
 
     /* Swerve Current Limiting */
     public static final int angleCurrentLimit = (int)(25 * currentLimitModifier);
@@ -119,7 +134,7 @@ public final class Constants {
     /** Volts (out of 12) */
     public static final double maxSpeed = 12; // TODO: This must be tuned to specific robot
     /** Volts (out of 12) */
-    public static final double maxAngularVelocity = 8; // TODO: This must be tuned to specific robot
+    public static final double maxAngularVelocity = 12; // TODO: This must be tuned to specific robot
 
     /* Sensitivity Values */
     public static final double translationSensitivity = 0.75;
@@ -175,9 +190,14 @@ public final class Constants {
     }
   }
 
+  public static class SimulationConstants {
+    public static final double kSimulationMaxSpeed = 2;
+    public static final double kSimulationMaxRotationSpeed = 3;
+  }
+
   public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be tuned
                                             // to specific robot
-    public static final double kMaxSpeedMetersPerSecond = 0;
+    public static final double kMaxSpeedMetersPerSecond = 2;
     public static final double kMaxAccelerationMetersPerSecondSquared = 0.25;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
@@ -190,7 +210,7 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
         
-    public static final double kRotationP = 50;
+    public static final double kRotationP = 10;
     public static final double kRotationI = 0;
     public static final double kRotationD = 0.05;
     // For PathPlanner
@@ -204,8 +224,11 @@ public final class Constants {
     public static final int kIntakeMotor2Id = 25;
     public static final int kIndexerMotorId = 26;
 
-    public static final double kIntakeMotorSpeed = 0.3;
-    public static final double kIndexerSpeed = 0.3;
+    public static final int kSpeakerBeamBreakPort = 2;
+    public static final double kSpeakerShootSpeed = 2;
+
+    public static final double kIntakeMotorSpeed = 0.2085;
+    public static final double kIndexerSpeed = 0.2085;
   }
 
   public static class SpeakerShooterConstants {
@@ -215,16 +238,19 @@ public final class Constants {
   }
 
   public static class AmpShooterConstants {
-    public static final double kAmpMotorSpeed = 0.4;
-    public static int kShootMotor;
+    public static final double kAmpMotorSpeed = 0.83;
+    public static int kShootMotor = 31;
+    public static double kIntakeCurrentLimitAmps = 100000000;
+
+    public static final int kAmpBeamBrakeId = 4;
 
   }
 
   public static class AmpArmConstants {
-    public static final double kMaxArmVolts = 3;
+    public static final double kMaxArmVolts = 6;
     public static final int kAmpArmMotorId = 32;
     public static final int kArmEncoderId = 0; // TODO: Change ID based on DIO port
-    public static final double kTorqueArmConstant = 0.5;
+    public static final double kTorqueArmConstant = 0.6;
     public static final double kGravityLimit = 0.3;
     // Gareths law of constants
     // TODO: Tune all of these values
@@ -244,12 +270,16 @@ public final class Constants {
     public static final double kMaxArmAccel = 3;
 
     // Angles
-    public static final double kMaxAngle = 90; // TODO: Maximum angle of arm
+    public static final double kMaxAngle = 180; // TODO: Maximum angle of arm
     public static final double kMinAngle = 0; // TODO: Change to resting position
-    public static final double kShootAngle = 100; // TODO: Change to shooting position
-
+    public static final double kShootAngle = 92;
 
     public static final double kAmpEncoderOffset = 179 + 140 + 4.2 - 124 + 1.5; // Needs to be measured
+
+    // Raise/Lower Constants
+    public static final double kRaiseArmVolts = 1;
+    public static final double kLowerArmVolts = -1;
+    public static final double kAmpCurrentLimit = 39;
   }
 
   public class ClimberConstants {
@@ -261,6 +291,13 @@ public final class Constants {
   }
 
   public static class VisionConstants {
-      public static final Transform3d robotToCamera = new Transform3d(Units.inchesToMeters(-5), Units.inchesToMeters(9), Units.inchesToMeters(21.85), new Rotation3d(0, Math.toRadians(8.5),Math.PI));
+      public static final Transform3d robotToCamera = new Transform3d(Units.inchesToMeters(5), Units.inchesToMeters(9), Units.inchesToMeters(21.85), new Rotation3d(0, Math.toRadians(8.5),Math.PI));
+  }
+
+  public static class AutoAlignConstants {
+    public static final Transform3d kRobotToShooter = new Transform3d(0, 0, 0.5207, new Rotation3d(0, 77.5 * Math.PI / 180, Math.PI));
+    public static final Pose3d kRedSpeaker = new Pose3d(16.427, 5.548, 2.032, new Rotation3d(0, 0, Math.PI));
+    public static final Pose3d kBlueSpeaker = new Pose3d(0.073, 5.548, 2.032, new Rotation3d(0, 0, 0));
+    public static final double kMaximumFiringAngle = 75 * Math.PI / 180;
   }
 }

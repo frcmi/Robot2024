@@ -8,22 +8,17 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-public class DriveStationSubsystem extends SubsystemBase {
+
+public class LEDSubsystem extends SubsystemBase {
   public Color8Bit setColor = new Color8Bit(128,0,0);
 
 
   public AddressableLEDBuffer m_ledBuffer;
-  public AddressableLEDBuffer m_ledBuffer2;
-  private SwerveSubsystem swerve;
-
-  // public DigitalInput beambreak = new DigitalInput(1);
+  public AddressableLEDBuffer m_ledBufferCopy;
 
   public void setLight(int ID, Color8Bit color){
     m_ledBuffer.setLED(ID, color);
@@ -32,15 +27,13 @@ public class DriveStationSubsystem extends SubsystemBase {
 
   public AddressableLED m_led;
 
-  public DriveStationSubsystem( SwerveSubsystem swerveSubsystem) {
+  public LEDSubsystem() {
     m_led = new AddressableLED(LEDConstants.kLedPort);
-    m_ledBuffer = new AddressableLEDBuffer(73);
+    m_ledBuffer = new AddressableLEDBuffer(LEDConstants.kLedCount);
+    m_ledBufferCopy = new AddressableLEDBuffer(LEDConstants.kLedCount);
     m_led.setLength(m_ledBuffer.getLength());
     m_led.setData(m_ledBuffer);
     m_led.start();
-    this.swerve = swerveSubsystem;
-
-
   }
  
   // TODO: See if still needed, or remove if isn't.
@@ -60,6 +53,7 @@ public class DriveStationSubsystem extends SubsystemBase {
       // Set the value
 
       m_ledBuffer.setHSV(i, hue, 255, 128);
+      m_ledBufferCopy.setHSV(i, hue, 255, 128);
       
 
     }
@@ -85,16 +79,13 @@ public class DriveStationSubsystem extends SubsystemBase {
   
   }
   public Command ledOff() {  
-    return runOnce(
-      () -> {
-        setColor(new Color8Bit(0,0,0));
-      }
-    );
+    return setColor(new Color8Bit(0,0,0));
   }
   public Command setLights(){
     return runOnce(() -> {
       for (int i = 0; i < m_ledBuffer.getLength(); i++) {
         m_ledBuffer.setLED(i, setColor);
+      m_ledBufferCopy.setLED(i, setColor);
       }
     });
   }
@@ -109,11 +100,6 @@ public class DriveStationSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_led.setData(m_ledBuffer);
-    Pose2d pose = swerve.getPose();
-    // if (beambreak.get()) {
-    //   readyToSpeaker().schedule();
-    // }
-    
   }
 
   @Override
@@ -135,7 +121,7 @@ public class DriveStationSubsystem extends SubsystemBase {
     
   }
   public Command readyToAmp(){
-     return setColor(new Color8Bit(255, 192, 203));
+     return setColor(new Color8Bit(255, 20, 50));
      //change color later bc alliance problems
   }
   public Command readyToSpeaker(){

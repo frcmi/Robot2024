@@ -1,24 +1,14 @@
 package frc.robot.subsystems;
 
-import java.util.Map;
-import java.util.function.DoubleSupplier;
-
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.ExponentialProfile.State;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.lib.ultralogger.UltraBooleanLog;
+import frc.lib.ultralogger.UltraDoubleLog;
 import frc.robot.Constants.AmpArmConstants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -37,6 +27,11 @@ public class AmpArmSubsystem extends SubsystemBase{
     private final ArmFeedforward feedforward = 
         new ArmFeedforward(AmpArmConstants.kS, AmpArmConstants.kG, AmpArmConstants.kV, AmpArmConstants.kA);
 
+    private final UltraDoubleLog radianPublisher = new UltraDoubleLog("Amp Arm/Radians");
+    private final UltraDoubleLog currentPublisher = new UltraDoubleLog("Amp Arm/Motor Current");
+    private final UltraDoubleLog goalAnglePublisher = new UltraDoubleLog("Amp Arm/Goal Angle");
+    private final UltraBooleanLog boundsPublisher = new UltraBooleanLog("Amp Arm/Bounds");
+
     public AmpArmSubsystem() {
         armEncoder.setDistancePerRotation(1);
         armEncoder.setPositionOffset(AmpArmConstants.kAmpEncoderOffset / 360);
@@ -49,10 +44,13 @@ public class AmpArmSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Arm Degrees", Math.toDegrees(getAngle()));
-        SmartDashboard.putNumber("Arm Radians", getAngle());
+        radianPublisher.update(getAngle());
+        currentPublisher.update(armMotor.getOutputCurrent());
     }
 
+    /**
+     * Return the current angle in RADIANS
+     */
     public double getAngle() {
         return -((armEncoder.getAbsolutePosition()) * 2 * Math.PI) + Math.toRadians(AmpArmConstants.kAmpEncoderOffset); // Angle is in radians
     }     
@@ -60,9 +58,11 @@ public class AmpArmSubsystem extends SubsystemBase{
     public void setGoal(double goalAngle) {
         double angle = getAngle();
         double kg = feedforward.calculate(angle, 0);
+
+        goalAngle = Math.toRadians(goalAngle);
         
-        SmartDashboard.putNumber("Goal Angle", goalAngle);
-        SmartDashboard.putBoolean("Arm Bounds", !(angle > AmpArmConstants.kMaxAngle || angle < AmpArmConstants.kMinAngle));
+         goalAnglePublisher.update(goalAngle);
+         boundsPublisher.update(!(angle > AmpArmConstants.kMaxAngle || angle < AmpArmConstants.kMinAngle));
 
         double pidOutput = pidController.calculate(angle, goalAngle);
        // double ffOutput = feedforward.calculate(pidController.getSetpoint().position, pidController.getSetpoint().velocity);
@@ -77,19 +77,39 @@ public class AmpArmSubsystem extends SubsystemBase{
 
         outputVolts = Math.max(-AmpArmConstants.kMaxArmVolts, Math.min(AmpArmConstants.kMaxArmVolts, outputVolts));
 
-        armMotor.setVoltage(outputVolts);  
+        armMotor.setVoltage(outputVolts);
     }
 
     
     public Command moveTo(double goalAngle) {
         return run(() -> setGoal(goalAngle));
     }
+
+    public Command raiseToAmp() {
+        double raiseVolts = AmpArmConstants.kRaiseArmVolts + Math.cos(getAngle()) * AmpArmConstants.kTorqueArmConstant;
+        raiseVolts = Math.max(-AmpArmConstants.kMaxArmVolts, Math.min(AmpArmConstants.kMaxArmVolts, raiseVolts));
+        final double outputVolts = raiseVolts;
+
+        return new PrintCommand("Raising Arm")
+            .andThen(run(() -> armMotor.setVoltage(AmpArmConstants.kRaiseArmVolts + Math.cos(getAngle()) * AmpArmConstants.kTorqueArmConstant)))
+            .until(() -> (Math.toDegrees(getAngle()) > 92))
+            .andThen(runOnce(() -> System.out.println("At " + Math.toDegrees(getAngle()) +", stopping now")))
+            .andThen(stop());
+    }
+
+    public Command lowerArm() {
+        return run(
+                () -> armMotor.setVoltage(AmpArmConstants.kLowerArmVolts)
+        ).until(
+                () -> armMotor.getOutputCurrent() > AmpArmConstants.kAmpCurrentLimit
+        );
+    }
       
     public Command stop() { //TODO: can change
         return run (
-                () -> { 
-                    armMotor.set(0);
-                }
+            () -> { 
+                armMotor.set(0);
+            }
         ).withName("stop");
     }
 }

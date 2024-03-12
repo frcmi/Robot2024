@@ -3,22 +3,22 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.LEDConstants;
-import frc.robot.subsystems.DriveStationSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 
 
 /**
- * Creates a trail effect on the LEDs given a {@link DriveStationSubsystem}.
- * <p>It will follow current {@link DriveStationSubsystem} LED color.
+ * Creates a trail effect on the LEDs given a {@link LEDSubsystem}.
+ * <p>It will follow current {@link LEDSubsystem} LED color.
  */
 public class SetTrailLights extends Command {
     private int counter = 0;
     private int frame = 0;
     private boolean done = false;
-    private DriveStationSubsystem m_DriveStationSubsystem;
+    private LEDSubsystem m_LEDSubsystem;
     private boolean forever;
 
-    public SetTrailLights(DriveStationSubsystem DriveStationSubsystem, boolean forever) {
-        m_DriveStationSubsystem = DriveStationSubsystem;
+    public SetTrailLights(LEDSubsystem LEDSubsystem, boolean forever) {
+        m_LEDSubsystem = LEDSubsystem;
         this.forever = forever;
     }
 
@@ -39,19 +39,19 @@ public class SetTrailLights extends Command {
         if (frame > 0) {
             // See https://www.desmos.com/calculator/fejjdhp1bc
             min = Math.max(0, frame - LEDConstants.kStreakLength);
-            max = Math.min(m_DriveStationSubsystem.m_ledBuffer.getLength(), frame - 1);
+            max = Math.min(m_LEDSubsystem.m_ledBuffer.getLength(), frame - 1);
 
-            if (min == m_DriveStationSubsystem.m_ledBuffer.getLength()) {
+            if (min == m_LEDSubsystem.m_ledBuffer.getLength()) {
                 done = true;
             }
         }
         
-        for (int i = 0; i < m_DriveStationSubsystem.m_ledBuffer.getLength(); i++) {
+        for (int i = 0; i < m_LEDSubsystem.m_ledBuffer.getLength(); i++) {
             if (i >= min && i <= max) {
-            m_DriveStationSubsystem.setLight(i, m_DriveStationSubsystem.setColor);
+            m_LEDSubsystem.setLight(i, m_LEDSubsystem.m_ledBufferCopy.getLED8Bit(i));
 
             } else {
-            m_DriveStationSubsystem.setLight(i, new Color8Bit());
+            m_LEDSubsystem.setLight(i, new Color8Bit());
             }
         }
 
@@ -62,7 +62,7 @@ public class SetTrailLights extends Command {
         if (done) {
             frame = 0;
             done = false;
-            m_DriveStationSubsystem.setLights();
+            m_LEDSubsystem.setLights();
             return true && !forever;
         } else {
             return false;

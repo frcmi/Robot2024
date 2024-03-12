@@ -12,11 +12,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.lib.math.Conversions;
 import frc.lib.util.SwerveModuleConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -25,12 +21,10 @@ public class SwerveModule {
     public int moduleNumber;
     public Rotation2d angleOffset;
 
-    private TalonFX mAngleMotor;
-    private TalonFX mDriveMotor;
-    private CANcoder angleEncoder;
+    private final TalonFX mAngleMotor;
+    private final TalonFX mDriveMotor;
+    private final CANcoder angleEncoder;
     private SwerveModuleState setState;
-
-    public SwerveModuleState moduleSetState;
 
     public boolean isInverted;
 
@@ -43,11 +37,7 @@ public class SwerveModule {
     /* angle motor control requests */
     private final PositionVoltage anglePosition = new PositionVoltage(0);
 
-    /* shuffleboard entries */
-    private final ShuffleboardTab shuffleboardTab;
-    private final GenericEntry CANCoderShuffleBoardItem;
-    private final GenericEntry angleShuffleBoardItem;
-    private final GenericEntry velocityShuffleBoardItem;
+    private final SwerveModulePosition simulatedPosition = new SwerveModulePosition(0, new Rotation2d(0));
 
 
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants, boolean isInverted){
@@ -69,36 +59,8 @@ public class SwerveModule {
         mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
         mDriveMotor.getConfigurator().apply(Robot.ctreConfigs.swerveDriveFXConfig);
         mDriveMotor.getConfigurator().setPosition(0.0);
+    
         mDriveMotor.setInverted(isInverted);
-
-        String modName;
-        switch (moduleNumber) {
-            case 0: {
-                modName = "Front Left Swerve";
-                break;
-            }
-            case 1: {
-                modName = "Front Right Swerve";
-                break;
-            }
-            case 2: {
-                modName = "Back Left Swerve";
-                break;
-            }
-            case 3: {
-                modName = "Back Right Swerve";
-                break;
-            }
-            default: {
-                modName = "Unknown Swerve Mod " + moduleNumber;
-                System.err.println("UNKNOWN SWERVE MODULES " + moduleNumber + ", module should be between 0 and 3");
-            }
-        }
-
-        shuffleboardTab = Shuffleboard.getTab(modName);
-        CANCoderShuffleBoardItem = shuffleboardTab.add("CANCoder", 0).withSize(2,2).withWidget(BuiltInWidgets.kGyro).withPosition(2,0).getEntry();
-        angleShuffleBoardItem = shuffleboardTab.add("Angle", 0).withSize(2,2).withWidget(BuiltInWidgets.kGyro).withPosition(0,0).getEntry();
-        velocityShuffleBoardItem = shuffleboardTab.add("Velocity", 0).withSize(4,1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min", -SwerveConstants.maxSpeed, "Max", SwerveConstants.maxSpeed)).withPosition(0, 2).getEntry();
     }
 
     /**
@@ -107,8 +69,7 @@ public class SwerveModule {
      * @param isOpenLoop whether the module should use open or closed loop control
      */
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
-        moduleSetState = desiredState;
-        desiredState = SwerveModuleState.optimize(desiredState, getState().angle); 
+        desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
         mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
         setSpeed(desiredState, isOpenLoop);
         setState = desiredState;
@@ -118,9 +79,9 @@ public class SwerveModule {
     }
 
     /**
-     * Sets the drive motor of the module to a speed, preferable to use {@link frc.robot.SwerveModule.SetDesiredState}
-     * @param desiredState
-     * @param isOpenLoop
+     * Sets the drive motor of the module to a speed, preferable to use {@link #setDesiredState}
+     * @param desiredState the state the module should be
+     * @param isOpenLoop whether the module should use open or closed loop control
      */
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
         if (isOpenLoop) {
@@ -135,7 +96,7 @@ public class SwerveModule {
     }
 
     /**
-     * @return the reading of the CANcoder as a rotation2d
+     * @return the reading of the {@link CANcoder} as a {@link Rotation2d}
      */
     public Rotation2d getCANcoderReading(){
         return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValue());
@@ -163,10 +124,18 @@ public class SwerveModule {
      * @return the position of the module based on measured values
      */
     public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(
-            Conversions.rotationsToMeters(mDriveMotor.getPosition().getValue(), Constants.SwerveConstants.wheelCircumference), 
-            Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
-        );
+        if (RobotBase.isReal()) {
+            return new SwerveModulePosition(
+                    Conversions.rotationsToMeters(mDriveMotor.getPosition().getValue(), Constants.SwerveConstants.wheelCircumference),
+                    Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
+            );
+        } else {
+            if (setState != null) {
+                simulatedPosition.distanceMeters += setState.speedMetersPerSecond * 0.02;
+                simulatedPosition.angle = setState.angle;
+            }
+            return simulatedPosition;
+        }
     }
 
     /**

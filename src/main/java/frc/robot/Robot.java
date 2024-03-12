@@ -4,22 +4,11 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.*;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
-import java.sql.Driver;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalInt;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -29,37 +18,6 @@ import java.util.OptionalInt;
  */
 public class Robot extends TimedRobot {
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
-
-  private static final PowerDistribution pdh = new PowerDistribution();
-  private static final ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Status");
-
-  public static final GenericEntry allianceShuffleboardEntry = shuffleboardTab
-          .add("Alliance", true)
-          .withWidget(BuiltInWidgets.kBooleanBox)
-          .withPosition(3, 0)
-          .withSize(2, 1)
-          .withProperties(
-                  Map.of(
-                          "Color when true", "red",
-                          "Color when false", "blue"
-                  )
-          )
-          .getEntry();
-
-  public static final GenericEntry stationShuffleboardEntry = shuffleboardTab
-          .add("Station", 0)
-          .withWidget(BuiltInWidgets.kTextView)
-          .withPosition(3, 1)
-          .withSize(2, 1)
-          .getEntry();
-
-  static {
-    shuffleboardTab.add("PDH", pdh)
-            .withWidget(BuiltInWidgets.kPowerDistribution)
-            .withPosition(0,0)
-            .withSize(3,3)
-            .withProperties(Map.of("Glyph", "POWER_OFF"));
-  }
 
   private Command m_autonomousCommand;
 
@@ -71,8 +29,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
+    if (!Constants.TelemetryConstants.disableDatalog && !Constants.TelemetryConstants.killswitch) {
+      DataLogManager.start();
+
+      // Record both DS control and joystick data
+      DriverStation.startDataLog(DataLogManager.getLog());
+    }
+
     m_robotContainer = new RobotContainer();
   }
 
@@ -85,19 +48,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    
-    Pose2d currentPose = m_robotContainer.swerveSubsystem.getPose();
-    e.setRobotPose(m_robotContainer.gotoAutoThing2);
-    SmartDashboard.putData("I want to be at", e);
-    SmartDashboard.putNumber("Dist from want", Math.sqrt(Math.pow(m_robotContainer.gotoAutoThing2.getX() - currentPose.getX(), 2) + Math.pow(m_robotContainer.gotoAutoThing2.getY() - currentPose.getY(), 2)));
-  
-    // TODO: measure if this has a perf impact?
-    // Optional<Alliance> alliance = DriverStation.getAlliance();
-    // alliance.ifPresent(value -> allianceShuffleboardEntry.setBoolean(value == Alliance.Red));
-
-    // OptionalInt station = DriverStation.getLocation();
-    // station.ifPresent(stationShuffleboardEntry::setInteger);
-
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -111,7 +61,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    SmartDashboard.putBoolean("Enabled", false);
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -125,12 +74,11 @@ public class Robot extends TimedRobot {
     }
   }
 
-  public Field2d e = new Field2d();
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    SmartDashboard.putBoolean("Enabled", true);}
+  }
 
   @Override
   public void teleopInit() {
