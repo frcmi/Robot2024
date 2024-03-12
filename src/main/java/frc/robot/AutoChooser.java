@@ -102,10 +102,10 @@ public class AutoChooser {
         Strategy strategy = getStrategy();
         switch (strategy) {
             case TRAVEL -> {
-                return Autos.pathplannerPath("Travel");
+                return Autos.pathplannerAuto("Travel");
             }
             case AMP -> {
-                return Autos.pathplannerPath("Amp")
+                return Autos.pathplannerAuto("Amp")
                 .andThen(robotContainer.ampArmSubsystem.raiseToAmp().withTimeout(1))
                 .andThen(robotContainer.ampShooterSubsystem.shootAmp().withTimeout(1))
                 .andThen(robotContainer.ampArmSubsystem.lowerArm());
@@ -115,7 +115,7 @@ public class AutoChooser {
             }
             case SCORE_THEN_TRAVEL -> {
                 Command score = new ScoreAuto(null, robotContainer);
-                Command travel = Autos.pathplannerPath("Travel");
+                Command travel = Autos.pathplannerAuto("Travel");
                 
                 return score.andThen(travel);
             }
