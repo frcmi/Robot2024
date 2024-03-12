@@ -47,7 +47,7 @@ public final class Autos {
     // .andThen(shooter.shootSpeaker()).withTimeout(2);
   }
 
-  public static Command pathplannerPath(String path) {
+  public static Command pathplannerAuto(String path) {
     return new PathPlannerAuto(path);
   }
 
