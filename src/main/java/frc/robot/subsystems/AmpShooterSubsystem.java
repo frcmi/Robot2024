@@ -47,6 +47,8 @@ public class AmpShooterSubsystem extends SubsystemBase{
             ledSubsystem.ledOff().schedule();
         }
         beamClearPrevious = beamClear;
+
+        SmartDashboard.putNumber("Motor Output", shootMotor.getAppliedOutput());
     }
 
     public Command shootAmp() { //TODO: can change
@@ -60,11 +62,11 @@ public class AmpShooterSubsystem extends SubsystemBase{
     public Command intakeAmp() {
         return run (
             () -> {
-                shootMotor.set(0.6); // Keep this motor negative
+                shootMotor.set(0.4); // Keep this motor negative
             }
         )
                 .until(() -> !beambreak.get())
-                .andThen(Commands.waitSeconds(0.05))
+                .andThen(Commands.waitSeconds(0.09))
                 .andThen(stop())
                 .withName("intakeAmp");
     }

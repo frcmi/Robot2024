@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -15,10 +17,11 @@ public class SpeakerShooterSubsystem extends SubsystemBase {
     public TalonFX speakerShooterMotor = new TalonFX(SpeakerShooterConstants.kSpeakerShooterMotorId);
 
     public DigitalInput beambreak = new DigitalInput(Constants.IntakeConstants.kSpeakerBeamBreakPort);
-
+    public BooleanSupplier manualRev;
     private final UltraBooleanLog beambreakPublisher = new UltraBooleanLog("Speaker Shooter/Beambreak");
 
-    public SpeakerShooterSubsystem() {
+    public SpeakerShooterSubsystem(BooleanSupplier manualRev) {
+        this.manualRev = manualRev;
         speakerShooterMotor.setNeutralMode(NeutralModeValue.Brake);
 
         setDefaultCommand(stop());
@@ -33,7 +36,7 @@ public class SpeakerShooterSubsystem extends SubsystemBase {
         // This is needed to driver can see if note is actually in the speaker shooter
         SmartDashboard.putBoolean("Speaker Beam Break", beamNotBroken);
 
-        if (beamNotBroken) {
+        if (beamNotBroken || manualRev.getAsBoolean()) {
             stop().schedule();
         } else {
             shoot().schedule();

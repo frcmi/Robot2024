@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.AmpArmConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.autos.ChosenAuto;
 import frc.robot.subsystems.*;
 import frc.robot.commands.TeleopSwerve;
 
@@ -30,21 +31,22 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  private final CommandXboxController m_DriverButton = new CommandXboxController(OperatorConstants.kDriverButtonPort);
+
   // The robot's subsystems and commands are defined here...
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   public final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
-    public final LEDSubsystem m_LEDSubsystem = new LEDSubsystem();
+  public final LEDSubsystem m_LEDSubsystem = new LEDSubsystem();
   public final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem, m_LEDSubsystem);
-  public final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem();
+  public final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem(m_DriverButton.button(4));
   public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(speakerShooterSubsystem.beambreak::get, m_LEDSubsystem);
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_DriverButton = new CommandXboxController(OperatorConstants.kDriverButtonPort);
 
   private final AutoChooser autoChooser = new AutoChooser(this);
 
@@ -100,13 +102,12 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
     // RB Intake speaker
     // driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
-
+    NamedCommands.registerCommand("Flash rainbow", m_LEDSubsystem.runRainbow());
     // RT Shoot speaker
     driverController.rightTrigger().whileTrue(intakeSubsystem.intakeSpeakerNoBeamBreak(IntakeConstants.kSpeakerShootSpeed));
 
     // LB Intake amp
     driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp().alongWith(ampShooterSubsystem.intakeAmp()));
-
     // LT Shoot amp
     driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
     driverController.leftTrigger().onFalse(ampArmSubsystem.moveTo(AmpArmConstants.kMinAngle));
@@ -180,6 +181,7 @@ public class RobotContainer {
     if (swerveSubsystem.getCurrentCommand() != null) {
       SmartDashboard.putString("command name swerve", swerveSubsystem.getCurrentCommand().getName());
     }
-    return autoChooser.getCommand();
+
+    return autoChooser.getCommand(intakeSubsystem, speakerShooterSubsystem, swerveSubsystem);
   }
 }

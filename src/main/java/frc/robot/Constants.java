@@ -35,9 +35,9 @@ public final class Constants {
         // this will fully disable logging even when FMS is connected.
         public static final boolean killswitch = false;
         // If true data won't be sent over network even when not connected to FMS
-        public static final boolean disableNetworkLogging = true;
+        public static final boolean disableNetworkLogging = false;
         // ONLY ENABLE IN DEV (this *should* be overwritten when connected to FMS, but that's untested)
-        public static final boolean disableDatalog = false;
+        public static final boolean disableDatalog = true;
         // Prefix in NetworkTables, must end with a '/'
         public static final String tabPrefix = "UltraLog/";
         // How often to re-check if the FMS is connected (and disable network logging if so)
@@ -291,7 +291,7 @@ public final class Constants {
   }
 
   public static class VisionConstants {
-      public static final Transform3d robotToCamera = new Transform3d(Units.inchesToMeters(5), Units.inchesToMeters(9), Units.inchesToMeters(21.85), new Rotation3d(0, Math.toRadians(8.5),Math.PI));
+      public static final Transform3d robotToCamera = new Transform3d(Units.inchesToMeters(5), Units.inchesToMeters(9), Units.inchesToMeters(21.85), new Rotation3d(0, -Math.toRadians(10.5),Math.PI));
   }
 
   public static class AutoAlignConstants {

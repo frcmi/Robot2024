@@ -3,15 +3,18 @@ package frc.robot;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import com.pathplanner.lib.auto.NamedCommands;
-
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.autos.ScoreAuto;
-import frc.robot.commands.Autos;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.SpeakerShooterSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutoChooser {
     public static final int TARGET_COUNT = 3;
@@ -35,10 +38,11 @@ public class AutoChooser {
 
     public enum Strategy {
         TRAVEL,
-        AMP,
-        SCORE,
+        TRAVEL_ANGLED,
+        // AMP,
+        SCORE_THEN_TRAVEL_ANGLED,
         SCORE_THEN_TRAVEL,
-        SCORE_AND_RELOAD,
+        // SCORE_AND_RELOAD,
         NONE,
     }
 
@@ -98,46 +102,69 @@ public class AutoChooser {
         return result;
     }
 
-    public Command getCommand() {
+    public Command getCommand(IntakeSubsystem intakeSubsystem, SpeakerShooterSubsystem speakerShooterSubsystem, SwerveSubsystem swerveSubsystem) {
         Strategy strategy = getStrategy();
+        Command travel = //Autos.pathplannerAuto("Travel");
+                new RepeatCommand((new InstantCommand(() -> {swerveSubsystem.drive(
+                    new Translation2d(2 * 6, -0.5 * 6), 
+                    0, 
+                    false, 
+                    false
+                );}, swerveSubsystem))).withTimeout(2.5);
+        Command travelAngled = //Autos.pathplannerAuto("Travel");
+               new RepeatCommand((new InstantCommand(() -> {swerveSubsystem.drive(
+                    new Translation2d(1 * 1.2 * 6, 1.3 * 1.2 * 6), 
+                    0, 
+                    false, 
+                    false
+                );}, swerveSubsystem))).withTimeout(2.5);
+        Command shoot = new WaitCommand(2).andThen(intakeSubsystem.shoot()).andThen(new WaitCommand(0.5));
+
         switch (strategy) {
             case TRAVEL -> {
-                return Autos.pathplannerAuto("Travel");
+                return travel;
             }
-            case AMP -> {
-                return Autos.pathplannerAuto("Amp")
-                .andThen(robotContainer.ampArmSubsystem.raiseToAmp().withTimeout(1))
-                .andThen(robotContainer.ampShooterSubsystem.shootAmp().withTimeout(1))
-                .andThen(robotContainer.ampArmSubsystem.lowerArm());
+            case TRAVEL_ANGLED -> {
+                return travelAngled;
             }
-            case SCORE -> {
-                return new ScoreAuto(null, robotContainer);
-            }
+            // case AMP -> {
+            //     return Autos.pathplannerAuto("Amp")
+            //     .andThen(robotContainer.ampArmSubsystem.raiseToAmp().withTimeout(1))
+            //     .andThen(robotContainer.ampShooterSubsystem.shootAmp().withTimeout(1))
+            //     .andThen(robotContainer.ampArmSubsystem.lowerArm());
+            // }
+            // case SCORE -> {
+            //     return new ScoreAuto(null, robotContainer);
+            // }
             case SCORE_THEN_TRAVEL -> {
-                Command score = new ScoreAuto(null, robotContainer);
-                Command travel = Autos.pathplannerAuto("Travel");
-                
-                return score.andThen(travel);
+                // Command score = new ScoreAuto(null, robotContainer);
+                return shoot.andThen(travel);
+                // .andThen(new RepeatCommand(new RunCommand(() -> swerveSubsystem.drive(new Translation2d(-1,0), 0, false, true))).withTimeout(3));
             }
-            case SCORE_AND_RELOAD -> {
-                var notes = getNotes();
-                if (notes.length == 0) {
-                    break;
-                }
+            case SCORE_THEN_TRAVEL_ANGLED -> {
+                return shoot.andThen(travelAngled);
 
-                return new ScoreAuto(notes, robotContainer);
             }
+            // case SCORE_AND_RELOAD -> {
+            //     var notes = getNotes();
+            //     if (notes.length == 0) {
+            //         break;
+            //     }
+
+            //     return new ScoreAuto(notes, robotContainer);
+            // }
             case NONE -> {
-                System.out.println("Auto is disabled");
-                break;
+                // System.out.println("Auto is disabled");
+                // break;
+                return Commands.runOnce(() -> {});
             }
-            default -> {
-                System.out.println("Unhandled strategy - disabling auto");
-                break;
-            }
+            // default -> {
+            //     System.out.println("Unhandled strategy - disabling auto");
+            //     break;
+            // }
         }
 
-        return Commands.waitSeconds(0);
+        return Commands.runOnce(() -> {});
     };
 
 }
