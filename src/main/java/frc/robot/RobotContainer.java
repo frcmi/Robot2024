@@ -21,6 +21,8 @@ import frc.robot.commands.SetTrailLights;
 import frc.robot.subsystems.LEDSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -71,6 +73,14 @@ public class RobotContainer {
     );
     // Configure the trigger bindings
     configureBindings();
+    configurePPTriggers();
+  }
+
+  private void configurePPTriggers() {
+    NamedCommands.registerCommand("Flash rainbow", m_LEDSubsystem.runRainbow());
+    NamedCommands.registerCommand("intake", new RepeatCommand(intakeSubsystem.intakeSpeaker()));
+    NamedCommands.registerCommand("stop intake", intakeSubsystem.stop());
+
   }
 
   /**
@@ -84,6 +94,16 @@ public class RobotContainer {
    */
 
   private void configureBindings() {
+    
+    // new Trigger(
+    //   () -> !speakerShooterSubsystem.beambreak.get()
+    // )
+    //   .whileTrue(
+    //     new RepeatCommand(
+    //       new PrintCommand("FUN")
+    //     )
+    //   );
+    
     driverController.start().onTrue(new InstantCommand(() -> {
       this.slewLimited = !this.slewLimited;
       SmartDashboard.putBoolean("Slew Limited", this.slewLimited);
@@ -103,7 +123,6 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
     // RB Intake speaker
     // driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
-    NamedCommands.registerCommand("Flash rainbow", m_LEDSubsystem.runRainbow());
     // RT Shoot speaker
     driverController.rightTrigger().whileTrue(intakeSubsystem.intakeSpeakerNoBeamBreak(IntakeConstants.kSpeakerShootSpeed));
 

@@ -14,6 +14,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants;
 
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -55,6 +56,8 @@ public class SwerveSubsystem extends SubsystemBase {
     public SwerveDriveOdometry swerveDriveOdometrySim;
     public UltraStructLog<Pose2d> odometrySimPosePublisher;
 
+    public Orchestra orchestra = new Orchestra();
+
     public SwerveSubsystem() {
         gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
@@ -76,6 +79,19 @@ public class SwerveSubsystem extends SubsystemBase {
         Pose2d blueStation = new Pose2d(0.53, 7.11, new Rotation2d(0));
         swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(Constants.SwerveConstants.swerveKinematics,
                 getGyroYaw(), getModulePositions(), blueStation);
+
+        /*
+            for (SwerveModule mod : mSwerveMods) {
+                orchestra.addInstrument(mod.mAngleMotor);
+            }
+
+            for (SwerveModule mod : mSwerveMods) {
+                orchestra.addInstrument(mod.mDriveMotor);
+            }
+
+            orchestra.loadMusic("train.chrp");
+        */
+
 
         if (RobotBase.isSimulation()) {
             simGyro.setAngle(0);
@@ -112,6 +128,12 @@ public class SwerveSubsystem extends SubsystemBase {
                 this // Reference to this subsystem to set requirements
         );
     }
+
+    /*
+        public Command playCrazyTrain() {
+            return runOnce(() -> {});
+        }
+    */
 
     /**
      * Drives the drive train with desired velocities
@@ -157,7 +179,7 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveModuleState[] swerveModuleStates = SwerveConstants.swerveKinematics.toSwerveModuleStates(chassisSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);
         for (SwerveModule mod : mSwerveMods) {
-            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], true);
+            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], false);
         }
     }
 
@@ -217,8 +239,18 @@ public class SwerveSubsystem extends SubsystemBase {
      * @param pose the pose to set the odometry to
      */
     public void setPose(Pose2d pose) {
+        setPose(pose, false);
+    }
+
+    /**
+     * Sets the pose of the odometry to be a certain position
+     * 
+     * @param pose the pose to set the odometry to
+     * @param setSim if the sim exact pose should be set as well
+     */
+    public void setPose(Pose2d pose, boolean setSim) {
         swerveDrivePoseEstimator.resetPosition(getGyroYaw(), getModulePositions(), pose);
-        if (Robot.isSimulation()) {
+        if (Robot.isSimulation() && setSim) {
             visionSubsystemForSim.resetSimPose(pose);
         }
     }

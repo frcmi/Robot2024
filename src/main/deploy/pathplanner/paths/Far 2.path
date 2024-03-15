@@ -8,20 +8,36 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.0989120662242975,
-        "y": 6.560253736484374
+        "x": 4.951010171510237,
+        "y": 6.846807379851526
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.723966475844405,
-        "y": 6.560253736484374
+        "x": 6.081305098125115,
+        "y": 6.846807379851526
       },
       "prevControl": {
-        "x": 6.877312779173412,
-        "y": 6.560253736484374
+        "x": 4.799773526399797,
+        "y": 6.902526143839585
+      },
+      "nextControl": {
+        "x": 6.932350962165428,
+        "y": 6.809805385762816
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 9.384631820274228,
+        "y": 5.071766755660557
+      },
+      "prevControl": {
+        "x": 8.493131596465311,
+        "y": 5.708552629809783
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,8 +48,8 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.0,
+      "name": "intake",
+      "waypointRelativePos": 1.0,
       "command": {
         "type": "sequential",
         "data": {
@@ -41,7 +57,24 @@
             {
               "type": "named",
               "data": {
-                "name": "Flash rainbow"
+                "name": "intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "stop",
+      "waypointRelativePos": 2.0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "stop intake"
               }
             }
           ]
@@ -57,7 +90,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 2.499619609242476,
+    "rotation": -33.43986920578225,
     "rotateFast": false
   },
   "reversed": false,

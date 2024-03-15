@@ -39,6 +39,7 @@ public class AutoChooser {
     }
 
     public enum Strategy {
+        TESTING,
         TRAVEL,
         PP_TRAVEL,
         TRAVEL_ANGLED,
@@ -48,6 +49,7 @@ public class AutoChooser {
         SCORE_THEN_TRAVEL,
         PP_SCORE_THEN_TRAVEL,
         PP_SCORE_AND_RELOAD,
+        SHOOT,
         NONE,
     }
 
@@ -111,9 +113,13 @@ public class AutoChooser {
         SwerveSubsystem swerve = robotContainer.swerveSubsystem;
         IntakeSubsystem intake = robotContainer.intakeSubsystem;
 
-        double travelAngle = -0.7;
-        double subwooferToSpeakerAngle = -1.5 * Math.PI;
-        Translation2d angledTravelDirection = new Translation2d(1.2, new Rotation2d(subwooferToSpeakerAngle + travelAngle));
+        // double travelAngle = -0.7;
+        // double subwooferToSpeakerAngle = -1.5 * Math.PI;
+        Translation2d angledTravelDirection = new Translation2d(0.813733, -0.581238 * 0.5);
+        // double travelAngle = -0.7;
+        // double subwooferToSpeakerAngle = -1.5 * Math.PI;
+        // Translation2d angledTravelDirection = new Translation2d(1.2, new Rotation2d(subwooferToSpeakerAngle + travelAngle));
+
 
         Strategy strategy = getStrategy();
 
@@ -127,7 +133,7 @@ public class AutoChooser {
                 );}, swerve))).withTimeout(2.5);
         Command travelAngled =
                new RepeatCommand((new InstantCommand(() -> {swerve.drive(
-                    new Translation2d(angledTravelDirection.getX() * 6, angledTravelDirection.getY() * 1.2 * 6), 
+                    angledTravelDirection.times(0.5), 
                     0, 
                     false, 
                     false
@@ -135,6 +141,12 @@ public class AutoChooser {
         Command shoot = new WaitCommand(2).andThen(intake.shoot()).andThen(new WaitCommand(0.5));
 
         switch (strategy) {
+            case TESTING -> {
+                return Autos.pathplannerAuto("Far 1");
+            }
+            case SHOOT -> {
+                return shoot;
+            }
             case TRAVEL -> {
                 return travel;
             }
@@ -157,8 +169,7 @@ public class AutoChooser {
                 return shoot.andThen(travel);
             }
             case PP_SCORE_THEN_TRAVEL -> {
-                Command score = new ScoreAuto(null, robotContainer);
-                return score.andThen(pathplannerTravel);
+                return shoot.andThen(pathplannerTravel);
             }
             case SCORE_THEN_TRAVEL_ANGLED -> {
                 return shoot.andThen(travelAngled);

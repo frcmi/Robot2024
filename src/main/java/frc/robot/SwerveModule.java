@@ -18,8 +18,8 @@ public class SwerveModule {
     public int moduleNumber;
     public Rotation2d angleOffset;
 
-    private final TalonFX mAngleMotor;
-    private final TalonFX mDriveMotor;
+    public final TalonFX mAngleMotor;
+    public final TalonFX mDriveMotor;
     private final CANcoder angleEncoder;
     private SwerveModuleState setState;
 

@@ -23,8 +23,6 @@ public class SpeakerShooterSubsystem extends SubsystemBase {
     public SpeakerShooterSubsystem(BooleanSupplier manualRev) {
         this.manualRev = manualRev;
         speakerShooterMotor.setNeutralMode(NeutralModeValue.Brake);
-
-        setDefaultCommand(stop());
     }
 
     @Override
@@ -36,10 +34,10 @@ public class SpeakerShooterSubsystem extends SubsystemBase {
         // This is needed to driver can see if note is actually in the speaker shooter
         SmartDashboard.putBoolean("Speaker Beam Break", beamNotBroken);
 
-        if (beamNotBroken || manualRev.getAsBoolean()) {
-            stop().schedule();
-        } else {
+        if (!beamNotBroken || manualRev.getAsBoolean()) {
             shoot().schedule();
+        } else {
+            stop().schedule();
         }
     }
 

@@ -1,0 +1,74 @@
+{
+  "HALProvider": {
+    "DIO": {
+      "window": {
+        "visible": true
+      }
+    },
+    "RoboRIO": {
+      "3.3V Rail": {
+        "open": true
+      },
+      "5V Rail": {
+        "open": true
+      },
+      "6V Rail": {
+        "open": true
+      },
+      "RoboRIO Input": {
+        "open": true
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Autos/Strategy": "String Chooser",
+      "/Shuffleboard/Autos/Target 1": "String Chooser",
+      "/Shuffleboard/Autos/Target 2": "String Chooser",
+      "/Shuffleboard/Autos/Target 3": "String Chooser",
+      "/SmartDashboard/Vision Sim": "Field2d",
+      "/SmartDashboard/VisionSystemSim-Arducam_OV9281_USB_Camera/Sim Field": "Field2d"
+    },
+    "windows": {
+      "/Shuffleboard/Autos/Strategy": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "Vision Sim": {
+          "open": true
+        },
+        "VisionSystemSim-Arducam_OV9281_USB_Camera": {
+          "open": true
+        },
+        "open": true
+      },
+      "UltraLog": {
+        "Amp Arm": {
+          "open": true
+        },
+        "Arm Shooter": {
+          "open": true
+        },
+        "Speaker Shooter": {
+          "open": true
+        },
+        "open": true
+      }
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  },
+  "sourceNames": {
+    "DIO[0]": "Amp Arm Encoder",
+    "DIO[2]": "Speaker Shooter Beambreak",
+    "DIO[4]": "Amp Shooter Beambreak"
+  }
+}

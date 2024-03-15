@@ -150,7 +150,7 @@ public final class Constants {
       public static final int driveMotorID = 1;
       public static final int angleMotorID = 5;
       public static final int canCoderID = 9; //
-      public static final Rotation2d angleOffset = Rotation2d.fromRadians(-2.317844970495204);
+      public static final Rotation2d angleOffset = Rotation2d.fromRadians(3.994);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
       public static final boolean isInverted = true;
@@ -161,7 +161,7 @@ public final class Constants {
       public static final int driveMotorID = 2;
       public static final int angleMotorID = 6;
       public static final int canCoderID = 10;
-      public static final Rotation2d angleOffset = Rotation2d.fromRadians(-2.839398438376322);
+      public static final Rotation2d angleOffset = Rotation2d.fromRadians(-2.766);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
       public static final boolean isInverted = true;
@@ -172,7 +172,7 @@ public final class Constants {
       public static final int driveMotorID = 3;
       public static final int angleMotorID = 7;
       public static final int canCoderID = 11;
-      public static final Rotation2d angleOffset = Rotation2d.fromRadians(-2.83633047680055);
+      public static final Rotation2d angleOffset = Rotation2d.fromRadians(3.497);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
       public static final boolean isInverted = true;
@@ -183,7 +183,7 @@ public final class Constants {
       public static final int driveMotorID = 4;
       public static final int angleMotorID = 8;
       public static final int canCoderID = 12;
-      public static final Rotation2d angleOffset = Rotation2d.fromRadians(-2.481980914798967);
+      public static final Rotation2d angleOffset = Rotation2d.fromRadians(3.757);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
       public static final boolean isInverted = true;
@@ -197,8 +197,8 @@ public final class Constants {
 
   public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be tuned
                                             // to specific robot
-    public static final double kMaxSpeedMetersPerSecond = 2;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 0.25;
+    public static final double kMaxSpeedMetersPerSecond = 10;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 6.0;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
@@ -210,9 +210,9 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
         
-    public static final double kRotationP = 10;
+    public static final double kRotationP = 8;
     public static final double kRotationI = 0;
-    public static final double kRotationD = 0.05;
+    public static final double kRotationD = 0;
     // For PathPlanner
     public static final double kAccelerationP = 25;
     public static final double kAccelerationI = 0;
