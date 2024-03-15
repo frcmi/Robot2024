@@ -19,6 +19,8 @@ public class AutoAlignCommand extends Command {
     private Command driveToPosition;
 
     public AutoAlignCommand(SwerveSubsystem swerveSubsystem) {
+        addRequirements(swerveSubsystem);
+
         swerve = swerveSubsystem;
         driveToPosition = null;
     }

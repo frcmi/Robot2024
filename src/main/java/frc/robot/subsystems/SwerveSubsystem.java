@@ -143,6 +143,16 @@ public class SwerveSubsystem extends SubsystemBase {
         }
     }
 
+    /** 
+     * For lining up with amp
+     * @return a command that moves the robot back a very small amoutn
+     */
+    public Command backupSlightly() {
+        return run(() -> {
+            drive(new Translation2d(0.1, 0), 0, false, false);
+        }).withTimeout(0.03);
+    }
+
     public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
         SwerveModuleState[] swerveModuleStates = SwerveConstants.swerveKinematics.toSwerveModuleStates(chassisSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);

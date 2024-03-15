@@ -3,6 +3,7 @@ package frc.robot;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -12,8 +13,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.autos.ScoreAuto;
+import frc.robot.commands.Autos;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.SpeakerShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutoChooser {
@@ -38,11 +40,14 @@ public class AutoChooser {
 
     public enum Strategy {
         TRAVEL,
+        PP_TRAVEL,
         TRAVEL_ANGLED,
-        // AMP,
+        PP_AMP,
+        PP_SCORE,
         SCORE_THEN_TRAVEL_ANGLED,
         SCORE_THEN_TRAVEL,
-        // SCORE_AND_RELOAD,
+        PP_SCORE_THEN_TRAVEL,
+        PP_SCORE_AND_RELOAD,
         NONE,
     }
 
@@ -102,66 +107,78 @@ public class AutoChooser {
         return result;
     }
 
-    public Command getCommand(IntakeSubsystem intakeSubsystem, SpeakerShooterSubsystem speakerShooterSubsystem, SwerveSubsystem swerveSubsystem) {
+    public Command getCommand() {
+        SwerveSubsystem swerve = robotContainer.swerveSubsystem;
+        IntakeSubsystem intake = robotContainer.intakeSubsystem;
+
+        double travelAngle = -0.7;
+        double subwooferToSpeakerAngle = -1.5 * Math.PI;
+        Translation2d angledTravelDirection = new Translation2d(1.2, new Rotation2d(subwooferToSpeakerAngle + travelAngle));
+
         Strategy strategy = getStrategy();
-        Command travel = //Autos.pathplannerAuto("Travel");
-                new RepeatCommand((new InstantCommand(() -> {swerveSubsystem.drive(
+
+        Command pathplannerTravel = Autos.pathplannerAuto("Travel");
+        Command travel =
+                new RepeatCommand((new InstantCommand(() -> {swerve.drive(
                     new Translation2d(2 * 6, -0.5 * 6), 
                     0, 
                     false, 
                     false
-                );}, swerveSubsystem))).withTimeout(2.5);
-        Command travelAngled = //Autos.pathplannerAuto("Travel");
-               new RepeatCommand((new InstantCommand(() -> {swerveSubsystem.drive(
-                    new Translation2d(1 * 1.2 * 6, 1.3 * 1.2 * 6), 
+                );}, swerve))).withTimeout(2.5);
+        Command travelAngled =
+               new RepeatCommand((new InstantCommand(() -> {swerve.drive(
+                    new Translation2d(angledTravelDirection.getX() * 6, angledTravelDirection.getY() * 1.2 * 6), 
                     0, 
                     false, 
                     false
-                );}, swerveSubsystem))).withTimeout(2.5);
-        Command shoot = new WaitCommand(2).andThen(intakeSubsystem.shoot()).andThen(new WaitCommand(0.5));
+                );}, swerve))).withTimeout(2.5);
+        Command shoot = new WaitCommand(2).andThen(intake.shoot()).andThen(new WaitCommand(0.5));
 
         switch (strategy) {
             case TRAVEL -> {
                 return travel;
             }
+            case PP_TRAVEL -> {
+                return pathplannerTravel;
+            }
             case TRAVEL_ANGLED -> {
                 return travelAngled;
             }
-            // case AMP -> {
-            //     return Autos.pathplannerAuto("Amp")
-            //     .andThen(robotContainer.ampArmSubsystem.raiseToAmp().withTimeout(1))
-            //     .andThen(robotContainer.ampShooterSubsystem.shootAmp().withTimeout(1))
-            //     .andThen(robotContainer.ampArmSubsystem.lowerArm());
-            // }
-            // case SCORE -> {
-            //     return new ScoreAuto(null, robotContainer);
-            // }
+            case PP_AMP -> {
+                return Autos.pathplannerAuto("Amp")
+                    .andThen(robotContainer.ampArmSubsystem.raiseToAmp().withTimeout(1))
+                    .andThen(robotContainer.ampShooterSubsystem.shootAmp().withTimeout(1))
+                    .andThen(robotContainer.ampArmSubsystem.lowerArm());
+            }
+            case PP_SCORE -> {
+                return new ScoreAuto(null, robotContainer);
+            }
             case SCORE_THEN_TRAVEL -> {
-                // Command score = new ScoreAuto(null, robotContainer);
                 return shoot.andThen(travel);
-                // .andThen(new RepeatCommand(new RunCommand(() -> swerveSubsystem.drive(new Translation2d(-1,0), 0, false, true))).withTimeout(3));
+            }
+            case PP_SCORE_THEN_TRAVEL -> {
+                Command score = new ScoreAuto(null, robotContainer);
+                return score.andThen(pathplannerTravel);
             }
             case SCORE_THEN_TRAVEL_ANGLED -> {
                 return shoot.andThen(travelAngled);
-
             }
-            // case SCORE_AND_RELOAD -> {
-            //     var notes = getNotes();
-            //     if (notes.length == 0) {
-            //         break;
-            //     }
+            case PP_SCORE_AND_RELOAD -> {
+                var notes = getNotes();
+                if (notes.length == 0) {
+                    break;
+                }
 
-            //     return new ScoreAuto(notes, robotContainer);
-            // }
+                return new ScoreAuto(notes, robotContainer);
+            }
             case NONE -> {
-                // System.out.println("Auto is disabled");
-                // break;
-                return Commands.runOnce(() -> {});
+                System.out.println("Auto is disabled");
+                break;
             }
-            // default -> {
-            //     System.out.println("Unhandled strategy - disabling auto");
-            //     break;
-            // }
+            default -> {
+                System.out.println("Unhandled strategy - disabling auto");
+                break;
+            }
         }
 
         return Commands.runOnce(() -> {});

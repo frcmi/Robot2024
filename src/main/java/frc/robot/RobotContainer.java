@@ -21,6 +21,7 @@ import frc.robot.commands.SetTrailLights;
 import frc.robot.subsystems.LEDSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -140,6 +141,9 @@ public class RobotContainer {
     // X Toggle Sensitivity (translation and rotation)
     driverController.x().onTrue(new InstantCommand(swerveSubsystem::switchSensitivity, swerveSubsystem));
 
+    //small backup
+    driverController.povLeft().onTrue(swerveSubsystem.backupSlightly());
+
     // ***********************************************
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
@@ -182,6 +186,6 @@ public class RobotContainer {
       SmartDashboard.putString("command name swerve", swerveSubsystem.getCurrentCommand().getName());
     }
 
-    return autoChooser.getCommand(intakeSubsystem, speakerShooterSubsystem, swerveSubsystem);
+    return autoChooser.getCommand();
   }
 }
