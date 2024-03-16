@@ -172,7 +172,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public Command backupSlightly() {
         return run(() -> {
             drive(new Translation2d(0.1, 0), 0, false, false);
-        }).withTimeout(0.03);
+        }).withTimeout(0.03 * 8);
     }
 
     public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
@@ -327,6 +327,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        for (SwerveModule mod : mSwerveMods) {
+            mod.logValues();
+        }
+        
         swerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
         
         ultraPosePublisher.update(getPose());

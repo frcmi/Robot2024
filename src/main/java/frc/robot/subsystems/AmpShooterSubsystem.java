@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.ultralogger.UltraBooleanLog;
 import frc.lib.ultralogger.UltraDoubleLog;
+import frc.lib.ultralogger.UltraTempLog;
 import frc.robot.Constants.AmpShooterConstants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -19,8 +20,9 @@ public class AmpShooterSubsystem extends SubsystemBase{
 
     private final DigitalInput beambreak = new DigitalInput(AmpShooterConstants.kAmpBeamBrakeId);
 
-    private final UltraDoubleLog currentPublisher = new UltraDoubleLog("Arm Shooter/Motor Current");
-    private final UltraBooleanLog beambreakPublisher = new UltraBooleanLog("Arm Shooter/Beambreak");
+    private final UltraDoubleLog currentPublisher = new UltraDoubleLog("Amp Shooter/Motor Current");
+    private final UltraBooleanLog beambreakPublisher = new UltraBooleanLog("Amp Shooter/Beambreak");
+    private final UltraTempLog temperaturePublisher = new UltraTempLog("Amp Shooter/Motor Temperature", shootMotor::getMotorTemperature);
 
     public AmpShooterSubsystem(AmpArmSubsystem ampArm, LEDSubsystem leds) {
         ampArmSubsystem = ampArm;
@@ -36,6 +38,8 @@ public class AmpShooterSubsystem extends SubsystemBase{
 
         currentPublisher.update(shootMotor.getOutputCurrent());
         beambreakPublisher.update(beamClear);
+        temperaturePublisher.update();
+
         // TODO: remove this once UltraLog supports always networked values
         // This is needed to driver can see if note is actually in the amp shooter
         SmartDashboard.putBoolean("Amp Beam Break", beamClear);

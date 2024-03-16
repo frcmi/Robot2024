@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.ultralogger.UltraBooleanLog;
 import frc.lib.ultralogger.UltraDoubleLog;
+import frc.lib.ultralogger.UltraTempLog;
 import frc.robot.Constants.AmpArmConstants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -31,6 +32,7 @@ public class AmpArmSubsystem extends SubsystemBase{
     private final UltraDoubleLog currentPublisher = new UltraDoubleLog("Amp Arm/Motor Current");
     private final UltraDoubleLog goalAnglePublisher = new UltraDoubleLog("Amp Arm/Goal Angle");
     private final UltraBooleanLog boundsPublisher = new UltraBooleanLog("Amp Arm/Bounds");
+    private final UltraTempLog temperaturePublisher = new UltraTempLog("Amp Arm/Motor Temperature", armMotor::getMotorTemperature);
 
     public AmpArmSubsystem() {
         armEncoder.setDistancePerRotation(1);
@@ -46,6 +48,7 @@ public class AmpArmSubsystem extends SubsystemBase{
     public void periodic() {
         radianPublisher.update(getAngle());
         currentPublisher.update(armMotor.getOutputCurrent());
+        temperaturePublisher.update();
     }
 
     /**

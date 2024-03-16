@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.ultralogger.UltraDoubleLog;
+import frc.lib.ultralogger.UltraTempLog;
 import frc.robot.Constants.ClimberConstants;
 
 public class ClimberSubsystem extends SubsystemBase {
@@ -16,6 +17,8 @@ public class ClimberSubsystem extends SubsystemBase {
 
     private final UltraDoubleLog leftCurrentPublisher = new UltraDoubleLog("Climber/Left Motor Current");
     private final UltraDoubleLog rightCurrentPublisher = new UltraDoubleLog("Climber/Right Motor Current");
+    private final UltraTempLog leftTemperaturePublisher = new UltraTempLog("Climber/Left Motor Temperature", leftClimberMotor::getMotorTemperature);
+    private final UltraTempLog rightTemperaturePublisher = new UltraTempLog("Climber/Right Motor Temperature", rightClimberMotor::getMotorTemperature);
 
     public ClimberSubsystem() {
         leftClimberMotor.setIdleMode(IdleMode.kBrake);
@@ -29,6 +32,8 @@ public class ClimberSubsystem extends SubsystemBase {
     public void periodic() {
         leftCurrentPublisher.update(leftClimberMotor.getOutputCurrent());
         rightCurrentPublisher.update(rightClimberMotor.getOutputCurrent());
+        leftTemperaturePublisher.update();
+        rightTemperaturePublisher.update();
     }
 
     public Command up() { //Subject to change due to motor shenanigans

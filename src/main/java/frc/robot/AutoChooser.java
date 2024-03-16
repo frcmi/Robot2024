@@ -5,9 +5,12 @@ import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -39,17 +42,17 @@ public class AutoChooser {
     }
 
     public enum Strategy {
-        TESTING,
-        TRAVEL,
-        PP_TRAVEL,
-        TRAVEL_ANGLED,
-        PP_AMP,
-        PP_SCORE,
+        // TESTING,
+        TRAVEL_ONLY,
+        // PP_TRAVEL,
+        TRAVEL_ANGLED_ONLY,
+        // PP_AMP,
+        // PP_SCORE,
         SCORE_THEN_TRAVEL_ANGLED,
         SCORE_THEN_TRAVEL,
-        PP_SCORE_THEN_TRAVEL,
-        PP_SCORE_AND_RELOAD,
-        SHOOT,
+        // PP_SCORE_THEN_TRAVEL,
+        // PP_SCORE_AND_RELOAD,
+        SCORE_ONLY,
         NONE,
     }
 
@@ -66,16 +69,16 @@ public class AutoChooser {
                 chooser.addOption(auto, Optional.of(auto));
             }
 
-            shuffleboard.add("Target " + (i + 1), chooser);
+            // shuffleboard.add("Target " + (i + 1), chooser);
             targetChoosers.add(chooser);
         }
 
         strategyChooser = new SendableChooser<>();
-        shuffleboard.add("Strategy", strategyChooser);
+        shuffleboard.add("Strategy", strategyChooser).withSize(4, 1);
 
         for (Strategy strategy : Strategy.values()) {
             String name = strategy.toString();
-            if (strategy == Strategy.TRAVEL) {
+            if (strategy == Strategy.TRAVEL_ANGLED_ONLY) {
                 strategyChooser.setDefaultOption(name, strategy);
             } else {
                 strategyChooser.addOption(name, strategy);
@@ -115,7 +118,7 @@ public class AutoChooser {
 
         // double travelAngle = -0.7;
         // double subwooferToSpeakerAngle = -1.5 * Math.PI;
-        Translation2d angledTravelDirection = new Translation2d(0.813733, -0.581238 * 0.5);
+        Translation2d angledTravelDirection = new Translation2d(0.813733, DriverStation.getAlliance().orElseGet(() -> Alliance.Red) == Alliance.Blue ? -1 : 1 * 0.581238 * 2.8);
         // double travelAngle = -0.7;
         // double subwooferToSpeakerAngle = -1.5 * Math.PI;
         // Translation2d angledTravelDirection = new Translation2d(1.2, new Rotation2d(subwooferToSpeakerAngle + travelAngle));
@@ -126,62 +129,62 @@ public class AutoChooser {
         Command pathplannerTravel = Autos.pathplannerAuto("Travel");
         Command travel =
                 new RepeatCommand((new InstantCommand(() -> {swerve.drive(
-                    new Translation2d(2 * 6, -0.5 * 6), 
+                    new Translation2d(2 * 6, DriverStation.getAlliance().orElseGet(() -> Alliance.Red) == Alliance.Blue ? 1 : -1  * 0.3 * 6), 
                     0, 
                     false, 
                     false
-                );}, swerve))).withTimeout(2.5);
+                );}, swerve))).withTimeout(1.7);
         Command travelAngled =
                new RepeatCommand((new InstantCommand(() -> {swerve.drive(
-                    angledTravelDirection.times(0.5), 
+                    angledTravelDirection.times(9.5), 
                     0, 
                     false, 
                     false
-                );}, swerve))).withTimeout(2.5);
+                );}, swerve))).withTimeout(2);
         Command shoot = new WaitCommand(2).andThen(intake.shoot()).andThen(new WaitCommand(0.5));
 
         switch (strategy) {
-            case TESTING -> {
-                return Autos.pathplannerAuto("Far 1");
-            }
-            case SHOOT -> {
+            // case TESTING -> {
+            //     return Autos.pathplannerAuto("Far 1");
+            // }
+            case SCORE_ONLY -> {
                 return shoot;
             }
-            case TRAVEL -> {
+            case TRAVEL_ONLY -> {
                 return travel;
             }
-            case PP_TRAVEL -> {
-                return pathplannerTravel;
-            }
-            case TRAVEL_ANGLED -> {
+            // case PP_TRAVEL -> {
+            //     return pathplannerTravel;
+            // }
+            case TRAVEL_ANGLED_ONLY -> {
                 return travelAngled;
             }
-            case PP_AMP -> {
-                return Autos.pathplannerAuto("Amp")
-                    .andThen(robotContainer.ampArmSubsystem.raiseToAmp().withTimeout(1))
-                    .andThen(robotContainer.ampShooterSubsystem.shootAmp().withTimeout(1))
-                    .andThen(robotContainer.ampArmSubsystem.lowerArm());
-            }
-            case PP_SCORE -> {
-                return new ScoreAuto(null, robotContainer);
-            }
+            // case PP_AMP -> {
+            //     return Autos.pathplannerAuto("Amp")
+            //         .andThen(robotContainer.ampArmSubsystem.raiseToAmp().withTimeout(1))
+            //         .andThen(robotContainer.ampShooterSubsystem.shootAmp().withTimeout(1))
+            //         .andThen(robotContainer.ampArmSubsystem.lowerArm());
+            // }
+            // case PP_SCORE -> {
+            //     return new ScoreAuto(null, robotContainer);
+            // }
             case SCORE_THEN_TRAVEL -> {
                 return shoot.andThen(travel);
             }
-            case PP_SCORE_THEN_TRAVEL -> {
-                return shoot.andThen(pathplannerTravel);
-            }
+            // case PP_SCORE_THEN_TRAVEL -> {
+            //     return shoot.andThen(pathplannerTravel);
+            // }
             case SCORE_THEN_TRAVEL_ANGLED -> {
                 return shoot.andThen(travelAngled);
             }
-            case PP_SCORE_AND_RELOAD -> {
-                var notes = getNotes();
-                if (notes.length == 0) {
-                    break;
-                }
+            // case PP_SCORE_AND_RELOAD -> {
+            //     var notes = getNotes();
+            //     if (notes.length == 0) {
+            //         break;
+            //     }
 
-                return new ScoreAuto(notes, robotContainer);
-            }
+            //     return new ScoreAuto(notes, robotContainer);
+            // }
             case NONE -> {
                 System.out.println("Auto is disabled");
                 break;

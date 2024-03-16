@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -12,6 +13,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.lib.math.Conversions;
+import frc.lib.ultralogger.UltraDoubleLog;
+import frc.lib.ultralogger.UltraTempLog;
 import frc.lib.util.SwerveModuleConstants;
 
 public class SwerveModule {
@@ -19,7 +22,9 @@ public class SwerveModule {
     public Rotation2d angleOffset;
 
     public final TalonFX mAngleMotor;
+    private final StatusSignal<Double> angleTemperatureSignal;
     public final TalonFX mDriveMotor;
+    private final StatusSignal<Double> driveTemperatureSignal;
     private final CANcoder angleEncoder;
     private SwerveModuleState setState;
 
@@ -36,6 +41,8 @@ public class SwerveModule {
 
     private final SwerveModulePosition simulatedPosition = new SwerveModulePosition(0, new Rotation2d(0));
 
+    private final UltraTempLog driveTemperaturePublisher;
+    private final UltraTempLog angleTemperaturePublisher;
 
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants, boolean isInverted){
         this.isInverted = isInverted;
@@ -51,13 +58,18 @@ public class SwerveModule {
         mAngleMotor.getConfigurator().apply(Robot.ctreConfigs.swerveAngleFXConfig);
         resetToAbsolute();
         mAngleMotor.setInverted(isInverted);
+        angleTemperatureSignal = mAngleMotor.getDeviceTemp();
+
+        angleTemperaturePublisher = new UltraTempLog("Swerve/Mod " + moduleNumber + "/Angle Motor Temperature", angleTemperatureSignal.asSupplier());
 
         /* Drive Motor Config */
         mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
         mDriveMotor.getConfigurator().apply(Robot.ctreConfigs.swerveDriveFXConfig);
         mDriveMotor.getConfigurator().setPosition(0.0);
-    
         mDriveMotor.setInverted(isInverted);
+        driveTemperatureSignal = mDriveMotor.getDeviceTemp();
+
+        driveTemperaturePublisher = new UltraTempLog("Swerve/Mod " + moduleNumber + "/Drive Motor Temperature", driveTemperatureSignal.asSupplier());
     }
 
     /**
@@ -135,12 +147,11 @@ public class SwerveModule {
         }
     }
 
-    // /**
-    //  * Logs all relevant values to shuffleboard. Should be called periodically.
-    //  */
-    // public void logValues() {
-    //     CANCoderShuffleBoardItem.setDouble(getCANcoderReading().getDegrees());
-    //     angleShuffleBoardItem.setDouble(getPosition().angle.getDegrees());
-    //     velocityShuffleBoardItem.setDouble(getState().speedMetersPerSecond);
-    // }
+    /**
+     * Logs all relevant values to shuffleboard. Should be called periodically.
+     */
+    public void logValues() {
+        driveTemperaturePublisher.update();
+        angleTemperaturePublisher.update();
+    }
 }
