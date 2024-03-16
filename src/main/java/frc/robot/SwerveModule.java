@@ -67,6 +67,7 @@ public class SwerveModule {
         mDriveMotor.getConfigurator().apply(Robot.ctreConfigs.swerveDriveFXConfig);
         mDriveMotor.getConfigurator().setPosition(0.0);
         mDriveMotor.setInverted(isInverted);
+        
         driveTemperatureSignal = mDriveMotor.getDeviceTemp();
 
         driveTemperaturePublisher = new UltraTempLog("Swerve/Mod " + moduleNumber + "/Drive Motor Temperature", driveTemperatureSignal.asSupplier());

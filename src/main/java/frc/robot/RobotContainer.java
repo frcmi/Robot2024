@@ -43,7 +43,7 @@ public class RobotContainer {
   public final AmpArmSubsystem ampArmSubsystem = new AmpArmSubsystem();
   public final LEDSubsystem m_LEDSubsystem = new LEDSubsystem();
   public final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem, m_LEDSubsystem);
-  public final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem(m_DriverButton.button(4));
+  public final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem(m_DriverButton.button(6));
   public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(speakerShooterSubsystem.beambreak::get, m_LEDSubsystem);
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();

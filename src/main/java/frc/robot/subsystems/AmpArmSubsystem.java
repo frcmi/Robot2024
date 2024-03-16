@@ -107,6 +107,12 @@ public class AmpArmSubsystem extends SubsystemBase{
                 () -> armMotor.getOutputCurrent() > AmpArmConstants.kAmpCurrentLimit
         );
     }
+
+    public Command holdDown() {
+        return run(
+                () -> armMotor.setVoltage(-0.5)
+        );
+    }
       
     public Command stop() { //TODO: can change
         return run (

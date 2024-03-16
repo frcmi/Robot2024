@@ -68,7 +68,7 @@ public class AmpShooterSubsystem extends SubsystemBase{
             () -> {
                 shootMotor.set(0.4); // Keep this motor negative
             }
-        )
+        ).alongWith(ampArmSubsystem.holdDown())
                 .until(() -> !beambreak.get())
                 .andThen(Commands.waitSeconds(0.09))
                 .andThen(stop())
