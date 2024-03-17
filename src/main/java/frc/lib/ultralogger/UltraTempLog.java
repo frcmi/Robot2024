@@ -11,13 +11,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import com.ctre.phoenix6.StatusSignal;
-
 public class UltraTempLog {
     private double lastUpdated = System.currentTimeMillis();
     private DoubleSupplier tempSupplier;
     private UltraDoubleLog logEntry;
-    private static final double TIME_DELAY = TimeUnit.SECONDS.toMillis(5);
+    private static final double TIME_DELAY = TimeUnit.SECONDS.toMillis(2);
 
     public UltraTempLog(String name, Supplier<Double> tempSupplier) {
         logEntry = new UltraDoubleLog(name);

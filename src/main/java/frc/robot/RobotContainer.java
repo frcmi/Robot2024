@@ -155,13 +155,15 @@ public class RobotContainer {
     // povLeft Auto Shoot amp
     // povRight Auto Shoot speaker
 
-    driverController.povRight().onTrue(new AutoAlignCommand(swerveSubsystem));
+   // driverController.povRight().onTrue(new AutoAlignCommand(swerveSubsystem));
+   // do not use because it is very bad
 
     // X Toggle Sensitivity (translation and rotation)
     driverController.x().onTrue(new InstantCommand(swerveSubsystem::switchSensitivity, swerveSubsystem));
 
     //small backup
     driverController.povLeft().onTrue(swerveSubsystem.backupSlightly());
+    // use this every time the driver goes up to the amp to score
 
     // ***********************************************
 

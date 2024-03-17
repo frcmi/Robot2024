@@ -36,7 +36,7 @@ public class SpeakerShooterSubsystem extends SubsystemBase {
         temperaturePublisher.update();
         beambreakPublisher.update(beamNotBroken);
         // TODO: remove this once UltraLog supports always networked values
-        // This is needed to driver can see if note is actually in the speaker shooter
+        // This is needed so driver can see if note is actually in the speaker shooter
         SmartDashboard.putBoolean("Speaker Beam Break", beamNotBroken);
 
         if (!beamNotBroken || manualRev.getAsBoolean()) {
