@@ -103,11 +103,11 @@ public class RobotContainer {
     //       new PrintCommand("FUN")
     //     )
     //   );
-    
-    driverController.start().onTrue(new InstantCommand(() -> {
-      this.slewLimited = !this.slewLimited;
-      SmartDashboard.putBoolean("Slew Limited", this.slewLimited);
-    }));
+    driverController.start().whileTrue(ampShooterSubsystem.fixStuckNote());
+    // driverController.start().onTrue(new InstantCommand(() -> {
+    //   this.slewLimited = !this.slewLimited;
+    //   SmartDashboard.putBoolean("Slew Limited", this.slewLimited);
+    // }));
     // driverController.povLeft()
     //   .whileTrue(speakerShooterSubsystem.shoot());
 
@@ -144,7 +144,7 @@ public class RobotContainer {
     driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
 
     // B Spit out note
-    driverController.b().whileTrue(intakeSubsystem.extractNote());
+    driverController.b().whileTrue(ampShooterSubsystem.shootAmp().alongWith(intakeSubsystem.extractNote()));
 
     // povUp Raise Climber
     driverController.povUp().whileTrue(climberSubsystem.up());
@@ -192,7 +192,7 @@ public class RobotContainer {
     // m_DriverButton.button(2).whileTrue(new SetTrailLights(m_LEDSubsystem, true));
     
     NamedCommands.registerCommand("Flash rainbow", m_LEDSubsystem.runRainbow());
-    m_DriverButton.button(3).and(m_DriverButton.button(4).and(m_DriverButton.button(5))).whileTrue(m_LEDSubsystem.runRainbow());
+    m_DriverButton.button(8).whileTrue(m_LEDSubsystem.runRainbow());
   }
 
   /**
