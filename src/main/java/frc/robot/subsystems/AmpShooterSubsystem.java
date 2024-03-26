@@ -25,6 +25,7 @@ public class AmpShooterSubsystem extends SubsystemBase{
     private final UltraTempLog temperaturePublisher = new UltraTempLog("Amp Shooter/Motor Temperature", shootMotor::getMotorTemperature);
 
     public AmpShooterSubsystem(AmpArmSubsystem ampArm, LEDSubsystem leds) {
+        SmartDashboard.setDefaultNumber("Fix Stuck Speed", 0.5);
         ampArmSubsystem = ampArm;
         ledSubsystem = leds;
         shootMotor.setInverted(true);
@@ -73,6 +74,14 @@ public class AmpShooterSubsystem extends SubsystemBase{
                 .andThen(Commands.waitSeconds(0.09))
                 .andThen(stop())
                 .withName("intakeAmp");
+    }
+
+    public Command fixStuckNote() {
+        return run(
+            () -> {
+                shootMotor.set(SmartDashboard.getNumber("Fix Stuck Speed", 0.5));
+            }
+        );
     }
 
     public Command stop() { //TODO: can change
