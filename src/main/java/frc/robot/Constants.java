@@ -109,10 +109,8 @@ public final class Constants {
      * loop driving.
      * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc
      */
-    // TODO: REMOVE
-    public static final double kOdometryProportionalityConstant = 1;
     public static final double openLoopRamp = 0.25;
-    public static final double closedLoopRamp = 0.0;
+    public static final double closedLoopRamp = 0.02;
 
     /* Angle Motor PID Values */
     public static final double angleKP = chosenModule.angleKP;

@@ -78,7 +78,7 @@ public class AutoChooser {
 
         for (Strategy strategy : Strategy.values()) {
             String name = strategy.toString();
-            if (strategy == Strategy.TRAVEL_ANGLED_ONLY) {
+            if (strategy == Strategy.SCORE_THEN_TRAVEL_ANGLED) {
                 strategyChooser.setDefaultOption(name, strategy);
             } else {
                 strategyChooser.addOption(name, strategy);
@@ -133,7 +133,7 @@ public class AutoChooser {
                     0, 
                     false, 
                     false
-                );}, swerve))).withTimeout(1.7);
+                );}, swerve))).withTimeout(1.7); // 3 + ___ + 2 = 15
         Command travelAngled =
                new RepeatCommand((new InstantCommand(() -> {swerve.drive(
                     angledTravelDirection.times(9.5), 
@@ -175,7 +175,7 @@ public class AutoChooser {
             //     return shoot.andThen(pathplannerTravel);
             // }
             case SCORE_THEN_TRAVEL_ANGLED -> {
-                return shoot.andThen(travelAngled);
+                return shoot.andThen(new WaitCommand(10)).andThen(travelAngled);
             }
             // case PP_SCORE_AND_RELOAD -> {
             //     var notes = getNotes();
