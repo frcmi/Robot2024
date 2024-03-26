@@ -156,7 +156,6 @@ public class RobotContainer {
     // povRight Auto Shoot speaker
 
    // driverController.povRight().onTrue(new AutoAlignCommand(swerveSubsystem));
-   // do not use because it is very bad
 
     // X Toggle Sensitivity (translation and rotation)
     driverController.x().onTrue(new InstantCommand(swerveSubsystem::switchSensitivity, swerveSubsystem));
