@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -25,6 +26,8 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeMotor1.setNeutralMode(NeutralModeValue.Brake);
         intakeMotor2.setNeutralMode(NeutralModeValue.Brake);
         indexerMotor.setNeutralMode(NeutralModeValue.Brake);
+
+        intakeMotor2.setControl(new NeutralOut());
         
         setDefaultCommand(stop());
     }
@@ -43,15 +46,15 @@ public class IntakeSubsystem extends SubsystemBase {
         beamClearPrevious = beamClear;
     }
 
-    public Command intakeAmp() { //Subject to change due to motor shenanigans
-        return run (
-            () -> {
-                intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed);
-                intakeMotor2.set(-IntakeConstants.kIntakeMotorSpeed);
-                indexerMotor.set(-IntakeConstants.kIndexerSpeed);
-            }
-        ).withName("intakeAmp");
-    }
+    // public Command intakeAmp() { //Subject to change due to motor shenanigans
+    //     return run (
+    //         () -> {
+    //             intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed);
+    //             // intakeMotor2.set(-IntakeConstants.kIntakeMotorSpeed);
+    //             indexerMotor.set(-IntakeConstants.kIndexerSpeed);
+    //         }
+    //     ).withName("intakeAmp");
+    // }
 
     public Command intakeSpeaker()  { //Subject to change due to motor shenanigans
         return intakeSpeakerNoBeamBreak().until(() -> !speakerBeambreak.getAsBoolean()).andThen(stop()).withName("intakeSpeaker with beambreak");
@@ -65,7 +68,7 @@ public class IntakeSubsystem extends SubsystemBase {
                 return intakeSpeakerNoBeamBreak(1);
     }
 
-    public Command intakeSpeakerNoBeamBreak(double speed )  { //Subject to change due to motor shenanigans
+    public Command intakeSpeakerNoBeamBreak(double speed)  { //Subject to change due to motor shenanigans
         return run(
             () -> {
                 intakeMotor1.set(IntakeConstants.kIntakeMotorSpeed * speed);
@@ -79,7 +82,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command extractNote() {
         return run (
             () -> {intakeMotor1.set(-IntakeConstants.kIntakeMotorSpeed);
-                intakeMotor2.set(IntakeConstants.kIntakeMotorSpeed);
+                // intakeMotor2.set(IntakeConstants.kIntakeMotorSpeed);
                 indexerMotor.set(-IntakeConstants.kIndexerSpeed);
 
             }

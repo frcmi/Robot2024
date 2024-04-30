@@ -119,32 +119,30 @@ public class RobotContainer {
 
     // Ben Control Scheme *****************************
 
-    // Intake
+    // RB Intake
     driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
-    // RB Intake speaker
-    // driverController.rightBumper().whileTrue(intakeSubsystem.intakeSpeaker());
     // RT Shoot speaker
-    driverController.rightTrigger().whileTrue(intakeSubsystem.intakeSpeakerNoBeamBreak(IntakeConstants.kSpeakerShootSpeed));
-
+    // driverController.rightTrigger().whileTrue(intakeSubsystem.intakeSpeakerNoBeamBreak(IntakeConstants.kSpeakerShootSpeed));
+    driverController.rightTrigger().whileTrue(intakeSubsystem.shoot());
     // LB Intake amp
-    driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp().alongWith(ampShooterSubsystem.intakeAmp()));
+    // driverController.leftBumper().whileTrue(intakeSubsystem.intakeAmp().alongWith(ampShooterSubsystem.intakeAmp()));
     // LT Shoot amp
-    driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
-    driverController.leftTrigger().onFalse(ampArmSubsystem.moveTo(AmpArmConstants.kMinAngle));
+    // driverController.leftTrigger().whileTrue(ampShooterSubsystem.shootAmp());
+    // driverController.leftTrigger().onFalse(ampArmSubsystem.moveTo(AmpArmConstants.kMinAngle));
 
     // A Raise amp arm
-    Command raiseAmp = ampArmSubsystem.raiseToAmp().withTimeout(1);
-    NamedCommands.registerCommand("Shoot Amp", raiseAmp
-    .andThen(ampShooterSubsystem.shootAmp()).withTimeout(0.75)
-    .andThen(ampArmSubsystem.moveTo(AmpArmConstants.kMinAngle)).withTimeout(0.5));
-    driverController.a().onTrue(ampArmSubsystem.raiseToAmp());
+    // Command raiseAmp = ampArmSubsystem.raiseToAmp().withTimeout(1);
+    // NamedCommands.registerCommand("Shoot Amp", raiseAmp
+    // .andThen(ampShooterSubsystem.shootAmp()).withTimeout(0.75)
+    // .andThen(ampArmSubsystem.moveTo(AmpArmConstants.kMinAngle)).withTimeout(0.5));
+    // driverController.a().onTrue(ampArmSubsystem.raiseToAmp());
     // driverController.a().onTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
 
     // Y Reset Field Orientation
     driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
 
     // B Spit out note
-    driverController.b().whileTrue(ampShooterSubsystem.shootAmp().alongWith(intakeSubsystem.extractNote()));
+    // driverController.b().whileTrue(ampShooterSubsystem.shootAmp().alongWith(intakeSubsystem.extractNote()));
 
     // povUp Raise Climber
     driverController.povUp().whileTrue(climberSubsystem.up());
@@ -161,7 +159,7 @@ public class RobotContainer {
     driverController.x().onTrue(new InstantCommand(swerveSubsystem::switchSensitivity, swerveSubsystem));
 
     //small backup
-    driverController.povLeft().onTrue(swerveSubsystem.backupSlightly());
+    // driverController.povLeft().onTrue(swerveSubsystem.backupSlightly());
     // use this every time the driver goes up to the amp to score
 
     // ***********************************************

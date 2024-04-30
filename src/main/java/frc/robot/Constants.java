@@ -35,9 +35,9 @@ public final class Constants {
         // this will fully disable logging even when FMS is connected.
         public static final boolean killswitch = false;
         // If true data won't be sent over network even when not connected to FMS
-        public static final boolean disableNetworkLogging = true;
+        public static final boolean disableNetworkLogging = false;
         // ONLY ENABLE IN DEV (this *should* be overwritten when connected to FMS, but that's untested)
-        public static final boolean disableDatalog = false;
+        public static final boolean disableDatalog = true;
         // Prefix in NetworkTables, must end with a '/'
         public static final String tabPrefix = "UltraLog/";
         // How often to re-check if the FMS is connected (and disable network logging if so)
@@ -148,7 +148,7 @@ public final class Constants {
       public static final int driveMotorID = 1;
       public static final int angleMotorID = 5;
       public static final int canCoderID = 9; //
-      public static final Rotation2d angleOffset = Rotation2d.fromRadians(-2.253 - 0.055);
+      public static final Rotation2d angleOffset =  Rotation2d.fromRadians(-2.3055731241921187);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
       public static final boolean isInverted = true;
@@ -159,7 +159,7 @@ public final class Constants {
       public static final int driveMotorID = 2;
       public static final int angleMotorID = 6;
       public static final int canCoderID = 10;
-      public static final Rotation2d angleOffset = Rotation2d.fromRadians(-2.772);
+      public static final Rotation2d angleOffset = Rotation2d.fromRadians(-2.791845033951867);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
       public static final boolean isInverted = true;
@@ -170,7 +170,7 @@ public final class Constants {
       public static final int driveMotorID = 3;
       public static final int angleMotorID = 7;
       public static final int canCoderID = 11;
-      public static final Rotation2d angleOffset = Rotation2d.fromRadians(-2.706 + 6.223);
+      public static final Rotation2d angleOffset = Rotation2d.fromRadians(-2.756563475830497);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
       public static final boolean isInverted = true;
@@ -181,7 +181,7 @@ public final class Constants {
       public static final int driveMotorID = 4;
       public static final int angleMotorID = 8;
       public static final int canCoderID = 12;
-      public static final Rotation2d angleOffset = Rotation2d.fromRadians(-2.493);
+      public static final Rotation2d angleOffset = Rotation2d.fromRadians(3.80427235395639);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
       public static final boolean isInverted = true;
