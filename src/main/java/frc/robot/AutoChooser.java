@@ -114,7 +114,7 @@ public class AutoChooser {
 
     public Command getCommand() {
         SwerveSubsystem swerve = robotContainer.swerveSubsystem;
-        IntakeSubsystem intake = robotContainer.intakeSubsystem;
+        IntakeSubsystem intake = null; // robotContainer.intakeSubsystem;
 
         // double travelAngle = -0.7;
         // double subwooferToSpeakerAngle = -1.5 * Math.PI;

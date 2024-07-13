@@ -33,7 +33,7 @@ public final class Constants {
     public static class TelemetryConstants {
         // DON'T ENABLE UNLESS ABSOLUTELY NEEDED
         // this will fully disable logging even when FMS is connected.
-        public static final boolean killswitch = false;
+        public static final boolean killswitch = true;
         // If true data won't be sent over network even when not connected to FMS
         public static final boolean disableNetworkLogging = true;
         // ONLY ENABLE IN DEV (this *should* be overwritten when connected to FMS, but that's untested)
@@ -232,7 +232,7 @@ public final class Constants {
   public static class SpeakerShooterConstants {
     public static final int kSpeakerShooterMotorId = 27;
 
-    public static final double kSpeakerMotorSpeed = -0.85;
+    public static final double kSpeakerMotorSpeed = -1;
   }
 
   public static class AmpShooterConstants {

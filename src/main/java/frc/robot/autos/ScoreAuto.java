@@ -6,16 +6,16 @@ import frc.robot.commands.Autos;
 
 public class ScoreAuto extends SequentialCommandGroup {
     public ScoreAuto(String[] notes, RobotContainer robot) {
-        addCommands(Autos.shoot(robot.swerveSubsystem, robot.intakeSubsystem));
+        // addCommands(Autos.shoot(robot.swerveSubsystem, robot.intakeSubsystem));
 
-        if (notes != null) {
-            for (var path : notes) {
-                var pathAuto = Autos.pathplannerAuto(path);
-                var intake = robot.intakeSubsystem.intakeSpeaker();
-                var shoot = Autos.shoot(robot.swerveSubsystem, robot.intakeSubsystem);
+        // if (notes != null) {
+        //     for (var path : notes) {
+        //         var pathAuto = Autos.pathplannerAuto(path);
+        //         var intake = robot.intakeSubsystem.intakeSpeaker();
+        //         var shoot = Autos.shoot(robot.swerveSubsystem, robot.intakeSubsystem);
     
-                addCommands(pathAuto, intake, shoot);
-            }    
-        }
+        //         addCommands(pathAuto, intake, shoot);
+        //     }    
+        // }
     }
 }
