@@ -113,7 +113,7 @@ public class AutoChooser {
     }
 
     public Command getCommand() {
-        SwerveSubsystem swerve = robotContainer.swerveSubsystem;
+        SwerveSubsystem swerve = null; // robotContainer.swerveSubsystem;
         IntakeSubsystem intake = null; // robotContainer.intakeSubsystem;
 
         // double travelAngle = -0.7;

@@ -33,11 +33,11 @@ public final class Constants {
     public static class TelemetryConstants {
         // DON'T ENABLE UNLESS ABSOLUTELY NEEDED
         // this will fully disable logging even when FMS is connected.
-        public static final boolean killswitch = true;
+        public static final boolean killswitch = false;
         // If true data won't be sent over network even when not connected to FMS
-        public static final boolean disableNetworkLogging = true;
+        public static final boolean disableNetworkLogging = false;
         // ONLY ENABLE IN DEV (this *should* be overwritten when connected to FMS, but that's untested)
-        public static final boolean disableDatalog = false;
+        public static final boolean disableDatalog = true;
         // Prefix in NetworkTables, must end with a '/'
         public static final String tabPrefix = "UltraLog/";
         // How often to re-check if the FMS is connected (and disable network logging if so)
@@ -79,6 +79,7 @@ public final class Constants {
         new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
         new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
         new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
+        //Jett was here
 
     /* Module Gear Ratios */
     public static final double driveGearRatio = chosenModule.driveGearRatio;
@@ -91,7 +92,7 @@ public final class Constants {
     /* Angle Encoder Invert */
     public static final SensorDirectionValue cancoderInvert = chosenModule.cancoderInvert;
 
-    public static final float currentLimitModifier = 0.4f;
+    public static final float currentLimitModifier = 0.1f;
 
     /* Swerve Current Limiting */
     public static final int angleCurrentLimit = (int)(25 * currentLimitModifier);
@@ -232,7 +233,7 @@ public final class Constants {
   public static class SpeakerShooterConstants {
     public static final int kSpeakerShooterMotorId = 27;
 
-    public static final double kSpeakerMotorSpeed = -1;
+    public static final double kSpeakerMotorSpeed = -0.5;
   }
 
   public static class AmpShooterConstants {
@@ -297,5 +298,9 @@ public final class Constants {
     public static final Pose3d kRedSpeaker = new Pose3d(16.427, 5.548, 2.032, new Rotation3d(0, 0, Math.PI));
     public static final Pose3d kBlueSpeaker = new Pose3d(0.073, 5.548, 2.032, new Rotation3d(0, 0, 0));
     public static final double kMaximumFiringAngle = 75 * Math.PI / 180;
+  }
+  public static class JonesConstants {
+    public static final String Sigma = "Sigma=Jett";
+    
   }
 }

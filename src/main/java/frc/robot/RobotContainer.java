@@ -47,7 +47,7 @@ public class RobotContainer {
   public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(speakerShooterSubsystem.beambreak::get, m_LEDSubsystem);
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
-  public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
+  // public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
@@ -60,7 +60,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    if (Robot.isSimulation()) swerveSubsystem.visionSubsystemForSim = visionSubsystem;
+    // if (Robot.isSimulation()) swerveSubsystem.visionSubsystemForSim = visionSubsystem;
     swerveSubsystem.setDefaultCommand(
         new TeleopSwerve(
             swerveSubsystem, 
@@ -155,7 +155,7 @@ public class RobotContainer {
     // povLeft Auto Shoot amp
     // povRight Auto Shoot speaker
 
-   // driverController.povRight().onTrue(new AutoAlignCommand(swerveSubsystem));
+   driverController.povRight().onTrue(new AutoAlignCommand(swerveSubsystem));
 
     // X Toggle Sensitivity (translation and rotation)
     driverController.x().onTrue(new InstantCommand(swerveSubsystem::switchSensitivity, swerveSubsystem));
@@ -201,11 +201,12 @@ public class RobotContainer {
    */
 
   public Command getAutonomousCommand() {
-    SmartDashboard.putString("command name swerve", "test");
-    if (swerveSubsystem.getCurrentCommand() != null) {
-      SmartDashboard.putString("command name swerve", swerveSubsystem.getCurrentCommand().getName());
-    }
+    // SmartDashboard.putString("command name swerve", "test");
+    // if (swerveSubsystem.getCurrentCommand() != null) {
+    //   SmartDashboard.putString("command name swerve", swerveSubsystem.getCurrentCommand().getName());
+    // }
 
-    return autoChooser.getCommand();
+    // return autoChooser.getCommand();
+    return new RunCommand(() -> {});
   }
 }

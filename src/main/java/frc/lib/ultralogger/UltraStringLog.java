@@ -15,7 +15,6 @@ public class UltraStringLog implements UltraLogEntry<String> {
     private double lastCheckedTimestamp = System.currentTimeMillis();
     private boolean errored = false;
 
-    private String lastItem;
 
     public UltraStringLog(String name) {
         if (TelemetryConstants.killswitch) {return;}
@@ -59,11 +58,9 @@ public class UltraStringLog implements UltraLogEntry<String> {
     public void update(String item) {
         if (TelemetryConstants.killswitch || errored) {return;}
         try {
-            if (item == null || lastItem.equals(item)) {
+            if (item == null) {
                 return;
             }
-
-            lastItem = item;
 
             if (this.datalogPublisher.isPresent()) {
                 this.datalogPublisher.get().append(item);

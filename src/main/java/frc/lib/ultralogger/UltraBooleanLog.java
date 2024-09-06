@@ -15,7 +15,6 @@ public class UltraBooleanLog implements UltraLogEntry<Boolean> {
     private double lastCheckedTimestamp = System.currentTimeMillis();
     private boolean errored = false;
 
-    private boolean lastItem;
 
     public UltraBooleanLog(String name) {
         if (TelemetryConstants.killswitch) {return;}
@@ -59,11 +58,9 @@ public class UltraBooleanLog implements UltraLogEntry<Boolean> {
     public void update(Boolean item) {
         if (TelemetryConstants.killswitch || errored) {return;}
         try {
-            if (item == null || item == lastItem) {
+            if (item == null) {
                 return;
             }
-
-            lastItem = item;
 
             if (this.datalogPublisher.isPresent()) {
                 this.datalogPublisher.get().append(item);
