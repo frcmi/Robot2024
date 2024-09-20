@@ -247,10 +247,9 @@ public final class Constants {
 
   public static class AmpArmConstants {
     public static final double kMaxArmVolts = 6;
-    public static final int kAmpArmMotorId = 32;
+    public static final int kAmpArmMotorId = 30;
     public static final int kArmEncoderId = 0; // TODO: Change ID based on DIO port
     public static final double kTorqueArmConstant = 0.6;
-    public static final double kGravityLimit = 0.3;
     // Gareths law of constants
     // TODO: Tune all of these values
     // PID parameters

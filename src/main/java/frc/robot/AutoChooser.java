@@ -54,6 +54,7 @@ public class AutoChooser {
         // PP_SCORE_AND_RELOAD,
         SCORE_ONLY,
         NONE,
+        // DOES_NOTHING
     }
 
     public AutoChooser(RobotContainer robot) {

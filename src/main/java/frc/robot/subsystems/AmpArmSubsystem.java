@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,10 +15,12 @@ import frc.robot.Constants.AmpArmConstants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class AmpArmSubsystem extends SubsystemBase{
-    public final CANSparkMax armMotor = new CANSparkMax(AmpArmConstants.kAmpArmMotorId, MotorType.kBrushless);
+    // public final CANSparkMax oldArmMotor = new CANSparkMax(AmpArmConstants.kAmpArmMotorId, MotorType.kBrushless);
+    public final TalonFX armMotor = new TalonFX(AmpArmConstants.kAmpArmMotorId);
     private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(AmpArmConstants.kArmEncoderId);
 
     // PID Controller for arm movement
@@ -32,12 +35,12 @@ public class AmpArmSubsystem extends SubsystemBase{
     private final UltraDoubleLog currentPublisher = new UltraDoubleLog("Amp Arm/Motor Current");
     private final UltraDoubleLog goalAnglePublisher = new UltraDoubleLog("Amp Arm/Goal Angle");
     private final UltraBooleanLog boundsPublisher = new UltraBooleanLog("Amp Arm/Bounds");
-    private final UltraTempLog temperaturePublisher = new UltraTempLog("Amp Arm/Motor Temperature", armMotor::getMotorTemperature);
+    // private final UltraTempLog temperaturePublisher = new UltraTempLog("Amp Arm/Motor Temperature", armMotor::getMotorTemperature);
 
     public AmpArmSubsystem() {
         armEncoder.setDistancePerRotation(1);
         armEncoder.setPositionOffset(AmpArmConstants.kAmpEncoderOffset / 360);
-        armMotor.setIdleMode(IdleMode.kBrake);
+        armMotor.setNeutralMode(NeutralModeValue.Brake);
 
         armMotor.setInverted(false);
 
@@ -47,8 +50,8 @@ public class AmpArmSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
         radianPublisher.update(getAngle());
-        currentPublisher.update(armMotor.getOutputCurrent());
-        temperaturePublisher.update();
+        // currentPublisher.update(armMotor.getOutputCurrent());
+        // temperaturePublisher.update();
     }
 
     /**
@@ -70,7 +73,7 @@ public class AmpArmSubsystem extends SubsystemBase{
         double pidOutput = pidController.calculate(angle, goalAngle);
        // double ffOutput = feedforward.calculate(pidController.getSetpoint().position, pidController.getSetpoint().velocity);
 
-        double outputVolts = pidOutput + /*ffOutput +*/ Math.cos(angle) * (goalAngle < AmpArmConstants.kGravityLimit ? 0 : AmpArmConstants.kTorqueArmConstant);
+        double outputVolts = pidOutput + /*ffOutput +*/ Math.cos(angle) * AmpArmConstants.kTorqueArmConstant;
 
         // Stop movement if outside bounds
         if (angle < AmpArmConstants.kMinAngle) 
@@ -79,8 +82,10 @@ public class AmpArmSubsystem extends SubsystemBase{
             outputVolts = Math.max(-2, Math.min(kg, outputVolts));
 
         outputVolts = Math.max(-AmpArmConstants.kMaxArmVolts, Math.min(AmpArmConstants.kMaxArmVolts, outputVolts));
-
+        outputVolts = Math.cos(angle) * AmpArmConstants.kTorqueArmConstant;
         armMotor.setVoltage(outputVolts);
+        SmartDashboard.putNumber("Angle of arm", angle);
+        
     }
 
     
@@ -104,7 +109,7 @@ public class AmpArmSubsystem extends SubsystemBase{
         return run(
                 () -> armMotor.setVoltage(AmpArmConstants.kLowerArmVolts)
         ).until(
-                () -> armMotor.getOutputCurrent() > AmpArmConstants.kAmpCurrentLimit
+                () -> armMotor.getSupplyCurrent().getValueAsDouble() > AmpArmConstants.kAmpCurrentLimit
         );
     }
 
