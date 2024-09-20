@@ -233,7 +233,7 @@ public final class Constants {
   public static class SpeakerShooterConstants {
     public static final int kSpeakerShooterMotorId = 27;
 
-    public static final double kSpeakerMotorSpeed = -0.5;
+    public static final double kSpeakerMotorSpeed = -0.85;
   }
 
   public static class AmpShooterConstants {
