@@ -63,7 +63,7 @@ public final class Constants {
     public static final int pigeonID = 0;
 
     public static final COTSTalonFXSwerveConstants chosenModule =
-        COTSTalonFXSwerveConstants.SDS.MK4i.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L3);
+        COTSTalonFXSwerveConstants.SDS.MK4i.Falcon500(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L3);
 
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(28);
@@ -289,7 +289,7 @@ public final class Constants {
   }
 
   public static class VisionConstants {
-      public static final Transform3d robotToCamera = new Transform3d(Units.inchesToMeters(5), Units.inchesToMeters(9), Units.inchesToMeters(21.85), new Rotation3d(0, -Math.toRadians(10.5),Math.PI));
+      public static final Transform3d robotToCamera = new Transform3d(Units.inchesToMeters(-9), Units.inchesToMeters(-4.25), Units.inchesToMeters(18), new Rotation3d(0, -Math.toRadians(10.5),Math.PI));
   }
 
   public static class AutoAlignConstants {
