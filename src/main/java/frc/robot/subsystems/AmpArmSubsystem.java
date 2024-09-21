@@ -82,7 +82,7 @@ public class AmpArmSubsystem extends SubsystemBase{
             outputVolts = Math.max(-2, Math.min(kg, outputVolts));
 
         outputVolts = Math.max(-AmpArmConstants.kMaxArmVolts, Math.min(AmpArmConstants.kMaxArmVolts, outputVolts));
-        outputVolts = Math.cos(angle) * AmpArmConstants.kTorqueArmConstant;
+        // outputVolts = Math.cos(angle) * AmpArmConstants.kTorqueArmConstant;
         armMotor.setVoltage(outputVolts);
         SmartDashboard.putNumber("Angle of arm", angle);
         

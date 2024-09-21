@@ -237,7 +237,7 @@ public final class Constants {
   }
 
   public static class AmpShooterConstants {
-    public static final double kAmpMotorSpeed = 0.83;
+    public static final double kAmpMotorSpeed = 1;
     public static int kShootMotor = 31;
     public static double kIntakeCurrentLimitAmps = 100000000;
 
