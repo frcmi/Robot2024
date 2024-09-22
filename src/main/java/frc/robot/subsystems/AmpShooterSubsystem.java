@@ -42,7 +42,7 @@ public class AmpShooterSubsystem extends SubsystemBase{
         temperaturePublisher.update();
 
         // TODO: remove this once UltraLog supports always networked values
-        // This is needed to driver can see if note is actually in the amp shooter
+        // This is needed to driver can see if note is actually in the amp shooter in shuffleboard
         SmartDashboard.putBoolean("Amp Beam Break", beamClear);
 
         if (!beambreak.get()) {

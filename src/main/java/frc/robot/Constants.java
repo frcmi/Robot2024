@@ -35,9 +35,9 @@ public final class Constants {
         // this will fully disable logging even when FMS is connected.
         public static final boolean killswitch = false;
         // If true data won't be sent over network even when not connected to FMS
-        public static final boolean disableNetworkLogging = false;
+        public static final boolean disableNetworkLogging = true;
         // ONLY ENABLE IN DEV (this *should* be overwritten when connected to FMS, but that's untested)
-        public static final boolean disableDatalog = true;
+        public static final boolean disableDatalog = false;
         // Prefix in NetworkTables, must end with a '/'
         public static final String tabPrefix = "UltraLog/";
         // How often to re-check if the FMS is connected (and disable network logging if so)
@@ -92,7 +92,7 @@ public final class Constants {
     /* Angle Encoder Invert */
     public static final SensorDirectionValue cancoderInvert = chosenModule.cancoderInvert;
 
-    public static final float currentLimitModifier = 0.1f;
+    public static final float currentLimitModifier = 1f;
 
     /* Swerve Current Limiting */
     public static final int angleCurrentLimit = (int)(25 * currentLimitModifier);
@@ -100,8 +100,8 @@ public final class Constants {
     public static final double angleCurrentThresholdTime = 0.1;
     public static final boolean angleEnableCurrentLimit = true;
 
-    public static final int driveCurrentLimit = (int)(35 * currentLimitModifier);
-    public static final int driveCurrentThreshold = (int)(60 * currentLimitModifier);
+    public static final int driveCurrentLimit = (int)(30 * currentLimitModifier);
+    public static final int driveCurrentThreshold = (int)(40 * currentLimitModifier);
     public static final double driveCurrentThresholdTime = 0.1;
     public static final boolean driveEnableCurrentLimit = true;
 

@@ -15,6 +15,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.SetTrailLights;
@@ -49,9 +50,10 @@ public class RobotContainer {
   public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   // public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
 
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
-  private final AutoChooser autoChooser = new AutoChooser(this);
+  // private final AutoChooser autoChooser = new AutoChooser(this);
 
   public final Pose2d gotoAutoThing = new Pose2d(2.843,5.819, new Rotation2d(Math.PI));
   public final Pose2d gotoAutoThing2 = new Pose2d(8.244,2.471, new Rotation2d(Math.PI));
@@ -148,7 +150,6 @@ public class RobotContainer {
 
     // povUp Raise Climber
     driverController.povUp().whileTrue(climberSubsystem.up());
-
     // povDown Lower Climber
     driverController.povDown().whileTrue(climberSubsystem.down());
 
@@ -206,7 +207,6 @@ public class RobotContainer {
     //   SmartDashboard.putString("command name swerve", swerveSubsystem.getCurrentCommand().getName());
     // }
 
-    // return autoChooser.getCommand();
-    return new RunCommand(() -> {});
+    return null; // autoChooser.getCommand();
   }
 }

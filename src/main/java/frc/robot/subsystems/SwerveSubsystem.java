@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.ultralogger.UltraDoubleLog;
 import frc.lib.ultralogger.UltraStructArrayLog;
 import frc.lib.ultralogger.UltraStructLog;
+import frc.lib.ultralogger.UltraTempLog;
 import frc.robot.Robot;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.AutoConstants;
@@ -57,7 +58,6 @@ public class SwerveSubsystem extends SubsystemBase {
     public UltraStructLog<Pose2d> odometrySimPosePublisher;
 
     public Orchestra orchestra = new Orchestra();
-
     public SwerveSubsystem() {
         gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
@@ -329,6 +329,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public void periodic() {
         for (SwerveModule mod : mSwerveMods) {
             mod.logValues();
+            SmartDashboard.putNumber("module speed: " + mod.moduleNumber, mod.mDriveMotor.getVelocity().getValueAsDouble());
         }
         
         swerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
@@ -337,6 +338,7 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveStatePublisher.update(getModuleStates());
         swerveSetpointPublisher.update(getModuleSetpoints());
         angularVelocityPublisher.update(gyro.getAngularVelocityZWorld().getValueAsDouble());
+        
     }
 
     @Override
