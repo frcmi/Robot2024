@@ -50,6 +50,7 @@ public class AmpArmSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
         radianPublisher.update(getAngle());
+        SmartDashboard.putNumber("amp arm amperage", armMotor.getSupplyCurrent().getValueAsDouble());
         // currentPublisher.update(armMotor.getOutputCurrent());
         // temperaturePublisher.update();
     }
@@ -100,8 +101,7 @@ public class AmpArmSubsystem extends SubsystemBase{
 
         return new PrintCommand("Raising Arm")
             .andThen(run(() -> armMotor.setVoltage(AmpArmConstants.kRaiseArmVolts + Math.cos(getAngle()) * AmpArmConstants.kTorqueArmConstant)))
-            .until(() -> (Math.toDegrees(getAngle()) > 92))
-            .andThen(runOnce(() -> System.out.println("At " + Math.toDegrees(getAngle()) +", stopping now")))
+            .until(() -> armMotor.getSupplyCurrent().getValueAsDouble() > AmpArmConstants.kAmpCurrentLimit)
             .andThen(stop());
     }
 

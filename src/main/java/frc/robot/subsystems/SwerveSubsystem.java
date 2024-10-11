@@ -59,7 +59,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public Orchestra orchestra = new Orchestra();
     public SwerveSubsystem() {
-        gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
+        gyro = new Pigeon2(Constants.SwerveConstants.pigeonID, "*");
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
 
@@ -330,7 +330,9 @@ public class SwerveSubsystem extends SubsystemBase {
         for (SwerveModule mod : mSwerveMods) {
             mod.logValues();
             SmartDashboard.putNumber("module speed: " + mod.moduleNumber, mod.mDriveMotor.getVelocity().getValueAsDouble());
+            SmartDashboard.putNumber("mod: " + mod.moduleNumber, mod.getCANcoderReading().getRadians());
         }
+    
         
         swerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
         

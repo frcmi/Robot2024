@@ -6,6 +6,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -50,12 +51,13 @@ public class SwerveModule {
         this.angleOffset = moduleConstants.angleOffset;
         
         /* Angle Encoder Config */
-        angleEncoder = new CANcoder(moduleConstants.cancoderID);
+        angleEncoder = new CANcoder(moduleConstants.cancoderID, "*");
         angleEncoder.getConfigurator().apply(Robot.ctreConfigs.swerveCANcoderConfig);
 
         /* Angle Motor Config */
-        mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
+        mAngleMotor = new TalonFX(moduleConstants.angleMotorID, "*");
         mAngleMotor.getConfigurator().apply(Robot.ctreConfigs.swerveAngleFXConfig);
+        mAngleMotor.setNeutralMode(NeutralModeValue.Coast);
         resetToAbsolute();
         mAngleMotor.setInverted(isInverted);
         angleTemperatureSignal = mAngleMotor.getDeviceTemp();
@@ -63,7 +65,7 @@ public class SwerveModule {
         angleTemperaturePublisher = new UltraTempLog("Swerve/Mod " + moduleNumber + "/Angle Motor Temperature", angleTemperatureSignal.asSupplier());
 
         /* Drive Motor Config */
-        mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
+        mDriveMotor = new TalonFX(moduleConstants.driveMotorID, "*");
         mDriveMotor.getConfigurator().apply(Robot.ctreConfigs.swerveDriveFXConfig);
         mDriveMotor.getConfigurator().setPosition(0.0);
         mDriveMotor.setInverted(isInverted);
