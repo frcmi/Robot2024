@@ -56,6 +56,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public VisionSubsystem visionSubsystemForSim = null;
     public SwerveDriveOdometry swerveDriveOdometrySim;
     public UltraStructLog<Pose2d> odometrySimPosePublisher;
+    public UltraStructLog<Pose2d> robotPositionPublisher;
 
     public Orchestra orchestra = new Orchestra();
     public SwerveSubsystem() {
@@ -127,6 +128,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 },
                 this // Reference to this subsystem to set requirements
         );
+        robotPositionPublisher = new UltraStructLog<>("Swerve/Position", Pose2d.struct);
     }
 
     /*
@@ -340,7 +342,7 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveStatePublisher.update(getModuleStates());
         swerveSetpointPublisher.update(getModuleSetpoints());
         angularVelocityPublisher.update(gyro.getAngularVelocityZWorld().getValueAsDouble());
-        
+        robotPositionPublisher.update(getPose());
     }
 
     @Override

@@ -6,9 +6,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.lib.ultralogger.UltraDoubleLog;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -17,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
+  public final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
+  private UltraDoubleLog[] pdhPortCurrents;
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
 
   private Command m_autonomousCommand;
@@ -29,6 +34,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    pdhPortCurrents = new UltraDoubleLog[23];
+    for (int i = 0; i < 23; i++) {
+      pdhPortCurrents[i] = new UltraDoubleLog("PDH/Port " + i + "/Current");
+    }
     if (!Constants.TelemetryConstants.disableDatalog && !Constants.TelemetryConstants.killswitch) {
       DataLogManager.start();
 
@@ -48,6 +57,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -55,6 +65,9 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     // System.out.println(Constants.JonesConstants.Sigma);
     // do not uncomment the line above please
+    for (int i = 0; i < 23; i++) {
+      pdhPortCurrents[i].update(pdh.getCurrent(i));
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

@@ -10,17 +10,29 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.autos.ChosenAuto;
 import frc.robot.subsystems.*;
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.generated.TunerConstants;
 
+import java.sql.Driver;
+
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.SetTrailLights;
-import frc.robot.subsystems.LEDSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
@@ -46,36 +58,39 @@ public class RobotContainer {
   public final AmpShooterSubsystem ampShooterSubsystem = new AmpShooterSubsystem(ampArmSubsystem, m_LEDSubsystem);
   public final SpeakerShooterSubsystem speakerShooterSubsystem = new SpeakerShooterSubsystem(driverController.leftTrigger());
   public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(speakerShooterSubsystem.beambreak::get, m_LEDSubsystem);
-  public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  // public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  public final CommandSwerveDrivetrain commandSwerveDrivetrain = TunerConstants.DriveTrain;
   public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   // public final VisionSubsystem visionSubsystem = new VisionSubsystem(swerveSubsystem);
-
+  private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+  private double MaxAngularRate = 1.5 * Math.PI;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
-  // private final AutoChooser autoChooser = new AutoChooser(this);
+  private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
 
   public final Pose2d gotoAutoThing = new Pose2d(2.843,5.819, new Rotation2d(Math.PI));
   public final Pose2d gotoAutoThing2 = new Pose2d(8.244,2.471, new Rotation2d(Math.PI));
 
   private boolean slewLimited = false;
-
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  
   public RobotContainer() {
     // if (Robot.isSimulation()) swerveSubsystem.visionSubsystemForSim = visionSubsystem;
-    swerveSubsystem.setDefaultCommand(
-        new TeleopSwerve(
-            swerveSubsystem, 
-            () -> driverController.getLeftY() * swerveSubsystem.translationSensitivity, 
-            () -> driverController.getLeftX() * swerveSubsystem.translationSensitivity, 
-            () -> driverController.getRightX() * swerveSubsystem.rotationSensitivity, 
-            () -> false, //robotCentric.getAsBoolean()
-            () -> slewLimited
-        )
-    );
+
+    commandSwerveDrivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+        commandSwerveDrivetrain.applyRequest(() -> drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with
+                                                                                           // negative Y (forward)
+            .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        ));
     // Configure the trigger bindings
     configureBindings();
     configurePPTriggers();
+    configureAutoChooser();
   }
 
   private void configurePPTriggers() {
@@ -94,6 +109,9 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
+
+   private void configureAutoChooser() {
+   }
 
   private void configureBindings() {
     
@@ -144,7 +162,7 @@ public class RobotContainer {
     // driverController.a().onTrue(ampArmSubsystem.moveTo(AmpArmConstants.kShootAngle));
 
     // Y Reset Field Orientation
-    driverController.y().onTrue(new InstantCommand(swerveSubsystem::zeroHeading, swerveSubsystem));
+    driverController.y().onTrue(commandSwerveDrivetrain.runOnce(() -> commandSwerveDrivetrain.seedFieldRelative()));
 
     // B Spit out note
     driverController.b().whileTrue(ampShooterSubsystem.shootAmp().alongWith(intakeSubsystem.extractNote()));
@@ -157,13 +175,14 @@ public class RobotContainer {
     // povLeft Auto Shoot amp
     // povRight Auto Shoot speaker
 
-   driverController.povRight().onTrue(new AutoAlignCommand(swerveSubsystem));
+  //  driverController.povRight().onTrue(new AutoAlignCommand(swerveSubsystem));
 
     // X Toggle Sensitivity (translation and rotation)
-    driverController.x().onTrue(new InstantCommand(swerveSubsystem::switchSensitivity, swerveSubsystem));
+    // driverController.x().onTrue(new InstantCommand(swerveSubsystem::switchSensitivity, swerveSubsystem));
 
     //small backup
-    driverController.povLeft().onTrue(swerveSubsystem.backupSlightly());
+    // TODO make this work for commandSwerveDriveTrain
+    //driverController.povLeft().onTrue(swerveSubsystem.backupSlightly());
     // use this every time the driver goes up to the amp to score
 
     // ***********************************************
@@ -208,6 +227,6 @@ public class RobotContainer {
     //   SmartDashboard.putString("command name swerve", swerveSubsystem.getCurrentCommand().getName());
     // }
 
-    return null; // autoChooser.getCommand();
+    return autoChooser.getSelected();
   }
 }

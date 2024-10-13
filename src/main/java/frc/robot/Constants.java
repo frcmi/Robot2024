@@ -226,8 +226,8 @@ public final class Constants {
     public static final int kSpeakerBeamBreakPort = 2;
     public static final double kSpeakerShootSpeed = 2;
 
-    public static final double kIntakeMotorSpeed = 0.2085;
-    public static final double kIndexerSpeed = 0.2085;
+    public static final double kIntakeMotorSpeed = 0.25;
+    public static final double kIndexerSpeed = 0.25;
   }
 
   public static class SpeakerShooterConstants {
@@ -239,7 +239,7 @@ public final class Constants {
   public static class AmpShooterConstants {
     public static final double kAmpMotorSpeed = 1;
     public static int kShootMotor = 31;
-    public static double kIntakeCurrentLimitAmps = 100000000;
+    public static double kIntakeCurrentLimitAmps = 40;
 
     public static final int kAmpBeamBrakeId = 4;
 
@@ -275,9 +275,9 @@ public final class Constants {
     public static final double kAmpEncoderOffset = 179 + 140 + 4.2 - 124 + 1.5; // Needs to be measured
 
     // Raise/Lower Constants
-    public static final double kRaiseArmVolts = 1;
+    public static final double kRaiseArmVolts = 1.5;
     public static final double kLowerArmVolts = -1;
-    public static final double kAmpCurrentLimit = 3.5;
+    public static final double kAmpCurrentLimit = 3.9d;
   }
 
   public class ClimberConstants {

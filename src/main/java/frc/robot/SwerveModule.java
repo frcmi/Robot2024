@@ -44,6 +44,10 @@ public class SwerveModule {
 
     private final UltraTempLog driveTemperaturePublisher;
     private final UltraTempLog angleTemperaturePublisher;
+    private final StatusSignal<Double> driveMotorSpeed;
+    private final StatusSignal<Double> angle;
+    private final UltraTempLog driveSpeedPublisher;
+    private final UltraTempLog anglePublisher;
 
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants, boolean isInverted){
         this.isInverted = isInverted;
@@ -69,10 +73,15 @@ public class SwerveModule {
         mDriveMotor.getConfigurator().apply(Robot.ctreConfigs.swerveDriveFXConfig);
         mDriveMotor.getConfigurator().setPosition(0.0);
         mDriveMotor.setInverted(isInverted);
+
+        angle = angleEncoder.getAbsolutePosition();
+        driveMotorSpeed = mDriveMotor.getVelocity();
         
         driveTemperatureSignal = mDriveMotor.getDeviceTemp();
 
         driveTemperaturePublisher = new UltraTempLog("Swerve/Mod " + moduleNumber + "/Drive Motor Temperature", driveTemperatureSignal.asSupplier());
+        anglePublisher = new UltraTempLog("Swerve/Mod " + moduleNumber + "/Angle", angle.asSupplier());
+        driveSpeedPublisher = new UltraTempLog("Swerve/Mod " + moduleNumber + "/Drive Motor Speed", driveMotorSpeed.asSupplier());
     }
 
     /**
@@ -156,5 +165,7 @@ public class SwerveModule {
     public void logValues() {
         driveTemperaturePublisher.update();
         angleTemperaturePublisher.update();
+        driveSpeedPublisher.update();
+        anglePublisher.update();
     }
 }
